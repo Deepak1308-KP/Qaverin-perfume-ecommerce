@@ -124,21 +124,15 @@ function Login() {
         <div className="login-header">
 
           <p className="login-eyebrow">
-            WELCOME BACK
+            WELCOME TO QAVERIN
           </p>
 
 
           <h1>
-
-            Welcome
-
-            <br />
-
-            <em>
-              back.
-            </em>
-
-          </h1>
+  Discover
+  <br />
+  <em>your signature.</em>
+</h1>
 
 
           <p className="login-description">
