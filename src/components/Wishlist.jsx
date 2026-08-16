@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import { useCart } from "../context/useCart";
@@ -11,41 +11,30 @@ function Wishlist() {
 
   const navigate = useNavigate();
 
+
+  /* =========================================
+     WISHLIST
+  ========================================= */
+
   const {
     wishlistItems,
     removeFromWishlist,
   } = useWishlist();
 
+
+  /* =========================================
+     CART
+  ========================================= */
+
   const { addToCart } = useCart();
+
+
+  /* =========================================
+     ADDED PRODUCT MESSAGE
+  ========================================= */
 
   const [addedProduct, setAddedProduct] =
     useState(null);
-
-
-  /* =========================================
-     LOGIN STATUS
-  ========================================= */
-
-  const isLoggedIn =
-    localStorage.getItem(
-      "qaverin-logged-in"
-    ) === "true";
-
-
-  /* =========================================
-     PROTECT WISHLIST PAGE
-  ========================================= */
-
-  if (!isLoggedIn) {
-
-    return (
-      <Navigate
-        to="/login"
-        replace
-      />
-    );
-
-  }
 
 
   /* =========================================
@@ -65,9 +54,22 @@ function Wishlist() {
 
   const handleAddToCart = (product) => {
 
+    /* Add product to bag */
+
     addToCart(product, 1);
 
+
+    /* Remove product from wishlist */
+
+    removeFromWishlist(product.id);
+
+
+    /* Show success message */
+
     setAddedProduct(product.id);
+
+
+    /* Hide message after 2 seconds */
 
     setTimeout(() => {
 
@@ -99,15 +101,18 @@ function Wishlist() {
             YOUR QAVERIN WISHLIST
           </p>
 
+
           <h1>
             Your <em>favorites.</em>
           </h1>
+
 
           <p className="wishlist-description">
             Fragrances you've chosen to remember.
           </p>
 
         </section>
+
 
 
         {/* =====================================
@@ -120,14 +125,17 @@ function Wishlist() {
             ♡
           </div>
 
+
           <h2>
             Your wishlist is empty.
           </h2>
+
 
           <p>
             Save fragrances you love and
             find them here later.
           </p>
+
 
           <Link
             to="/shop"
@@ -137,6 +145,7 @@ function Wishlist() {
             <span>
               EXPLORE COLLECTION
             </span>
+
 
             <span>
               →
@@ -175,6 +184,7 @@ function Wishlist() {
             ✓
           </span>
 
+
           <span>
             Added to your Qaverin bag
           </span>
@@ -182,6 +192,7 @@ function Wishlist() {
         </div>
 
       )}
+
 
 
       {/* =====================================
@@ -194,15 +205,18 @@ function Wishlist() {
           YOUR QAVERIN WISHLIST
         </p>
 
+
         <h1>
           Your <em>favorites.</em>
         </h1>
+
 
         <p className="wishlist-description">
           Fragrances you've chosen to remember.
         </p>
 
       </section>
+
 
 
       {/* =====================================
@@ -234,6 +248,7 @@ function Wishlist() {
           </span>
 
         </div>
+
 
 
         {/* =====================================
@@ -288,6 +303,7 @@ function Wishlist() {
               </div>
 
 
+
               {/* =================================
                   PRODUCT INFORMATION
               ================================= */}
@@ -302,6 +318,7 @@ function Wishlist() {
                 </p>
 
 
+
                 {/* PRODUCT NAME */}
 
                 <h2
@@ -311,8 +328,11 @@ function Wishlist() {
                     openProduct(product.id)
                   }
                 >
+
                   {product.name}
+
                 </h2>
+
 
 
                 {/* DECORATIVE LINE */}
@@ -330,6 +350,7 @@ function Wishlist() {
                 </div>
 
 
+
                 {/* DESCRIPTION */}
 
                 <p className="wishlist-product-description">
@@ -343,6 +364,7 @@ function Wishlist() {
                 </p>
 
 
+
                 {/* PRICE */}
 
                 <p className="wishlist-price">
@@ -350,6 +372,7 @@ function Wishlist() {
                   ${Number(product.price).toFixed(2)}
 
                 </p>
+
 
 
                 {/* =================================
@@ -378,11 +401,13 @@ function Wishlist() {
 
                     </span>
 
+
                     <span>
                       →
                     </span>
 
                   </button>
+
 
 
                   {/* REMOVE FROM WISHLIST */}
@@ -419,6 +444,7 @@ function Wishlist() {
         </div>
 
 
+
         {/* =====================================
             CONTINUE SHOPPING
         ===================================== */}
@@ -433,6 +459,7 @@ function Wishlist() {
             <span>
               CONTINUE SHOPPING
             </span>
+
 
             <span className="wishlist-continue-arrow">
               →
