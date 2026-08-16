@@ -22,13 +22,18 @@ import ProductDetails from "./components/ProductDetails";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import Wishlist from "./components/Wishlist";
+
 import OrderSuccess from "./components/OrderSuccess";
 import OrderDetails from "./components/OrderDetails";
+import Orders from "./components/Orders";
 
 import Profile from "./components/Profile";
 import About from "./components/About";
 import Collections from "./components/Collections";
 import Account from "./components/Account";
+
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 
 /* =========================================
@@ -247,6 +252,16 @@ function App() {
 
 
               {/* =================================
+                  ALL ORDERS
+              ================================= */}
+
+              <Route
+                path="/orders"
+                element={<Orders />}
+              />
+
+
+              {/* =================================
                   ORDER DETAILS
               ================================= */}
 
@@ -283,6 +298,26 @@ function App() {
               <Route
                 path="/collections"
                 element={<Collections />}
+              />
+
+
+              {/* =================================
+                  LOGIN
+              ================================= */}
+
+              <Route
+                path="/login"
+                element={<Login />}
+              />
+
+
+              {/* =================================
+                  SIGN UP
+              ================================= */}
+
+              <Route
+                path="/signup"
+                element={<Signup />}
               />
 
 

@@ -47,7 +47,10 @@
 .account-header h1 {
   margin: 0;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: clamp(50px, 6vw, 78px);
 
@@ -95,6 +98,8 @@
 ========================================= */
 
 .account-profile {
+  position: relative;
+
   display: flex;
 
   align-items: center;
@@ -106,6 +111,33 @@
   background: #fbfaf7;
 
   border: 1px solid #e2dbd2;
+
+  color: #171513;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  animation:
+    accountFadeUp 0.8s ease 0.15s both;
+}
+
+.account-profile:hover {
+  background: #f1ece6;
+
+  border-color: #cfc3b7;
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 30px
+    rgba(23, 21, 19, 0.07);
 }
 
 .account-avatar {
@@ -138,7 +170,8 @@
   transform: scale(1.06);
 
   box-shadow:
-    0 10px 25px rgba(23, 21, 19, 0.15);
+    0 10px 25px
+    rgba(23, 21, 19, 0.15);
 }
 
 .account-profile-label {
@@ -158,7 +191,10 @@
 .account-profile h2 {
   margin: 0 0 6px;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: 25px;
 
@@ -173,6 +209,25 @@
   font-size: 11px;
 
   color: #817a73;
+}
+
+.account-profile-arrow {
+  margin-left: auto;
+
+  font-family: Georgia, serif;
+
+  font-size: 22px;
+
+  font-weight: 400;
+
+  color: #9b7540;
+
+  transition:
+    transform 0.3s ease;
+}
+
+.account-profile:hover .account-profile-arrow {
+  transform: translateX(7px);
 }
 
 
@@ -202,7 +257,8 @@
 
   display: grid;
 
-  grid-template-columns: 55px 1fr auto;
+  grid-template-columns:
+    55px 1fr auto;
 
   align-items: center;
 
@@ -228,6 +284,21 @@
     background 0.3s ease,
     transform 0.3s ease,
     border-color 0.3s ease;
+
+  animation:
+    accountFadeUp 0.7s ease both;
+}
+
+.account-option:nth-child(1) {
+  animation-delay: 0.25s;
+}
+
+.account-option:nth-child(2) {
+  animation-delay: 0.35s;
+}
+
+.account-option:nth-child(3) {
+  animation-delay: 0.45s;
 }
 
 .account-option:hover {
@@ -294,11 +365,6 @@
   color: #817a73;
 }
 
-
-/* =========================================
-   ARROW
-========================================= */
-
 .account-option strong {
   font-family: Georgia, serif;
 
@@ -308,7 +374,8 @@
 
   color: #9b7540;
 
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease;
 }
 
 .account-option:hover strong {
@@ -317,321 +384,14 @@
 
 
 /* =========================================
-   ACCOUNT MESSAGE
-========================================= */
-
-.account-message {
-  margin-top: 55px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 18px;
-
-  text-align: center;
-}
-
-.account-message span {
-  color: #9b7540;
-
-  font-size: 12px;
-}
-
-.account-message p {
-  max-width: 430px;
-
-  margin: 0;
-
-  font-family: Georgia, "Times New Roman", serif;
-
-  font-size: 15px;
-
-  font-style: italic;
-
-  line-height: 1.7;
-
-  color: #817a73;
-}
-
-
-/* =========================================
-   BACK HOME
-========================================= */
-
-.account-home-button {
-  display: flex;
-
-  width: fit-content;
-
-  margin: 55px auto 0;
-
-  align-items: center;
-
-  gap: 10px;
-
-  font-family: Arial, sans-serif;
-
-  font-size: 9px;
-
-  letter-spacing: 1.5px;
-
-  color: #171513;
-
-  text-decoration: none;
-
-  transition:
-    color 0.25s ease,
-    gap 0.25s ease;
-}
-
-.account-home-button:hover {
-  color: #9b7540;
-
-  gap: 15px;
-}
-
-
-/* =========================================
-   HEADER ANIMATION
-========================================= */
-
-@keyframes accountFadeUp {
-
-  from {
-    opacity: 0;
-
-    transform: translateY(25px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0);
-  }
-
-}
-
-.account-header {
-  animation: accountFadeUp 0.8s ease forwards;
-}
-
-
-/* =========================================
-   PROFILE ANIMATION
-========================================= */
-
-.account-profile {
-  animation: accountFadeUp 0.8s ease 0.15s both;
-}
-
-
-/* =========================================
-   OPTION ANIMATION
-========================================= */
-
-.account-option {
-  animation: accountFadeUp 0.7s ease both;
-}
-
-.account-option:nth-child(1) {
-  animation-delay: 0.25s;
-}
-
-.account-option:nth-child(2) {
-  animation-delay: 0.35s;
-}
-
-.account-option:nth-child(3) {
-  animation-delay: 0.45s;
-}
-
-
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 800px) {
-
-  .account-page {
-    padding: 65px 6% 80px;
-  }
-
-  .account-header {
-    margin-bottom: 45px;
-  }
-
-  .account-header h1 {
-    font-size: 58px;
-  }
-
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 600px) {
-
-  .account-page {
-    padding: 55px 20px 70px;
-  }
-
-  .account-eyebrow {
-    font-size: 9px;
-
-    letter-spacing: 3px;
-  }
-
-  .account-header h1 {
-    font-size: clamp(45px, 13vw, 60px);
-
-    letter-spacing: -2px;
-  }
-
-  .account-description {
-    font-size: 12px;
-  }
-
-
-  /* PROFILE */
-
-  .account-profile {
-    padding: 22px;
-
-    gap: 18px;
-  }
-
-  .account-avatar {
-    width: 60px;
-    height: 60px;
-
-    font-size: 24px;
-  }
-
-  .account-profile h2 {
-    font-size: 21px;
-  }
-
-  .account-profile p:last-child {
-    font-size: 10px;
-  }
-
-
-  /* OPTIONS */
-
-  .account-option {
-    grid-template-columns: 48px 1fr auto;
-
-    gap: 14px;
-
-    min-height: 78px;
-
-    padding: 12px 15px;
-  }
-
-  .account-option-icon {
-    width: 40px;
-    height: 40px;
-
-    font-size: 18px;
-  }
-
-  .account-option-info span {
-    font-size: 8px;
-
-    letter-spacing: 1.5px;
-  }
-
-  .account-option-info p {
-    font-size: 10px;
-  }
-
-
-  /* MESSAGE */
-
-  .account-message {
-    margin-top: 40px;
-
-    gap: 10px;
-  }
-
-  .account-message p {
-    font-size: 13px;
-  }
-
-
-  /* HOME */
-
-  .account-home-button {
-    margin-top: 45px;
-  }
-
-}
-    a.view-order-button {
-      margin: 20px 5px 15px ;
-    }
-
-
-/* =========================================
-   SMALL PHONE
-========================================= */
-
-@media (max-width: 400px) {
-
-  .account-page {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  .account-header h1 {
-    font-size: 42px;
-  }
-
-  .account-profile {
-    padding: 18px;
-  }
-
-  .account-avatar {
-    width: 52px;
-    height: 52px;
-
-    font-size: 21px;
-  }
-
-  .account-profile h2 {
-    font-size: 19px;
-  }
-
-  .account-option {
-    grid-template-columns: 42px 1fr auto;
-
-    gap: 10px;
-
-    padding: 10px 12px;
-  }
-
-  .account-option-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .account-option strong {
-    font-size: 17px;
-  }
-
-}
-
-/* =========================================
    MY ORDERS
 ========================================= */
 
 .account-orders {
   margin-top: 55px;
-  animation: accountFadeUp 0.8s ease 0.5s both;
+
+  animation:
+    accountFadeUp 0.8s ease 0.5s both;
 }
 
 
@@ -668,7 +428,10 @@
 .account-orders-header h2 {
   margin: 0;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: 38px;
 
@@ -727,13 +490,17 @@
 
   font-size: 18px;
 
-  animation: orderIconPulse 2s ease-in-out infinite;
+  animation:
+    orderIconPulse 2s ease-in-out infinite;
 }
 
 .orders-empty h3 {
   margin: 0 0 8px;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: 24px;
 
@@ -754,6 +521,7 @@
   display: inline-flex;
 
   align-items: center;
+
   justify-content: space-between;
 
   gap: 30px;
@@ -826,7 +594,8 @@
     box-shadow 0.3s ease,
     border-color 0.3s ease;
 
-  animation: accountFadeUp 0.6s ease both;
+  animation:
+    accountFadeUp 0.6s ease both;
 }
 
 .order-card:hover {
@@ -835,7 +604,8 @@
   border-color: #cfc3b7;
 
   box-shadow:
-    0 15px 35px rgba(23, 21, 19, 0.08);
+    0 15px 35px
+    rgba(23, 21, 19, 0.08);
 }
 
 
@@ -852,7 +622,8 @@
 
   padding: 20px 25px;
 
-  border-bottom: 1px solid #e2dbd2;
+  border-bottom:
+    1px solid #e2dbd2;
 }
 
 .order-card-header span,
@@ -875,7 +646,10 @@
 .order-card-header h3 {
   margin: 0;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: 18px;
 
@@ -902,7 +676,8 @@
 
   letter-spacing: 1px;
 
-  animation: statusGlow 2.5s ease-in-out infinite;
+  animation:
+    statusGlow 2.5s ease-in-out infinite;
 }
 
 
@@ -917,7 +692,8 @@
 .order-item {
   display: grid;
 
-  grid-template-columns: 65px 1fr auto;
+  grid-template-columns:
+    65px 1fr auto;
 
   align-items: center;
 
@@ -927,9 +703,9 @@
 }
 
 .order-item + .order-item {
-  border-top: 1px solid #eee8e0;
+  border-top:
+    1px solid #eee8e0;
 }
-
 
 .order-item-image {
   position: relative;
@@ -950,7 +726,8 @@
 
   object-fit: cover;
 
-  transition: transform 0.5s ease;
+  transition:
+    transform 0.5s ease;
 }
 
 .order-item:hover .order-item-image img {
@@ -982,11 +759,13 @@
   font-size: 8px;
 }
 
-
 .order-item-info h4 {
   margin: 0 0 5px;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: 15px;
 
@@ -1004,7 +783,10 @@
 }
 
 .order-item > strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: 14px;
 
@@ -1019,7 +801,8 @@
 .order-card-footer {
   display: grid;
 
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns:
+    1fr 1fr 1fr;
 
   gap: 20px;
 
@@ -1027,7 +810,8 @@
 
   background: #f5f1eb;
 
-  border-top: 1px solid #e2dbd2;
+  border-top:
+    1px solid #e2dbd2;
 }
 
 .order-card-footer p {
@@ -1045,7 +829,10 @@
 }
 
 .order-total strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size: 17px;
 
@@ -1056,156 +843,6 @@
 
 
 /* =========================================
-   ORDER ANIMATIONS
-========================================= */
-
-@keyframes orderIconPulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-
-    box-shadow: 0 0 0 rgba(155, 117, 64, 0);
-  }
-
-  50% {
-    transform: scale(1.08);
-
-    box-shadow:
-      0 0 20px rgba(155, 117, 64, 0.15);
-  }
-
-}
-
-
-@keyframes statusGlow {
-
-  0%,
-  100% {
-    box-shadow:
-      0 0 0 rgba(194, 154, 99, 0);
-  }
-
-  50% {
-    box-shadow:
-      0 0 12px rgba(194, 154, 99, 0.15);
-  }
-
-}
-
-
-/* =========================================
-   MOBILE ORDERS
-========================================= */
-
-@media (max-width: 600px) {
-
-  .account-orders {
-    margin-top: 45px;
-  }
-
-  .account-orders-header {
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 10px;
-  }
-
-  .account-orders-header h2 {
-    font-size: 32px;
-  }
-
-  .order-card-header {
-    padding: 17px;
-  }
-
-  .order-items {
-    padding: 15px 17px;
-  }
-
-  .order-item {
-    grid-template-columns: 55px 1fr auto;
-
-    gap: 10px;
-  }
-
-  .order-item-image {
-    width: 55px;
-    height: 55px;
-  }
-
-  .order-item-info h4 {
-    font-size: 13px;
-  }
-
-  .order-item-info p {
-    font-size: 8px;
-  }
-
-  .order-item > strong {
-    font-size: 12px;
-  }
-
-  .order-card-footer {
-    grid-template-columns: 1fr 1fr;
-
-    padding: 15px 17px;
-  }
-
-  .order-total {
-    grid-column: 1 / -1;
-
-    padding-top: 12px;
-
-    border-top: 1px solid #e2dbd2;
-
-    text-align: left;
-  }
-
-}
-
-
-/* =========================================
-   SMALL PHONE
-========================================= */
-
-@media (max-width: 400px) {
-
-  .account-orders-header h2 {
-    font-size: 29px;
-  }
-
-  .order-card-header h3 {
-    font-size: 15px;
-  }
-
-  .order-status {
-    font-size: 6px;
-
-    padding: 6px 8px;
-  }
-
-  .order-item {
-    grid-template-columns: 48px 1fr;
-
-    position: relative;
-  }
-
-  .order-item-image {
-    width: 48px;
-    height: 48px;
-  }
-
-  .order-item > strong {
-    grid-column: 2;
-
-    margin-top: -5px;
-  }
-
-}
-
-/* =========================================
    VIEW ORDER DETAILS
 ========================================= */
 
@@ -1213,10 +850,12 @@
   width: 230px;
   height: 44px;
 
-  margin: 15px 25px 22px auto;
-  border-radius:20px;
+  margin: 20px 5px 15px auto;
+
+  border-radius: 20px;
 
   display: flex;
+
   align-items: center;
   justify-content: space-between;
 
@@ -1248,9 +887,6 @@
     box-shadow 0.35s ease;
 }
 
-
-/* ARROW */
-
 .view-order-button span {
   font-family: Georgia, serif;
 
@@ -1262,9 +898,6 @@
     transform 0.35s ease;
 }
 
-
-/* HOVER */
-
 .view-order-button:hover {
   width: 245px;
 
@@ -1275,16 +908,13 @@
   transform: translateY(-2px);
 
   box-shadow:
-    0 8px 20px rgba(23, 21, 19, 0.12);
+    0 8px 20px
+    rgba(23, 21, 19, 0.12);
 }
-
 
 .view-order-button:hover span {
   transform: translateX(7px);
 }
-
-
-/* CLICK */
 
 .view-order-button:active {
   transform: translateY(0);
@@ -1294,17 +924,425 @@
 
 
 /* =========================================
+   ACCOUNT MESSAGE
+========================================= */
+
+.account-message {
+  margin-top: 55px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  text-align: center;
+}
+
+.account-message span {
+  color: #9b7540;
+
+  font-size: 12px;
+}
+
+.account-message p {
+  max-width: 430px;
+
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 15px;
+
+  font-style: italic;
+
+  line-height: 1.7;
+
+  color: #817a73;
+}
+
+
+/* =========================================
+   LOGOUT BUTTON
+========================================= */
+
+.account-logout-button {
+  width: 230px;
+  height: 46px;
+
+  margin: 35px auto 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #c9b39a;
+
+  background: transparent;
+
+  color: #9b7540;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.account-logout-button strong {
+  font-family: Georgia, serif;
+
+  font-size: 18px;
+
+  font-weight: 400;
+
+  transition:
+    transform 0.3s ease;
+}
+
+.account-logout-button:hover {
+  background: #211e1b;
+
+  border-color: #211e1b;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px
+    rgba(23, 21, 19, 0.12);
+}
+
+.account-logout-button:hover strong {
+  transform: translateX(7px);
+}
+
+.account-logout-button:active {
+  transform: translateY(0);
+
+  box-shadow: none;
+}
+
+
+/* =========================================
+   BACK HOME
+========================================= */
+
+.account-home-button {
+  display: flex;
+
+  width: fit-content;
+
+  margin: 30px auto 0;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 1.5px;
+
+  color: #171513;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease,
+    gap 0.25s ease;
+}
+
+.account-home-button:hover {
+  color: #9b7540;
+
+  gap: 15px;
+}
+
+
+/* =========================================
+   HEADER ANIMATION
+========================================= */
+
+@keyframes accountFadeUp {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   ORDER ANIMATIONS
+========================================= */
+
+@keyframes orderIconPulse {
+
+  0%,
+  100% {
+
+    transform: scale(1);
+
+    box-shadow:
+      0 0 0
+      rgba(155, 117, 64, 0);
+
+  }
+
+  50% {
+
+    transform: scale(1.08);
+
+    box-shadow:
+      0 0 20px
+      rgba(155, 117, 64, 0.15);
+
+  }
+
+}
+
+
+@keyframes statusGlow {
+
+  0%,
+  100% {
+
+    box-shadow:
+      0 0 0
+      rgba(194, 154, 99, 0);
+
+  }
+
+  50% {
+
+    box-shadow:
+      0 0 12px
+      rgba(194, 154, 99, 0.15);
+
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .account-page {
+    padding:
+      65px 6% 80px;
+  }
+
+  .account-header {
+    margin-bottom: 45px;
+  }
+
+  .account-header h1 {
+    font-size: 58px;
+  }
+
+}
+
+
+/* =========================================
    MOBILE
 ========================================= */
 
 @media (max-width: 600px) {
+
+  .account-page {
+    padding:
+      55px 20px 70px;
+  }
+
+  .account-eyebrow {
+    font-size: 9px;
+
+    letter-spacing: 3px;
+  }
+
+  .account-header h1 {
+    font-size:
+      clamp(45px, 13vw, 60px);
+
+    letter-spacing: -2px;
+  }
+
+  .account-description {
+    font-size: 12px;
+  }
+
+
+  /* PROFILE */
+
+  .account-profile {
+    padding: 22px;
+
+    gap: 18px;
+  }
+
+  .account-avatar {
+    width: 60px;
+    height: 60px;
+
+    font-size: 24px;
+  }
+
+  .account-profile h2 {
+    font-size: 21px;
+  }
+
+  .account-profile p:last-child {
+    font-size: 10px;
+  }
+
+
+  /* OPTIONS */
+
+  .account-option {
+    grid-template-columns:
+      48px 1fr auto;
+
+    gap: 14px;
+
+    min-height: 78px;
+
+    padding: 12px 15px;
+  }
+
+  .account-option-icon {
+    width: 40px;
+    height: 40px;
+
+    font-size: 18px;
+  }
+
+  .account-option-info span {
+    font-size: 8px;
+
+    letter-spacing: 1.5px;
+  }
+
+  .account-option-info p {
+    font-size: 10px;
+  }
+
+
+  /* ORDERS */
+
+  .account-orders {
+    margin-top: 45px;
+  }
+
+  .account-orders-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .account-orders-header h2 {
+    font-size: 32px;
+  }
+
+  .order-card-header {
+    padding: 17px;
+  }
+
+  .order-items {
+    padding: 15px 17px;
+  }
+
+  .order-item {
+    grid-template-columns:
+      55px 1fr auto;
+
+    gap: 10px;
+  }
+
+  .order-item-image {
+    width: 55px;
+    height: 55px;
+  }
+
+  .order-item-info h4 {
+    font-size: 13px;
+  }
+
+  .order-item-info p {
+    font-size: 8px;
+  }
+
+  .order-item > strong {
+    font-size: 12px;
+  }
+
+  .order-card-footer {
+    grid-template-columns:
+      1fr 1fr;
+
+    padding: 15px 17px;
+  }
+
+  .order-total {
+    grid-column: 1 / -1;
+
+    padding-top: 12px;
+
+    border-top:
+      1px solid #e2dbd2;
+
+    text-align: left;
+  }
+
+
+  /* VIEW ORDER */
 
   .view-order-button {
     width: 100%;
 
     height: 42px;
 
-    margin: 0 15px 15px;
+    margin:
+      0 15px 15px;
 
     font-size: 8px;
   }
@@ -1313,78 +1351,138 @@
     width: 100%;
   }
 
-}
-.account-profile {
-  position: relative;
 
-  display: flex;
+  /* MESSAGE */
 
-  align-items: center;
+  .account-message {
+    margin-top: 40px;
 
-  gap: 25px;
+    gap: 10px;
+  }
 
-  padding: 30px;
+  .account-message p {
+    font-size: 13px;
+  }
 
-  background: #fbfaf7;
 
-  border: 1px solid #e2dbd2;
+  /* LOGOUT */
 
-  color: #171513;
+  .account-logout-button {
+    width: 100%;
 
-  text-decoration: none;
+    max-width: 230px;
 
-  cursor: pointer;
+    height: 44px;
 
-  transition:
-    background 0.3s ease,
-    border-color 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
+    margin-top: 30px;
+  }
 
-.account-profile:hover {
-  background: #f1ece6;
 
-  border-color: #cfc3b7;
+  /* HOME */
 
-  transform: translateY(-3px);
+  .account-home-button {
+    margin-top: 35px;
+  }
 
-  box-shadow:
-    0 12px 30px rgba(23, 21, 19, 0.07);
 }
 
 
-.account-profile-arrow {
-  margin-left: auto;
-
-  font-family: Georgia, serif;
-
-  font-size: 22px;
-
-  font-weight: 400;
-
-  color: #9b7540;
-
-  transition:
-    transform 0.3s ease;
-}
-
-.account-profile:hover .account-profile-arrow {
-  transform: translateX(7px);
-}
 /* =========================================
-   DARK THEME - ACCOUNT PAGE
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .account-page {
+    padding-left: 15px;
+
+    padding-right: 15px;
+  }
+
+  .account-header h1 {
+    font-size: 42px;
+  }
+
+  .account-profile {
+    padding: 18px;
+  }
+
+  .account-avatar {
+    width: 52px;
+    height: 52px;
+
+    font-size: 21px;
+  }
+
+  .account-profile h2 {
+    font-size: 19px;
+  }
+
+  .account-option {
+    grid-template-columns:
+      42px 1fr auto;
+
+    gap: 10px;
+
+    padding: 10px 12px;
+  }
+
+  .account-option-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .account-option strong {
+    font-size: 17px;
+  }
+
+  .account-orders-header h2 {
+    font-size: 29px;
+  }
+
+  .order-card-header h3 {
+    font-size: 15px;
+  }
+
+  .order-status {
+    font-size: 6px;
+
+    padding: 6px 8px;
+  }
+
+  .order-item {
+    grid-template-columns:
+      48px 1fr;
+
+    position: relative;
+  }
+
+  .order-item-image {
+    width: 48px;
+    height: 48px;
+  }
+
+  .order-item > strong {
+    grid-column: 2;
+
+    margin-top: -5px;
+  }
+
+}
+
+
+/* =========================================
+   DARK THEME
 ========================================= */
 
 body.dark-theme .account-page {
   background: #11100f;
+
   color: #f3efe9;
 }
 
 
-/* =========================================
-   HEADER
-========================================= */
+/* HEADER */
 
 body.dark-theme .account-eyebrow {
   color: #c79b5d;
@@ -1403,9 +1501,7 @@ body.dark-theme .account-description {
 }
 
 
-/* =========================================
-   PROFILE
-========================================= */
+/* PROFILE */
 
 body.dark-theme .account-profile {
   background: #1b1917;
@@ -1421,7 +1517,8 @@ body.dark-theme .account-profile:hover {
   border-color: #514a43;
 
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.3);
+    0 12px 30px
+    rgba(0, 0, 0, 0.3);
 }
 
 body.dark-theme .account-avatar {
@@ -1447,9 +1544,7 @@ body.dark-theme .account-profile-arrow {
 }
 
 
-/* =========================================
-   ACCOUNT OPTIONS
-========================================= */
+/* ACCOUNT OPTIONS */
 
 body.dark-theme .account-option {
   background: #1b1917;
@@ -1484,35 +1579,7 @@ body.dark-theme .account-option strong {
 }
 
 
-/* =========================================
-   ACCOUNT MESSAGE
-========================================= */
-
-body.dark-theme .account-message span {
-  color: #c79b5d;
-}
-
-body.dark-theme .account-message p {
-  color: #aaa39b;
-}
-
-
-/* =========================================
-   BACK HOME
-========================================= */
-
-body.dark-theme .account-home-button {
-  color: #f3efe9;
-}
-
-body.dark-theme .account-home-button:hover {
-  color: #c79b5d;
-}
-
-
-/* =========================================
-   ORDER HISTORY
-========================================= */
+/* ORDERS */
 
 body.dark-theme .account-orders-eyebrow {
   color: #c79b5d;
@@ -1531,9 +1598,7 @@ body.dark-theme .account-orders-count {
 }
 
 
-/* =========================================
-   EMPTY ORDERS
-========================================= */
+/* EMPTY ORDERS */
 
 body.dark-theme .orders-empty {
   background: #1b1917;
@@ -1570,9 +1635,7 @@ body.dark-theme .orders-shop-button:hover {
 }
 
 
-/* =========================================
-   ORDER CARD
-========================================= */
+/* ORDER CARD */
 
 body.dark-theme .order-card {
   background: #1b1917;
@@ -1584,13 +1647,9 @@ body.dark-theme .order-card:hover {
   border-color: #514a43;
 
   box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.35);
+    0 15px 35px
+    rgba(0, 0, 0, 0.35);
 }
-
-
-/* =========================================
-   ORDER CARD HEADER
-========================================= */
 
 body.dark-theme .order-card-header {
   border-bottom-color: #39342f;
@@ -1606,9 +1665,7 @@ body.dark-theme .order-card-header h3 {
 }
 
 
-/* =========================================
-   ORDER STATUS
-========================================= */
+/* ORDER STATUS */
 
 body.dark-theme .order-status {
   background: #2b261f;
@@ -1619,9 +1676,7 @@ body.dark-theme .order-status {
 }
 
 
-/* =========================================
-   ORDER ITEMS
-========================================= */
+/* ORDER ITEMS */
 
 body.dark-theme .order-item + .order-item {
   border-top-color: #35312d;
@@ -1650,9 +1705,7 @@ body.dark-theme .order-item > strong {
 }
 
 
-/* =========================================
-   ORDER FOOTER
-========================================= */
+/* ORDER FOOTER */
 
 body.dark-theme .order-card-footer {
   background: #24211e;
@@ -1669,9 +1722,7 @@ body.dark-theme .order-total strong {
 }
 
 
-/* =========================================
-   VIEW ORDER DETAILS
-========================================= */
+/* VIEW ORDER */
 
 body.dark-theme .view-order-button {
   border-color: #66543e;
@@ -1687,50 +1738,53 @@ body.dark-theme .view-order-button:hover {
   color: #11100f;
 
   box-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.3);
+    0 8px 20px
+    rgba(0, 0, 0, 0.3);
 }
 
 
-/* =========================================
-   MOBILE
-========================================= */
+/* ACCOUNT MESSAGE */
 
-@media (max-width: 600px) {
+body.dark-theme .account-message span {
+  color: #c79b5d;
+}
 
-  body.dark-theme .account-profile {
-    background: #1b1917;
-  }
+body.dark-theme .account-message p {
+  color: #aaa39b;
+}
 
-  body.dark-theme .account-option {
-    background: #1b1917;
-  }
 
-  body.dark-theme .order-card {
-    background: #1b1917;
-  }
+/* LOGOUT */
 
-  body.dark-theme .order-card-footer {
-    background: #24211e;
-  }
+body.dark-theme .account-logout-button {
+  border-color: #66543e;
 
-  body.dark-theme .order-total {
-    border-top-color: #39342f;
-  }
+  background: transparent;
 
-  body.dark-theme .view-order-button {
-    background: transparent;
+  color: #c79b5d;
+}
 
-    color: #c79b5d;
-  }
+body.dark-theme .account-logout-button:hover {
+  background: #f3efe9;
 
-  body.dark-theme .view-order-button:hover {
-    width: 100%;
+  border-color: #f3efe9;
 
-    background: #f3efe9;
+  color: #11100f;
 
-    color: #11100f;
-  }
+  box-shadow:
+    0 8px 20px
+    rgba(0, 0, 0, 0.3);
+}
 
+
+/* BACK HOME */
+
+body.dark-theme .account-home-button {
+  color: #f3efe9;
+}
+
+body.dark-theme .account-home-button:hover {
+  color: #c79b5d;
 }
 
 
@@ -1740,12 +1794,122 @@ body.dark-theme .view-order-button:hover {
 
 @media (prefers-reduced-motion: reduce) {
 
-  body.dark-theme .account-page *,
-  body.dark-theme .account-page::before,
-  body.dark-theme .account-page::after {
+  .account-page *,
+  .account-page::before,
+  .account-page::after {
+
     animation: none !important;
 
     transition: none !important;
+
+  }
+
+}
+
+/* =========================================
+   LOGGED-IN PROFILE DETAILS
+========================================= */
+
+.account-profile-welcome {
+  display: block;
+
+  margin-top: 5px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+
+  color: #817a73;
+}
+
+
+/* =========================================
+   DARK THEME
+========================================= */
+
+body.dark-theme .account-profile-welcome {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   PROFILE NAME
+========================================= */
+
+.account-profile h2 {
+  margin: 0 0 6px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 25px;
+
+  font-weight: 400;
+
+  color: #171513;
+}
+
+
+/* =========================================
+   PROFILE EMAIL
+========================================= */
+
+.account-profile p:last-of-type {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+
+  color: #817a73;
+}
+
+
+/* =========================================
+   DARK PROFILE
+========================================= */
+
+body.dark-theme .account-profile h2 {
+  color: #f3efe9;
+}
+
+
+body.dark-theme .account-profile p:last-of-type {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .account-profile-welcome {
+    font-size: 9px;
+
+    line-height: 1.4;
+  }
+
+  .account-profile h2 {
+    font-size: 21px;
+  }
+
+}
+
+
+@media (max-width: 400px) {
+
+  .account-profile-welcome {
+    font-size: 8px;
+  }
+
+  .account-profile h2 {
+    font-size: 19px;
   }
 
 }

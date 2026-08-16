@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import { useCart } from "../context/useCart";
@@ -20,6 +20,32 @@ function Wishlist() {
 
   const [addedProduct, setAddedProduct] =
     useState(null);
+
+
+  /* =========================================
+     LOGIN STATUS
+  ========================================= */
+
+  const isLoggedIn =
+    localStorage.getItem(
+      "qaverin-logged-in"
+    ) === "true";
+
+
+  /* =========================================
+     PROTECT WISHLIST PAGE
+  ========================================= */
+
+  if (!isLoggedIn) {
+
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+
+  }
 
 
   /* =========================================
@@ -395,7 +421,6 @@ function Wishlist() {
 
         {/* =====================================
             CONTINUE SHOPPING
-            OUTSIDE PRODUCT GRID
         ===================================== */}
 
         <div className="wishlist-continue">

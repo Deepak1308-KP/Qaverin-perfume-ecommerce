@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 
 import { useOrder } from "../context/useOrder";
 
@@ -13,11 +13,38 @@ function OrderDetails() {
 
 
   /* =========================================
+     LOGIN STATUS
+  ========================================= */
+
+  const isLoggedIn =
+    localStorage.getItem(
+      "qaverin-logged-in"
+    ) === "true";
+
+
+  /* =========================================
+     PROTECT ORDER DETAILS PAGE
+  ========================================= */
+
+  if (!isLoggedIn) {
+
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+
+  }
+
+
+  /* =========================================
      FIND ORDER
   ========================================= */
 
   const order = orders.find(
-    (item) => String(item.id) === String(id)
+    (item) =>
+      String(item.id) === String(id)
   );
 
 
@@ -50,10 +77,10 @@ function OrderDetails() {
           </p>
 
           <Link
-            to="/account"
+            to="/orders"
             className="order-details-back-button"
           >
-            ← BACK TO ACCOUNT
+            ← BACK TO ORDERS
           </Link>
 
         </section>
@@ -221,10 +248,13 @@ function OrderDetails() {
             </span>
 
             <span>
+
               {orderItems.length}{" "}
+
               {orderItems.length === 1
                 ? "ITEM"
                 : "ITEMS"}
+
             </span>
 
           </div>
@@ -234,11 +264,11 @@ function OrderDetails() {
 
             {orderItems.length > 0 ? (
 
-              orderItems.map((item) => (
+              orderItems.map((item, index) => (
 
                 <article
                   className="order-product"
-                  key={item.id}
+                  key={`${item.id}-${index}`}
                 >
 
 
@@ -248,11 +278,16 @@ function OrderDetails() {
 
                     <img
                       src={item.image}
-                      alt={item.name || "Product"}
+                      alt={
+                        item.name ||
+                        "Product"
+                      }
                     />
 
                     <span>
-                      {Number(item.quantity || 0)}
+                      {Number(
+                        item.quantity || 0
+                      )}
                     </span>
 
                   </div>
@@ -263,11 +298,13 @@ function OrderDetails() {
                   <div className="order-product-info">
 
                     <p>
-                      {item.type || "FRAGRANCE"}
+                      {item.type ||
+                        "FRAGRANCE"}
                     </p>
 
                     <h3>
-                      {item.name || "Unnamed Product"}
+                      {item.name ||
+                        "Unnamed Product"}
                     </h3>
 
                   </div>
@@ -278,11 +315,16 @@ function OrderDetails() {
                   <div className="order-product-price">
 
                     <span>
-                      ${Number(item.price || 0).toFixed(2)}
+                      $
+                      {Number(
+                        item.price || 0
+                      ).toFixed(2)}
                     </span>
 
                     <small>
-                      {Number(item.quantity || 0)} ×
+                      {Number(
+                        item.quantity || 0
+                      )} ×
                     </small>
 
                   </div>
@@ -331,7 +373,8 @@ function OrderDetails() {
               </span>
 
               <p>
-                {order.customer?.name || "—"}
+                {order.customer?.name ||
+                  "—"}
               </p>
 
             </div>
@@ -346,7 +389,8 @@ function OrderDetails() {
               </span>
 
               <p>
-                {order.customer?.email || "—"}
+                {order.customer?.email ||
+                  "—"}
               </p>
 
             </div>
@@ -361,7 +405,8 @@ function OrderDetails() {
               </span>
 
               <p>
-                {order.customer?.phone || "—"}
+                {order.customer?.phone ||
+                  "—"}
               </p>
 
             </div>
@@ -376,7 +421,8 @@ function OrderDetails() {
               </span>
 
               <p>
-                {order.customer?.address || "—"}
+                {order.customer?.address ||
+                  "—"}
               </p>
 
             </div>
@@ -391,7 +437,8 @@ function OrderDetails() {
               </span>
 
               <p>
-                {order.customer?.city || "—"}
+                {order.customer?.city ||
+                  "—"}
               </p>
 
             </div>
@@ -406,7 +453,8 @@ function OrderDetails() {
               </span>
 
               <p>
-                {order.customer?.state || "—"}
+                {order.customer?.state ||
+                  "—"}
               </p>
 
             </div>
@@ -421,7 +469,8 @@ function OrderDetails() {
               </span>
 
               <p>
-                {order.customer?.pincode || "—"}
+                {order.customer?.pincode ||
+                  "—"}
               </p>
 
             </div>
@@ -488,10 +537,10 @@ function OrderDetails() {
         <div className="order-details-actions">
 
           <Link
-            to="/account"
+            to="/orders"
             className="order-details-secondary"
           >
-            ← BACK TO ACCOUNT
+            ← BACK TO ORDERS
           </Link>
 
 
@@ -499,6 +548,7 @@ function OrderDetails() {
             to="/shop"
             className="order-details-primary"
           >
+
             CONTINUE SHOPPING
 
             <span>

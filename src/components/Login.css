@@ -1,0 +1,902 @@
+/* =========================================
+   LOGIN PAGE
+========================================= */
+
+.login-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 90px 20px;
+
+  box-sizing: border-box;
+
+  background: #f7f4ef;
+  color: #171513;
+
+  transition:
+    background 0.4s ease,
+    color 0.4s ease;
+}
+
+
+/* =========================================
+   LOGIN CONTAINER
+========================================= */
+
+.login-container {
+  width: 100%;
+  max-width: 500px;
+
+  margin: auto;
+
+  text-align: center;
+
+  animation:
+    loginFadeUp
+    0.8s
+    ease
+    both;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.login-header {
+  margin-bottom: 45px;
+}
+
+
+.login-eyebrow {
+  margin: 0 0 18px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  color: #9b7540;
+}
+
+
+.login-header h1 {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(55px, 8vw, 78px);
+
+  font-weight: 400;
+
+  line-height: 0.9;
+
+  letter-spacing: -3px;
+
+  color: #171513;
+}
+
+
+.login-header h1 em {
+  color: #9b8065;
+
+  font-style: italic;
+}
+
+
+.login-description {
+  max-width: 380px;
+
+  margin: 25px auto 0;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 12px;
+
+  line-height: 1.8;
+
+  color: #706961;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.login-form {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 22px;
+
+  text-align: left;
+}
+
+
+/* =========================================
+   FIELD
+========================================= */
+
+.login-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 9px;
+}
+
+
+.login-field label {
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color: #9b7540;
+}
+
+
+.login-field input {
+  width: 100%;
+
+  height: 52px;
+
+  padding:
+    0 17px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    #d8d0c7;
+
+  outline: none;
+
+  background: #fbfaf7;
+
+  color: #171513;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.4s ease,
+    color 0.4s ease;
+}
+
+
+.login-field input::placeholder {
+  color: #aaa29a;
+}
+
+
+.login-field input:focus {
+  border-color:
+    #9b7540;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      155,
+      117,
+      64,
+      0.1
+    );
+}
+
+
+/* =========================================
+   OPTIONS
+========================================= */
+
+.login-options {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: -5px;
+}
+
+
+.remember-option {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  cursor: pointer;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  color: #706961;
+}
+
+
+.remember-option input {
+  width: 14px;
+
+  height: 14px;
+
+  accent-color:
+    #9b7540;
+
+  cursor: pointer;
+}
+
+
+.forgot-password {
+  padding: 0;
+
+  border: none;
+
+  background: none;
+
+  cursor: pointer;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  color: #9b7540;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.forgot-password:hover {
+  color: #6e512d;
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+.login-button {
+  width: 100%;
+
+  height: 55px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  margin-top: 5px;
+
+  border:
+    1px solid
+    #211e1b;
+
+  background:
+    #211e1b;
+
+  color:
+    #f7f4ef;
+
+  cursor: pointer;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 2.5px;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+.login-button span {
+  font-size: 18px;
+
+  font-weight: 400;
+
+  transition:
+    transform 0.3s ease;
+}
+
+
+.login-button:hover {
+  background:
+    #9b7540;
+
+  border-color:
+    #9b7540;
+
+  transform:
+    translateY(-2px);
+}
+
+
+.login-button:hover span {
+  transform:
+    translateX(6px);
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.login-divider {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  margin: 35px 0;
+}
+
+
+.login-divider span {
+  flex: 1;
+
+  height: 1px;
+
+  background:
+    #ddd5cc;
+
+  transition:
+    background 0.4s ease;
+}
+
+
+.login-divider b {
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 8px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color:
+    #a09890;
+}
+
+
+/* =========================================
+   SIGN UP
+========================================= */
+
+.signup-link {
+  text-align: center;
+}
+
+
+.signup-link p {
+  margin: 0 0 13px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color:
+    #9b7540;
+}
+
+
+.signup-link a {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color:
+    #171513;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease,
+    gap 0.25s ease;
+}
+
+
+.signup-link a span {
+  font-size: 16px;
+
+  font-weight: 400;
+}
+
+
+.signup-link a:hover {
+  color:
+    #9b7540;
+
+  gap:
+    15px;
+}
+
+
+/* =========================================
+   BACK HOME
+========================================= */
+
+.login-home {
+  display: block;
+
+  width: fit-content;
+
+  margin:
+    45px auto 0;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 1.5px;
+
+  color:
+    #706961;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.login-home:hover {
+  color:
+    #9b7540;
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes loginFadeUp {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   DARK THEME
+========================================= */
+
+body.dark-theme .login-page {
+  background:
+    #171513;
+
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .login-header h1 {
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .login-header h1 em {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .login-description {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .login-eyebrow {
+  color:
+    #c29a63;
+}
+
+
+/* =========================================
+   DARK INPUT
+========================================= */
+
+body.dark-theme .login-field label {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .login-field input {
+  background:
+    #211e1b;
+
+  border-color:
+    #403a34;
+
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .login-field input::placeholder {
+  color:
+    #817a73;
+}
+
+
+body.dark-theme .login-field input:focus {
+  border-color:
+    #c29a63;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      194,
+      154,
+      99,
+      0.1
+    );
+}
+
+
+/* =========================================
+   DARK OPTIONS
+========================================= */
+
+body.dark-theme .remember-option {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .forgot-password {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .forgot-password:hover {
+  color:
+    #e0b77a;
+}
+
+
+/* =========================================
+   DARK LOGIN BUTTON
+========================================= */
+
+body.dark-theme .login-button {
+  background:
+    #f7f4ef;
+
+  border-color:
+    #f7f4ef;
+
+  color:
+    #171513;
+}
+
+
+body.dark-theme .login-button:hover {
+  background:
+    #c29a63;
+
+  border-color:
+    #c29a63;
+}
+
+
+/* =========================================
+   DARK DIVIDER
+========================================= */
+
+body.dark-theme .login-divider span {
+  background:
+    #403a34;
+}
+
+
+body.dark-theme .login-divider b {
+  color:
+    #817a73;
+}
+
+
+/* =========================================
+   DARK SIGNUP
+========================================= */
+
+body.dark-theme .signup-link p {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .signup-link a {
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .signup-link a:hover {
+  color:
+    #c29a63;
+}
+
+
+/* =========================================
+   DARK HOME
+========================================= */
+
+body.dark-theme .login-home {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .login-home:hover {
+  color:
+    #c29a63;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .login-page {
+    padding:
+      75px 30px;
+  }
+
+
+  .login-container {
+    max-width:
+      470px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .login-page {
+    min-height:
+      calc(100vh - 70px);
+
+    padding:
+      55px 20px 65px;
+
+    align-items:
+      flex-start;
+  }
+
+
+  .login-header {
+    margin-bottom:
+      35px;
+  }
+
+
+  .login-eyebrow {
+    font-size:
+      8px;
+
+    letter-spacing:
+      3px;
+  }
+
+
+  .login-header h1 {
+    font-size:
+      clamp(
+        48px,
+        14vw,
+        62px
+      );
+
+    letter-spacing:
+      -2px;
+  }
+
+
+  .login-description {
+    margin-top:
+      20px;
+
+    font-size:
+      11px;
+  }
+
+
+  .login-form {
+    gap:
+      18px;
+  }
+
+
+  .login-field input {
+    height:
+      50px;
+
+    font-size:
+      12px;
+  }
+
+
+  .login-options {
+    align-items:
+      flex-start;
+  }
+
+
+  .login-button {
+    height:
+      53px;
+  }
+
+
+  .login-divider {
+    margin:
+      30px 0;
+  }
+
+
+  .login-home {
+    margin-top:
+      38px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .login-page {
+    padding:
+      45px 15px 55px;
+  }
+
+
+  .login-header h1 {
+    font-size:
+      45px;
+  }
+
+
+  .login-description {
+    font-size:
+      10px;
+  }
+
+
+  .login-options {
+    flex-direction:
+      column;
+
+    gap:
+      10px;
+  }
+
+
+  .login-button {
+    height:
+      51px;
+  }
+
+
+  .signup-link a {
+    font-size:
+      9px;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .login-container {
+    animation:
+      none;
+  }
+
+  .login-button,
+  .login-button span,
+  .signup-link a {
+    transition:
+      none;
+  }
+
+}

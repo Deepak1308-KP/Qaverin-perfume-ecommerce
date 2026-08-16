@@ -1,5 +1,5 @@
 /* =========================================
-   PROFILE PAGE
+   QAVERIN PROFILE PAGE
 ========================================= */
 
 .profile-page {
@@ -11,7 +11,6 @@
   box-sizing: border-box;
 
   background: #f7f4ef;
-
   color: #171513;
 
   overflow: hidden;
@@ -87,6 +86,8 @@
 
   letter-spacing: -3px;
 
+  color: #171513;
+
   transition:
     color 0.4s ease;
 }
@@ -131,7 +132,7 @@
 ========================================= */
 
 .profile-content {
-  max-width: 900px;
+  max-width: 1100px;
 
   margin: 0 auto;
 }
@@ -148,9 +149,9 @@
 
   align-items: center;
 
-  gap: 25px;
+  gap: 28px;
 
-  padding: 30px;
+  padding: 34px;
 
   box-sizing: border-box;
 
@@ -195,9 +196,9 @@
 ========================================= */
 
 .profile-avatar {
-  width: 75px;
+  width: 82px;
 
-  height: 75px;
+  height: 82px;
 
   flex-shrink: 0;
 
@@ -217,7 +218,9 @@
     Georgia,
     serif;
 
-  font-size: 30px;
+  font-size: 32px;
+
+  text-transform: uppercase;
 
   transition:
     transform 0.3s ease,
@@ -248,12 +251,18 @@
 ========================================= */
 
 .profile-user {
+  min-width: 0;
+
   text-align: left;
 }
 
 
+/* =========================================
+   PROFILE LABEL
+========================================= */
+
 .profile-label {
-  margin: 0 0 6px;
+  margin: 0 0 7px;
 
   font-family:
     Arial,
@@ -263,23 +272,29 @@
 
   font-weight: 600;
 
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
 
   color: #9b7540;
 }
 
 
+/* =========================================
+   USER NAME
+========================================= */
+
 .profile-user h2 {
-  margin: 0 0 6px;
+  margin: 0 0 7px;
 
   font-family:
     Georgia,
     "Times New Roman",
     serif;
 
-  font-size: 26px;
+  font-size: 30px;
 
   font-weight: 400;
+
+  line-height: 1.1;
 
   color: #171513;
 
@@ -288,16 +303,50 @@
 }
 
 
-.profile-user p:last-child {
+/* =========================================
+   USER DESCRIPTION
+========================================= */
+
+.profile-user p:last-of-type {
   margin: 0;
 
   font-family:
     Arial,
     sans-serif;
 
-  font-size: 11px;
+  font-size: 12px;
+
+  line-height: 1.6;
 
   color: #817a73;
+
+  transition:
+    color 0.4s ease;
+}
+
+
+/* =========================================
+   USER EMAIL
+========================================= */
+
+.profile-email {
+  display: inline-block;
+
+  margin-top: 8px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 0.3px;
+
+  color: #9b7540;
+
+  opacity: 0.9;
+
+  word-break: break-word;
 
   transition:
     color 0.4s ease;
@@ -310,6 +359,8 @@
 
 .profile-mark {
   margin-left: auto;
+
+  flex-shrink: 0;
 
   color: #c29a63;
 
@@ -398,6 +449,10 @@
 }
 
 
+/* =========================================
+   STAT LABEL
+========================================= */
+
 .profile-stat span {
   margin-bottom: 10px;
 
@@ -415,6 +470,10 @@
 }
 
 
+/* =========================================
+   STAT NUMBER
+========================================= */
+
 .profile-stat strong {
   font-family:
     Georgia,
@@ -430,6 +489,10 @@
     color 0.4s ease;
 }
 
+
+/* =========================================
+   STAT DESCRIPTION
+========================================= */
 
 .profile-stat small {
   margin-top: 5px;
@@ -558,6 +621,8 @@
   flex-direction: column;
 
   gap: 5px;
+
+  min-width: 0;
 }
 
 
@@ -627,7 +692,7 @@ strong {
 
 
 /* =========================================
-   MESSAGE
+   PROFILE MESSAGE
 ========================================= */
 
 .profile-message {
@@ -858,9 +923,15 @@ body.dark-theme .profile-user h2 {
 }
 
 
-body.dark-theme .profile-user p:last-child {
+body.dark-theme .profile-user p:last-of-type {
   color:
     #aaa198;
+}
+
+
+body.dark-theme .profile-email {
+  color:
+    #c29a63;
 }
 
 
@@ -1029,6 +1100,11 @@ body.dark-theme .profile-home:hover {
       58px;
   }
 
+
+  .profile-content {
+    max-width: 100%;
+  }
+
 }
 
 
@@ -1101,9 +1177,18 @@ body.dark-theme .profile-home:hover {
   }
 
 
-  .profile-user p:last-child {
+  .profile-user p:last-of-type {
     font-size:
       10px;
+  }
+
+
+  .profile-email {
+    font-size:
+      9px;
+
+    max-width:
+      180px;
   }
 
 
@@ -1142,8 +1227,6 @@ body.dark-theme .profile-home:hover {
       none;
   }
 
-
-  /* DARK STATS BORDER */
 
   body.dark-theme .profile-stat {
     border-bottom-color:
@@ -1234,6 +1317,9 @@ body.dark-theme .profile-home:hover {
   .profile-card {
     padding:
       18px;
+
+    gap:
+      14px;
   }
 
 
@@ -1255,9 +1341,18 @@ body.dark-theme .profile-home:hover {
   }
 
 
-  .profile-user p:last-child {
+  .profile-user p:last-of-type {
     font-size:
       9px;
+  }
+
+
+  .profile-email {
+    font-size:
+      8px;
+
+    max-width:
+      140px;
   }
 
 
@@ -1289,6 +1384,7 @@ body.dark-theme .profile-home:hover {
     animation:
       none;
   }
+
 
   .profile-card,
   .profile-button,

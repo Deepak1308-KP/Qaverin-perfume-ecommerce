@@ -1,0 +1,750 @@
+/* =========================================
+   SIGNUP PAGE
+========================================= */
+
+.signup-page {
+  width: 100%;
+  min-height: calc(100vh - 88px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 90px 20px;
+
+  box-sizing: border-box;
+
+  background: #f7f4ef;
+  color: #171513;
+
+  transition:
+    background 0.4s ease,
+    color 0.4s ease;
+}
+
+
+/* =========================================
+   SIGNUP CONTAINER
+========================================= */
+
+.signup-container {
+  width: 100%;
+  max-width: 500px;
+
+  margin: 0 auto;
+
+  text-align: center;
+
+  animation:
+    signupFadeUp
+    0.8s
+    ease
+    both;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.signup-header {
+  margin-bottom: 40px;
+}
+
+
+.signup-eyebrow {
+  margin: 0 0 18px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  color: #9b7540;
+}
+
+
+.signup-header h1 {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(50px, 8vw, 76px);
+
+  font-weight: 400;
+
+  line-height: 0.9;
+
+  letter-spacing: -3px;
+
+  color: #171513;
+}
+
+
+.signup-header h1 em {
+  color: #9b8065;
+
+  font-style: italic;
+}
+
+
+.signup-description {
+  max-width: 380px;
+
+  margin: 23px auto 0;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 12px;
+
+  line-height: 1.8;
+
+  color: #706961;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.signup-form {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+
+  text-align: left;
+}
+
+
+/* =========================================
+   FIELD
+========================================= */
+
+.signup-field {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+.signup-field label {
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color: #9b7540;
+}
+
+
+.signup-field input {
+  width: 100%;
+
+  height: 50px;
+
+  padding: 0 17px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    #d8d0c7;
+
+  outline: none;
+
+  border-radius: 0;
+
+  background:
+    #fbfaf7;
+
+  color:
+    #171513;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.4s ease,
+    color 0.4s ease;
+}
+
+
+.signup-field input::placeholder {
+  color:
+    #aaa29a;
+}
+
+
+.signup-field input:focus {
+  border-color:
+    #9b7540;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      155,
+      117,
+      64,
+      0.1
+    );
+}
+
+
+/* =========================================
+   CREATE ACCOUNT BUTTON
+========================================= */
+
+.signup-button {
+  width: 100%;
+
+  height: 55px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  margin-top: 7px;
+
+  padding: 0;
+
+  border:
+    1px solid
+    #211e1b;
+
+  border-radius: 0;
+
+  background:
+    #211e1b;
+
+  color:
+    #f7f4ef;
+
+  cursor: pointer;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 2.5px;
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.signup-button span {
+  font-size: 18px;
+
+  font-weight: 400;
+
+  transition:
+    transform 0.3s ease;
+}
+
+
+.signup-button:hover {
+  background:
+    #9b7540;
+
+  border-color:
+    #9b7540;
+
+  transform:
+    translateY(-2px);
+}
+
+
+.signup-button:hover span {
+  transform:
+    translateX(6px);
+}
+
+
+/* =========================================
+   LOGIN LINK
+========================================= */
+
+.signup-login {
+  margin-top:
+    32px;
+
+  text-align:
+    center;
+}
+
+
+.signup-login p {
+  margin:
+    0 0 13px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color:
+    #9b7540;
+}
+
+
+.signup-login a {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color:
+    #171513;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease,
+    gap 0.25s ease;
+}
+
+
+.signup-login a span {
+  font-size:
+    16px;
+}
+
+
+.signup-login a:hover {
+  color:
+    #9b7540;
+
+  gap:
+    15px;
+}
+
+
+/* =========================================
+   BACK HOME
+========================================= */
+
+.signup-home {
+  display: block;
+
+  width: fit-content;
+
+  margin:
+    40px auto 0;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 1.5px;
+
+  color:
+    #706961;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.signup-home:hover {
+  color:
+    #9b7540;
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes signupFadeUp {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   DARK THEME
+========================================= */
+
+body.dark-theme .signup-page {
+  background:
+    #171513;
+
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .signup-header h1 {
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .signup-header h1 em {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .signup-description {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .signup-eyebrow {
+  color:
+    #c29a63;
+}
+
+
+/* =========================================
+   DARK FIELDS
+========================================= */
+
+body.dark-theme .signup-field label {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .signup-field input {
+  background:
+    #211e1b;
+
+  border-color:
+    #403a34;
+
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .signup-field input::placeholder {
+  color:
+    #817a73;
+}
+
+
+body.dark-theme .signup-field input:focus {
+  border-color:
+    #c29a63;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      194,
+      154,
+      99,
+      0.1
+    );
+}
+
+
+/* =========================================
+   DARK BUTTON
+========================================= */
+
+body.dark-theme .signup-button {
+  background:
+    #f7f4ef;
+
+  border-color:
+    #f7f4ef;
+
+  color:
+    #171513;
+}
+
+
+body.dark-theme .signup-button:hover {
+  background:
+    #c29a63;
+
+  border-color:
+    #c29a63;
+
+  color:
+    #171513;
+}
+
+
+/* =========================================
+   DARK LOGIN LINK
+========================================= */
+
+body.dark-theme .signup-login p {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .signup-login a {
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .signup-login a:hover {
+  color:
+    #c29a63;
+}
+
+
+/* =========================================
+   DARK HOME
+========================================= */
+
+body.dark-theme .signup-home {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .signup-home:hover {
+  color:
+    #c29a63;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .signup-page {
+    min-height:
+      calc(100vh - 78px);
+
+    padding:
+      75px 30px;
+  }
+
+  .signup-container {
+    max-width:
+      470px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .signup-page {
+    min-height:
+      calc(100vh - 70px);
+
+    padding:
+      55px 20px 65px;
+
+    align-items:
+      flex-start;
+  }
+
+
+  .signup-header {
+    margin-bottom:
+      32px;
+  }
+
+
+  .signup-eyebrow {
+    font-size:
+      8px;
+
+    letter-spacing:
+      3px;
+  }
+
+
+  .signup-header h1 {
+    font-size:
+      clamp(
+        46px,
+        13vw,
+        60px
+      );
+
+    letter-spacing:
+      -2px;
+  }
+
+
+  .signup-description {
+    margin-top:
+      19px;
+
+    font-size:
+      11px;
+  }
+
+
+  .signup-form {
+    gap:
+      16px;
+  }
+
+
+  .signup-field input {
+    height:
+      49px;
+
+    font-size:
+      12px;
+  }
+
+
+  .signup-button {
+    height:
+      53px;
+  }
+
+
+  .signup-login {
+    margin-top:
+      28px;
+  }
+
+
+  .signup-home {
+    margin-top:
+      35px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .signup-page {
+    padding:
+      45px 15px 55px;
+  }
+
+
+  .signup-header h1 {
+    font-size:
+      43px;
+  }
+
+
+  .signup-description {
+    font-size:
+      10px;
+  }
+
+
+  .signup-button {
+    height:
+      51px;
+  }
+
+
+  .signup-login a {
+    font-size:
+      9px;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .signup-container {
+    animation:
+      none;
+  }
+
+  .signup-button,
+  .signup-button span,
+  .signup-login a {
+    transition:
+      none;
+  }
+
+}

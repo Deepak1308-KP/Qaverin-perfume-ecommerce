@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import { useOrder } from "../context/useOrder";
 
@@ -11,11 +11,38 @@ function OrderSuccess() {
 
 
   /* =========================================
+     LOGIN STATUS
+  ========================================= */
+
+  const isLoggedIn =
+    localStorage.getItem(
+      "qaverin-logged-in"
+    ) === "true";
+
+
+  /* =========================================
+     PROTECT ORDER SUCCESS PAGE
+  ========================================= */
+
+  if (!isLoggedIn) {
+
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+
+  }
+
+
+  /* =========================================
      GET LATEST ORDER
   ========================================= */
 
   const latestOrder =
-    Array.isArray(orders) && orders.length > 0
+    Array.isArray(orders) &&
+    orders.length > 0
       ? orders[0]
       : null;
 
@@ -53,8 +80,13 @@ function OrderSuccess() {
             to="/shop"
             className="success-secondary-button"
           >
+
             EXPLORE COLLECTION
-            <span>→</span>
+
+            <span>
+              →
+            </span>
+
           </Link>
 
         </div>
@@ -147,7 +179,8 @@ function OrderSuccess() {
   ========================================= */
 
   const orderStatus =
-    latestOrder.status || "ORDER PLACED";
+    latestOrder.status ||
+    "ORDER PLACED";
 
 
   /* =========================================

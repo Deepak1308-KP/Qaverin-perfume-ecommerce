@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import { useCart } from "../context/useCart";
 import { useOrder } from "../context/useOrder";
@@ -11,13 +14,23 @@ function Checkout() {
 
   const navigate = useNavigate();
 
+
   const {
     cartItems,
     cartTotal,
     clearCart,
   } = useCart();
 
+
   const { addOrder } = useOrder();
+
+
+  /* =========================================
+     LOGIN STATUS
+  ========================================= */
+
+  const isLoggedIn =
+    localStorage.getItem("qaverin-logged-in") === "true";
 
 
   /* =========================================
@@ -54,14 +67,52 @@ function Checkout() {
 
 
   /* =========================================
+     GO TO LOGIN FROM CHECKOUT
+  ========================================= */
+
+  const goToLogin = () => {
+
+    navigate("/login", {
+      state: {
+        from: "/checkout",
+      },
+    });
+
+  };
+
+
+  /* =========================================
      COMPLETE ORDER
   ========================================= */
 
   const completeOrder = (customer, payment) => {
 
+    const loggedIn =
+      localStorage.getItem("qaverin-logged-in") === "true";
+
+
+    /* LOGIN SAFETY CHECK */
+
+    if (!loggedIn) {
+
+      alert(
+        "Please login to place an order."
+      );
+
+      goToLogin();
+
+      return;
+    }
+
+
+    /* CUSTOMER CHECK */
+
     if (!customer) {
       return;
     }
+
+
+    /* CART CHECK */
 
     if (!cartItems.length) {
       return;
@@ -115,17 +166,46 @@ function Checkout() {
 
 
     /* =======================================
-       SAFETY CHECKS
+       LOGIN CHECK
+    ======================================= */
+
+    const loggedIn =
+      localStorage.getItem("qaverin-logged-in") === "true";
+
+
+    if (!loggedIn) {
+
+      alert(
+        "Please login to continue with checkout."
+      );
+
+      goToLogin();
+
+      return;
+    }
+
+
+    /* =======================================
+       CART CHECK
     ======================================= */
 
     if (cartItems.length === 0) {
       return;
     }
 
+
+    /* =======================================
+       PREVENT DOUBLE ORDER
+    ======================================= */
+
     if (isPlacingOrder) {
       return;
     }
 
+
+    /* =======================================
+       FORM DATA
+    ======================================= */
 
     const formData =
       new FormData(event.currentTarget);
@@ -257,9 +337,30 @@ function Checkout() {
 
   const handlePayment = () => {
 
+    /* LOGIN SAFETY CHECK */
+
+    const loggedIn =
+      localStorage.getItem("qaverin-logged-in") === "true";
+
+
+    if (!loggedIn) {
+
+      alert(
+        "Please login to complete payment."
+      );
+
+      setShowPaymentModal(false);
+
+      goToLogin();
+
+      return;
+    }
+
+
     if (paymentProcessing) {
       return;
     }
+
 
     if (!customerData) {
       return;
@@ -270,7 +371,7 @@ function Checkout() {
 
 
     /* =======================================
-       SIMULATE PAYMENT PROCESSING
+       DEMO PAYMENT PROCESSING
     ======================================= */
 
     setTimeout(() => {
@@ -329,6 +430,72 @@ function Checkout() {
 
 
   /* =========================================
+     LOGIN PROTECTION
+  ========================================= */
+
+  if (!isLoggedIn) {
+
+    return (
+
+      <main className="checkout-page">
+
+        <section className="checkout-login-required">
+
+          <p className="checkout-eyebrow">
+            QAVERIN · CHECKOUT
+          </p>
+
+
+          <h1>
+
+            Please <em>login.</em>
+
+          </h1>
+
+
+          <p className="checkout-login-description">
+
+            You need to be logged in before
+            you can proceed with checkout
+            and place an order.
+
+          </p>
+
+
+          <button
+            type="button"
+            className="checkout-login-button"
+            onClick={goToLogin}
+          >
+
+            LOGIN TO CONTINUE
+
+            <span>
+              →
+            </span>
+
+          </button>
+
+
+          <Link
+            to="/cart"
+            className="checkout-login-back"
+          >
+
+            ← BACK TO BAG
+
+          </Link>
+
+        </section>
+
+      </main>
+
+    );
+
+  }
+
+
+  /* =========================================
      EMPTY CART
   ========================================= */
 
@@ -346,13 +513,17 @@ function Checkout() {
 
 
           <h1>
+
             Your bag is <em>empty.</em>
+
           </h1>
 
 
           <p>
+
             Add a fragrance to your bag before
             proceeding to checkout.
+
           </p>
 
 
@@ -360,8 +531,13 @@ function Checkout() {
             to="/shop"
             className="checkout-shop-button"
           >
+
             EXPLORE COLLECTION
-            <span>→</span>
+
+            <span>
+              →
+            </span>
+
           </Link>
 
         </section>
@@ -390,16 +566,21 @@ function Checkout() {
 
 
         <h1>
+
           Complete your <em>order.</em>
+
         </h1>
 
 
         <p>
+
           A few details and your fragrance
           will be on its way.
+
         </p>
 
       </section>
+
 
 
       {/* =========================================
@@ -459,6 +640,7 @@ function Checkout() {
               </div>
 
 
+
               {/* PHONE */}
 
               <div className="checkout-field">
@@ -483,6 +665,7 @@ function Checkout() {
             </div>
 
           </div>
+
 
 
           {/* =======================================
@@ -525,6 +708,7 @@ function Checkout() {
               </div>
 
 
+
               {/* ADDRESS */}
 
               <div className="checkout-field">
@@ -546,10 +730,10 @@ function Checkout() {
               </div>
 
 
+
               {/* CITY + STATE */}
 
               <div className="checkout-row">
-
 
                 <div className="checkout-field">
 
@@ -591,6 +775,7 @@ function Checkout() {
               </div>
 
 
+
               {/* PINCODE */}
 
               <div className="checkout-field">
@@ -619,6 +804,7 @@ function Checkout() {
           </div>
 
 
+
           {/* =======================================
               PAYMENT
           ======================================= */}
@@ -638,9 +824,7 @@ function Checkout() {
             <div className="payment-options">
 
 
-              {/* =================================
-                  CARD
-              ================================= */}
+              {/* CARD */}
 
               <label
                 className={`payment-option ${
@@ -675,9 +859,8 @@ function Checkout() {
               </label>
 
 
-              {/* =================================
-                  UPI
-              ================================= */}
+
+              {/* UPI */}
 
               <label
                 className={`payment-option ${
@@ -712,9 +895,8 @@ function Checkout() {
               </label>
 
 
-              {/* =================================
-                  COD
-              ================================= */}
+
+              {/* COD */}
 
               <label
                 className={`payment-option ${
@@ -753,6 +935,7 @@ function Checkout() {
           </div>
 
 
+
           {/* =======================================
               PLACE ORDER
           ======================================= */}
@@ -771,18 +954,23 @@ function Checkout() {
               ? "PROCESSING..."
               : paymentMethod === "cod"
               ? "PLACE ORDER"
-              : "CONTINUE TO PAYMENT"}
+              : "CONTINUE TO PAYMENT"
+            }
 
 
             <span>
+
               {isPlacingOrder
                 ? "✓"
-                : "→"}
+                : "→"
+              }
+
             </span>
 
           </button>
 
         </form>
+
 
 
         {/* =========================================
@@ -828,6 +1016,7 @@ function Checkout() {
                 </div>
 
 
+
                 {/* PRODUCT INFO */}
 
                 <div className="checkout-product-info">
@@ -844,14 +1033,18 @@ function Checkout() {
                 </div>
 
 
+
                 {/* PRICE */}
 
                 <strong>
+
                   $
+
                   {(
                     Number(item.price) *
                     Number(item.quantity)
                   ).toFixed(2)}
+
                 </strong>
 
               </div>
@@ -859,6 +1052,7 @@ function Checkout() {
             ))}
 
           </div>
+
 
 
           {/* SUBTOTAL */}
@@ -875,6 +1069,7 @@ function Checkout() {
             </span>
 
           </div>
+
 
 
           {/* SHIPPING */}
@@ -896,6 +1091,7 @@ function Checkout() {
           <div className="checkout-summary-divider"></div>
 
 
+
           {/* TOTAL */}
 
           <div className="checkout-total">
@@ -912,18 +1108,22 @@ function Checkout() {
           </div>
 
 
+
           {/* BACK TO CART */}
 
           <Link
             to="/cart"
             className="back-to-cart"
           >
+
             ← BACK TO BAG
+
           </Link>
 
         </aside>
 
       </section>
+
 
 
       {/* =========================================
@@ -937,9 +1137,7 @@ function Checkout() {
           <div className="payment-modal">
 
 
-            {/* =====================================
-                PAYMENT FORM
-            ===================================== */}
+            {/* PAYMENT FORM */}
 
             {!paymentProcessing &&
               !paymentSuccess && (
@@ -961,21 +1159,25 @@ function Checkout() {
 
 
                 <h2>
+
                   {paymentMethod === "card"
                     ? "Card payment."
-                    : "UPI payment."}
+                    : "UPI payment."
+                  }
+
                 </h2>
 
 
                 <p className="payment-modal-description">
+
                   Complete your payment securely
                   to place your order.
+
                 </p>
 
 
-                {/* =================================
-                    CARD PAYMENT
-                ================================= */}
+
+                {/* CARD PAYMENT */}
 
                 {paymentMethod === "card" ? (
 
@@ -1000,6 +1202,7 @@ function Checkout() {
                       />
 
                     </div>
+
 
 
                     {/* EXPIRY + CVV */}
@@ -1043,6 +1246,7 @@ function Checkout() {
                     </div>
 
 
+
                     {/* CARD HOLDER */}
 
                     <div className="payment-field">
@@ -1064,9 +1268,7 @@ function Checkout() {
 
                 ) : (
 
-                  /* =================================
-                     UPI PAYMENT
-                  ================================= */
+                  /* UPI PAYMENT */
 
                   <div className="upi-payment-form">
 
@@ -1095,9 +1297,8 @@ function Checkout() {
                 )}
 
 
-                {/* =================================
-                    PAYMENT BUTTON
-                ================================= */}
+
+                {/* PAYMENT BUTTON */}
 
                 <button
                   type="button"
@@ -1107,6 +1308,7 @@ function Checkout() {
                 >
 
                   PAY $
+
                   {Number(cartTotal).toFixed(2)}
 
 
@@ -1118,8 +1320,10 @@ function Checkout() {
 
 
                 <p className="payment-demo-note">
+
                   Demo payment · No real money will
                   be charged.
+
                 </p>
 
               </>
@@ -1127,9 +1331,8 @@ function Checkout() {
             )}
 
 
-            {/* =====================================
-                PAYMENT PROCESSING
-            ===================================== */}
+
+            {/* PAYMENT PROCESSING */}
 
             {paymentProcessing && (
 
@@ -1158,9 +1361,8 @@ function Checkout() {
             )}
 
 
-            {/* =====================================
-                PAYMENT SUCCESS
-            ===================================== */}
+
+            {/* PAYMENT SUCCESS */}
 
             {paymentSuccess && (
 

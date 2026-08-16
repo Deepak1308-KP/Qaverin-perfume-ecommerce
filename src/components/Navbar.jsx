@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+
+import {
+  useNavigate,
+  Link,
+  useLocation,
+} from "react-router-dom";
 
 import { useCart } from "../context/useCart";
 import { useWishlist } from "../context/useWishlist";
@@ -13,9 +18,10 @@ function Navbar() {
 
   const [searchText, setSearchText] = useState("");
 
-  /* =================================
+
+  /* =========================================
      THEME
-  ================================= */
+  ========================================= */
 
   const [darkMode, setDarkMode] = useState(() => {
 
@@ -31,20 +37,76 @@ function Navbar() {
 
   const location = useLocation();
 
+
+  /* =========================================
+     LOGIN STATUS
+  ========================================= */
+
+  const isLoggedIn =
+    localStorage.getItem(
+      "qaverin-logged-in"
+    ) === "true";
+
+
+  /* =========================================
+     LOGGED-IN USER
+  ========================================= */
+
+  let user = null;
+
+  try {
+
+    const savedUser =
+      localStorage.getItem("qaverin-user");
+
+    if (savedUser) {
+
+      user = JSON.parse(savedUser);
+
+    }
+
+  } catch {
+
+    user = null;
+
+  }
+
+
+  /* =========================================
+     USER NAME
+  ========================================= */
+
+  const userName =
+    user?.name ||
+    user?.fullName ||
+    user?.firstName ||
+    (
+      user?.email
+        ? user.email.split("@")[0]
+        : "Account"
+    );
+
+
+  /* =========================================
+     CONTEXT
+  ========================================= */
+
   const { cartCount } = useCart();
 
   const { wishlistCount } = useWishlist();
 
 
-  /* =================================
+  /* =========================================
      APPLY THEME
-  ================================= */
+  ========================================= */
 
   useEffect(() => {
 
     if (darkMode) {
 
-      document.body.classList.add("dark-theme");
+      document.body.classList.add(
+        "dark-theme"
+      );
 
       localStorage.setItem(
         "qaverin-theme",
@@ -53,7 +115,9 @@ function Navbar() {
 
     } else {
 
-      document.body.classList.remove("dark-theme");
+      document.body.classList.remove(
+        "dark-theme"
+      );
 
       localStorage.setItem(
         "qaverin-theme",
@@ -65,20 +129,22 @@ function Navbar() {
   }, [darkMode]);
 
 
-  /* =================================
+  /* =========================================
      TOGGLE THEME
-  ================================= */
+  ========================================= */
 
   const toggleTheme = () => {
 
-    setDarkMode((previous) => !previous);
+    setDarkMode(
+      previous => !previous
+    );
 
   };
 
 
-  /* =================================
-     CHECK ACTIVE PAGE
-  ================================= */
+  /* =========================================
+     ACTIVE PAGE
+  ========================================= */
 
   const isActive = (path) => {
 
@@ -87,15 +153,17 @@ function Navbar() {
   };
 
 
-  /* =================================
+  /* =========================================
      SEARCH
-  ================================= */
+  ========================================= */
 
   const handleSearch = (event) => {
 
     event.preventDefault();
 
-    const search = searchText.trim();
+    const search =
+      searchText.trim();
+
 
     if (!search) {
 
@@ -104,7 +172,9 @@ function Navbar() {
       setMenuOpen(false);
 
       return;
+
     }
+
 
     navigate(
       `/shop?search=${encodeURIComponent(search)}`
@@ -115,20 +185,22 @@ function Navbar() {
   };
 
 
-  /* =================================
-     SEARCH INPUT
-  ================================= */
+  /* =========================================
+     SEARCH CHANGE
+  ========================================= */
 
   const handleSearchChange = (event) => {
 
-    setSearchText(event.target.value);
+    setSearchText(
+      event.target.value
+    );
 
   };
 
 
-  /* =================================
+  /* =========================================
      LOGO CLICK
-  ================================= */
+  ========================================= */
 
   const handleLogoClick = () => {
 
@@ -139,9 +211,9 @@ function Navbar() {
   };
 
 
-  /* =================================
+  /* =========================================
      NAVIGATION CLICK
-  ================================= */
+  ========================================= */
 
   const handleNavigation = () => {
 
@@ -152,20 +224,62 @@ function Navbar() {
   };
 
 
+  /* =========================================
+     ACCOUNT CLICK
+  ========================================= */
+
+  const handleAccountClick = () => {
+
+    if (isLoggedIn) {
+
+      navigate("/account");
+
+    } else {
+
+      navigate("/login");
+
+    }
+
+    setMenuOpen(false);
+
+  };
+
+
+  /* =========================================
+     MOBILE ACCOUNT CLICK
+  ========================================= */
+
+  const handleMobileAccountClick = () => {
+
+    if (isLoggedIn) {
+
+      navigate("/account");
+
+    } else {
+
+      navigate("/login");
+
+    }
+
+    setMenuOpen(false);
+
+  };
+
+
   return (
 
     <>
 
-      {/* =================================
+      {/* =====================================
           NAVBAR
-      ================================= */}
+      ===================================== */}
 
       <nav className="navbar">
 
 
-        {/* =================================
+        {/* ===================================
             LOGO
-        ================================= */}
+        =================================== */}
 
         <Link
           to="/"
@@ -184,9 +298,9 @@ function Navbar() {
         </Link>
 
 
-        {/* =================================
+        {/* ===================================
             DESKTOP NAVIGATION
-        ================================= */}
+        =================================== */}
 
         <div className="navbar-links">
 
@@ -244,9 +358,9 @@ function Navbar() {
         </div>
 
 
-        {/* =================================
-            RIGHT SIDE
-        ================================= */}
+        {/* ===================================
+            RIGHT SIDE ACTIONS
+        =================================== */}
 
         <div className="navbar-actions">
 
@@ -331,7 +445,9 @@ function Navbar() {
             {wishlistCount > 0 && (
 
               <span className="wishlist-count">
+
                 {wishlistCount}
+
               </span>
 
             )}
@@ -383,7 +499,9 @@ function Navbar() {
             {cartCount > 0 && (
 
               <span className="cart-count">
+
                 {cartCount}
+
               </span>
 
             )}
@@ -397,43 +515,61 @@ function Navbar() {
 
           <button
             type="button"
-            className={`navbar-icon ${
+            className={`navbar-account ${
               isActive("/account")
                 ? "account-active"
                 : ""
             }`}
-            aria-label="User account"
-            onClick={() => {
-
-              navigate("/account");
-
-              setMenuOpen(false);
-
-            }}
+            aria-label={
+              isLoggedIn
+                ? `${userName} account`
+                : "Login"
+            }
+            title={
+              isLoggedIn
+                ? userName
+                : "Login"
+            }
+            onClick={handleAccountClick}
           >
 
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
+            <span className="navbar-account-icon">
 
-              <circle
-                cx="12"
-                cy="12"
-                r="9"
-              />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
 
-              <circle
-                cx="12"
-                cy="9"
-                r="3"
-              />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                />
 
-              <path d="M6.5 19c.9-2.7 3-4.2 5.5-4.2s4.6 1.5 5.5 4.2" />
+                <circle
+                  cx="12"
+                  cy="9"
+                  r="3"
+                />
 
-            </svg>
+                <path d="M6.5 19c.9-2.7 3-4.2 5.5-4.2s4.6 1.5 5.5 4.2" />
+
+              </svg>
+
+            </span>
+
+
+            {isLoggedIn && (
+
+              <span className="navbar-account-name">
+
+                {userName}
+
+              </span>
+
+            )}
 
           </button>
 
@@ -445,7 +581,9 @@ function Navbar() {
           <button
             type="button"
             className={`navbar-theme-toggle ${
-              darkMode ? "dark" : ""
+              darkMode
+                ? "dark"
+                : ""
             }`}
             onClick={toggleTheme}
             aria-label={
@@ -476,12 +614,19 @@ function Navbar() {
                 />
 
                 <path d="M12 2v2" />
+
                 <path d="M12 20v2" />
+
                 <path d="m4.93 4.93 1.42 1.42" />
+
                 <path d="m17.65 17.65 1.42 1.42" />
+
                 <path d="M2 12h2" />
+
                 <path d="M20 12h2" />
+
                 <path d="m4.93 19.07 1.42-1.42" />
+
                 <path d="m17.65 6.35 1.42-1.42" />
 
               </svg>
@@ -512,7 +657,7 @@ function Navbar() {
             type="button"
             className="mobile-menu-button"
             onClick={() =>
-              setMenuOpen(!menuOpen)
+              setMenuOpen(previous => !previous)
             }
             aria-label={
               menuOpen
@@ -532,9 +677,9 @@ function Navbar() {
       </nav>
 
 
-      {/* =================================
+      {/* =====================================
           MOBILE MENU
-      ================================= */}
+      ===================================== */}
 
       <div
         className={`mobile-menu ${
@@ -596,20 +741,22 @@ function Navbar() {
         </Link>
 
 
-        <Link
-          to="/account"
-          className={
-            isActive("/account")
-              ? "active"
-              : ""
-          }
-          onClick={handleNavigation}
+        {/* MOBILE ACCOUNT */}
+
+        <button
+          type="button"
+          className="mobile-account-button"
+          onClick={handleMobileAccountClick}
         >
-          Account
-        </Link>
+
+          {isLoggedIn
+            ? userName
+            : "Login"}
+
+        </button>
 
 
-        {/* THEME IN MOBILE MENU */}
+        {/* MOBILE THEME */}
 
         <button
           type="button"
@@ -618,13 +765,19 @@ function Navbar() {
         >
 
           <span>
+
             {darkMode
               ? "LIGHT MODE"
               : "DARK MODE"}
+
           </span>
 
           <span>
-            {darkMode ? "☀" : "☾"}
+
+            {darkMode
+              ? "☀"
+              : "☾"}
+
           </span>
 
         </button>

@@ -1,8 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { useCart } from "../context/useCart";
 import { useWishlist } from "../context/useWishlist";
-import { useOrder } from "../context/useOrder";
 
 import "./Account.css";
 
@@ -11,117 +10,152 @@ function Account() {
 
   const navigate = useNavigate();
 
+
+  /* =========================================
+     CONTEXT HOOKS
+     ALWAYS RUN BEFORE ANY RETURN
+  ========================================= */
+
   const { cartCount } = useCart();
 
   const { wishlistCount } = useWishlist();
 
-  const { orders } = useOrder();
+
+  /* =========================================
+     LOGIN STATUS
+  ========================================= */
+
+  const isLoggedIn =
+    localStorage.getItem("qaverin-logged-in") === "true";
 
 
   /* =========================================
-     FORMAT ORDER DATE
+     GET LOGGED-IN USER
   ========================================= */
 
-  const formatOrderDate = (order) => {
+  let user = null;
 
-    /*
-      New orders have createdAt.
-      Older orders may only have date.
-    */
+  try {
 
-    if (order?.createdAt) {
+    const savedUser =
+      localStorage.getItem("qaverin-current-user") ||
+      localStorage.getItem("qaverin-user");
 
-      const date =
-        new Date(order.createdAt);
+    if (savedUser) {
 
-      if (!Number.isNaN(date.getTime())) {
-
-        return date.toLocaleDateString(
-          "en-IN",
-          {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }
-        );
-
-      }
+      user = JSON.parse(savedUser);
 
     }
 
+  } catch {
 
-    /* FALLBACK */
+    user = null;
 
-    return order?.date || "—";
-
-  };
+  }
 
 
   /* =========================================
-     PAYMENT NAME
+     PROTECT ACCOUNT PAGE
   ========================================= */
 
-  const getPaymentName = (payment) => {
+  if (!isLoggedIn) {
 
-    switch (payment) {
-
-      case "card":
-        return "Credit / Debit Card";
-
-      case "upi":
-        return "UPI";
-
-      case "cod":
-        return "Cash on Delivery";
-
-      default:
-        return "—";
-
-    }
-
-  };
-
-
-  /* =========================================
-     ORDER ITEM COUNT
-  ========================================= */
-
-  const getOrderItemCount = (items) => {
-
-    if (!Array.isArray(items)) {
-      return 0;
-    }
-
-    return items.reduce(
-      (total, item) =>
-        total +
-        Number(item.quantity || 0),
-      0
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
     );
 
+  }
+
+
+  /* =========================================
+     USER NAME
+  ========================================= */
+
+  const userName =
+    user?.name ||
+    user?.fullName ||
+    user?.firstName ||
+    "Qaverin Guest";
+
+
+  /* =========================================
+     USER EMAIL
+  ========================================= */
+
+  const userEmail =
+    user?.email ||
+    "Welcome to your personal fragrance space.";
+
+
+  /* =========================================
+     USER INITIAL
+  ========================================= */
+
+  const userInitial =
+    userName
+      .trim()
+      .charAt(0)
+      .toUpperCase() || "Q";
+
+
+  /* =========================================
+     LOGOUT
+  ========================================= */
+
+  const handleLogout = () => {
+
+    /* Remove login status */
+
+    localStorage.removeItem(
+      "qaverin-logged-in"
+    );
+
+
+    /* Remove current logged-in user */
+
+    localStorage.removeItem(
+      "qaverin-current-user"
+    );
+
+
+    /* =======================================
+       GO TO HOME
+    ======================================= */
+
+    navigate("/", {
+      replace: true,
+    });
+
+
+    /* =======================================
+       ALWAYS START HOME FROM TOP
+    ======================================= */
+
+    setTimeout(() => {
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+
+    }, 0);
+
   };
 
 
   /* =========================================
-     ORDER TOTAL
+     MY ORDERS
   ========================================= */
 
-  const getOrderTotal = (order) => {
+  const handleOrders = () => {
 
-    return Number(
-      order?.total || 0
-    ).toFixed(2);
+    navigate("/orders");
 
   };
-
-
-  /* =========================================
-     EMPTY ORDER CHECK
-  ========================================= */
-
-  const hasOrders =
-    Array.isArray(orders) &&
-    orders.length > 0;
 
 
   return (
@@ -146,19 +180,22 @@ function Account() {
 
           <br />
 
-          <em>Qaverin.</em>
+          <em>
+            Qaverin.
+          </em>
 
         </h1>
 
 
         <p className="account-description">
 
-          Manage your collection, favorites
-          and shopping experience.
+          Manage your collection,
+          favorites and shopping experience.
 
         </p>
 
       </section>
+
 
 
       {/* =========================================
@@ -177,36 +214,60 @@ function Account() {
           className="account-profile"
         >
 
+          {/* AVATAR */}
+
           <div className="account-avatar">
-            Q
+
+            {userInitial}
+
           </div>
 
+
+          {/* USER INFORMATION */}
 
           <div>
 
             <p className="account-profile-label">
+
               YOUR PROFILE
+
             </p>
 
 
             <h2>
-              Qaverin Guest
+
+              {userName}
+
             </h2>
 
 
             <p>
-              Welcome to your personal
-              fragrance space.
+
+              {userEmail}
+
             </p>
+
+
+            <small className="account-profile-welcome">
+
+              Welcome back to your personal
+              fragrance space.
+
+            </small>
 
           </div>
 
 
+          {/* ARROW */}
+
           <strong className="account-profile-arrow">
+
             →
+
           </strong>
 
         </Link>
+
 
 
         {/* =========================================
@@ -229,7 +290,9 @@ function Account() {
           >
 
             <div className="account-option-icon">
+
               ♡
+
             </div>
 
 
@@ -242,9 +305,7 @@ function Account() {
 
               <p>
 
-                {wishlistCount}
-
-                {" "}
+                {wishlistCount}{" "}
 
                 {wishlistCount === 1
                   ? "fragrance"
@@ -264,8 +325,9 @@ function Account() {
           </button>
 
 
+
           {/* =====================================
-              CART
+              YOUR BAG
           ===================================== */}
 
           <button
@@ -277,7 +339,9 @@ function Account() {
           >
 
             <div className="account-option-icon">
+
               ♧
+
             </div>
 
 
@@ -290,9 +354,7 @@ function Account() {
 
               <p>
 
-                {cartCount}
-
-                {" "}
+                {cartCount}{" "}
 
                 {cartCount === 1
                   ? "item"
@@ -312,8 +374,49 @@ function Account() {
           </button>
 
 
+
           {/* =====================================
-              SHOP
+              MY ORDERS
+          ===================================== */}
+
+          <button
+            type="button"
+            className="account-option"
+            onClick={handleOrders}
+          >
+
+            <div className="account-option-icon">
+
+              ✦
+
+            </div>
+
+
+            <div className="account-option-info">
+
+              <span>
+                MY ORDERS
+              </span>
+
+
+              <p>
+                View and manage your
+                fragrance orders
+              </p>
+
+            </div>
+
+
+            <strong>
+              →
+            </strong>
+
+          </button>
+
+
+
+          {/* =====================================
+              EXPLORE COLLECTION
           ===================================== */}
 
           <Link
@@ -322,7 +425,9 @@ function Account() {
           >
 
             <div className="account-option-icon">
-              ✦
+
+              ✧
+
             </div>
 
 
@@ -346,351 +451,9 @@ function Account() {
 
           </Link>
 
+
         </div>
 
-
-        {/* =========================================
-            MY ORDERS
-        ========================================= */}
-
-        <section className="account-orders">
-
-
-          {/* =====================================
-              ORDERS HEADER
-          ===================================== */}
-
-          <div className="account-orders-header">
-
-            <div>
-
-              <p className="account-orders-eyebrow">
-                QAVERIN · ORDER HISTORY
-              </p>
-
-
-              <h2>
-
-                My <em>orders.</em>
-
-              </h2>
-
-            </div>
-
-
-            <span className="account-orders-count">
-
-              {orders.length}
-
-              {" "}
-
-              {orders.length === 1
-                ? "ORDER"
-                : "ORDERS"}
-
-            </span>
-
-          </div>
-
-
-          {/* =====================================
-              EMPTY ORDERS
-          ===================================== */}
-
-          {!hasOrders ? (
-
-            <div className="orders-empty">
-
-              <div className="orders-empty-icon">
-                ✦
-              </div>
-
-
-              <h3>
-                No orders yet.
-              </h3>
-
-
-              <p>
-                Your fragrance journey begins
-                with your first order.
-              </p>
-
-
-              <Link
-                to="/shop"
-                className="orders-shop-button"
-              >
-
-                EXPLORE COLLECTION
-
-                <span>
-                  →
-                </span>
-
-              </Link>
-
-            </div>
-
-          ) : (
-
-
-            /* =====================================
-               ORDER LIST
-            ===================================== */
-
-            <div className="orders-list">
-
-              {orders.map((order) => {
-
-                const items =
-                  Array.isArray(order.items)
-                    ? order.items
-                    : [];
-
-
-                const itemCount =
-                  getOrderItemCount(items);
-
-
-                return (
-
-                  <article
-                    className="order-card"
-                    key={order.id}
-                  >
-
-
-                    {/* =================================
-                        ORDER HEADER
-                    ================================= */}
-
-                    <div className="order-card-header">
-
-                      <div>
-
-                        <span>
-                          ORDER
-                        </span>
-
-
-                        <h3>
-                          #{order.id}
-                        </h3>
-
-                      </div>
-
-
-                      <div className="order-status">
-
-                        {order.status ||
-                          "ORDER PLACED"}
-
-                      </div>
-
-                    </div>
-
-
-                    {/* =================================
-                        ORDER ITEMS
-                    ================================= */}
-
-                    <div className="order-items">
-
-                      {items.length === 0 ? (
-
-                        <p className="order-no-items">
-                          No item information available.
-                        </p>
-
-                      ) : (
-
-                        items.map((item, index) => (
-
-                          <div
-                            className="order-item"
-                            key={
-                              `${order.id}-${item.id}-${index}`
-                            }
-                          >
-
-
-                            {/* IMAGE */}
-
-                            <div className="order-item-image">
-
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                              />
-
-
-                              <span>
-                                {item.quantity}
-                              </span>
-
-                            </div>
-
-
-                            {/* INFORMATION */}
-
-                            <div className="order-item-info">
-
-                              <h4>
-                                {item.name}
-                              </h4>
-
-
-                              <p>
-                                {item.type}
-                              </p>
-
-                            </div>
-
-
-                            {/* ITEM TOTAL */}
-
-                            <strong>
-
-                              $
-
-                              {(
-                                Number(
-                                  item.price || 0
-                                ) *
-
-                                Number(
-                                  item.quantity || 0
-                                )
-
-                              ).toFixed(2)}
-
-                            </strong>
-
-                          </div>
-
-                        ))
-
-                      )}
-
-                    </div>
-
-
-                    {/* =================================
-                        ORDER FOOTER
-                    ================================= */}
-
-                    <div className="order-card-footer">
-
-
-                      {/* ORDER DATE */}
-
-                      <div>
-
-                        <span>
-                          ORDER DATE
-                        </span>
-
-
-                        <p>
-                          {formatOrderDate(order)}
-                        </p>
-
-                      </div>
-
-
-                      {/* PAYMENT */}
-
-                      <div>
-
-                        <span>
-                          PAYMENT
-                        </span>
-
-
-                        <p>
-                          {getPaymentName(
-                            order.payment
-                          )}
-                        </p>
-
-                      </div>
-
-
-                      {/* ITEMS */}
-
-                      <div>
-
-                        <span>
-                          ITEMS
-                        </span>
-
-
-                        <p>
-
-                          {itemCount}
-
-                          {" "}
-
-                          {itemCount === 1
-                            ? "ITEM"
-                            : "ITEMS"}
-
-                        </p>
-
-                      </div>
-
-
-                      {/* TOTAL */}
-
-                      <div className="order-total">
-
-                        <span>
-                          TOTAL
-                        </span>
-
-
-                        <strong>
-
-                          $
-                          {getOrderTotal(order)}
-
-                        </strong>
-
-                      </div>
-
-                    </div>
-
-
-                    {/* =================================
-                        VIEW ORDER DETAILS
-                    ================================= */}
-
-                    <Link
-                      to={`/order/${order.id}`}
-                      className="view-order-button"
-                    >
-
-                      VIEW ORDER DETAILS
-
-                      <span>
-                        →
-                      </span>
-
-                    </Link>
-
-
-                  </article>
-
-                );
-
-              })}
-
-            </div>
-
-          )}
-
-        </section>
 
 
         {/* =========================================
@@ -720,21 +483,45 @@ function Account() {
         </div>
 
 
+
+        {/* =========================================
+            LOGOUT
+        ========================================= */}
+
+        <button
+          type="button"
+          className="account-logout-button"
+          onClick={handleLogout}
+        >
+
+          <span>
+            LOG OUT
+          </span>
+
+
+          <strong>
+            →
+          </strong>
+
+        </button>
+
+
+
+        {/* =========================================
+            BACK HOME
+        ========================================= */}
+
+        <Link
+          to="/"
+          className="account-home-button"
+        >
+
+          ← BACK TO HOME
+
+        </Link>
+
+
       </section>
-
-
-      {/* =========================================
-          BACK HOME
-      ========================================= */}
-
-      <Link
-        to="/"
-        className="account-home-button"
-      >
-
-        ← BACK TO HOME
-
-      </Link>
 
 
     </main>

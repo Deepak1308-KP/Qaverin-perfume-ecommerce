@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import { useCart } from "../context/useCart";
 import { useWishlist } from "../context/useWishlist";
@@ -9,6 +9,10 @@ import "./Profile.css";
 
 function Profile() {
 
+  /* =========================================
+     CONTEXT
+  ========================================= */
+
   const { cartCount } = useCart();
 
   const { wishlistCount } = useWishlist();
@@ -16,7 +20,108 @@ function Profile() {
   const { orders } = useOrder();
 
 
+  /* =========================================
+     LOGIN STATUS
+  ========================================= */
+
+  const isLoggedIn =
+    localStorage.getItem(
+      "qaverin-logged-in"
+    ) === "true";
+
+
+  /* =========================================
+     PROTECT PROFILE PAGE
+  ========================================= */
+
+  if (!isLoggedIn) {
+
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+
+  }
+
+
+  /* =========================================
+     GET CURRENT USER
+  ========================================= */
+
+  let user = null;
+
+  try {
+
+    const currentUser =
+      localStorage.getItem(
+        "qaverin-current-user"
+      );
+
+    const savedUser =
+      localStorage.getItem(
+        "qaverin-user"
+      );
+
+
+    if (currentUser) {
+
+      user = JSON.parse(
+        currentUser
+      );
+
+    } else if (savedUser) {
+
+      user = JSON.parse(
+        savedUser
+      );
+
+    }
+
+  } catch {
+
+    user = null;
+
+  }
+
+
+  /* =========================================
+     USER NAME
+  ========================================= */
+
+  const userName =
+    user?.name ||
+    user?.fullName ||
+    user?.username ||
+    (
+      user?.email
+        ? user.email.split("@")[0]
+        : "Qaverin"
+    );
+
+
+  /* =========================================
+     USER EMAIL
+  ========================================= */
+
+  const userEmail =
+    user?.email || "";
+
+
+  /* =========================================
+     AVATAR LETTER
+  ========================================= */
+
+  const avatarLetter =
+    userName
+      .trim()
+      .charAt(0)
+      .toUpperCase() || "Q";
+
+
   return (
+
     <main className="profile-page">
 
 
@@ -30,16 +135,23 @@ function Profile() {
           QAVERIN · YOUR PROFILE
         </p>
 
+
         <h1>
+
           Your <em>profile.</em>
+
         </h1>
 
+
         <p className="profile-description">
+
           Your personal space for everything
           Qaverin.
+
         </p>
 
       </section>
+
 
 
       {/* =================================
@@ -55,33 +167,72 @@ function Profile() {
 
         <div className="profile-card">
 
+
+          {/* AVATAR */}
+
           <div className="profile-avatar">
-            Q
+
+            {avatarLetter}
+
           </div>
 
+
+
+          {/* USER INFORMATION */}
 
           <div className="profile-user">
 
             <p className="profile-label">
+
               SIGNATURE MEMBER
+
             </p>
+
 
             <h2>
-              Qaverin Guest
+
+              {userName}
+
             </h2>
 
+
             <p>
-              Your fragrance journey starts here.
+
+              {userEmail
+                ? `Welcome back, ${userName}.`
+                : "Welcome back to your personal fragrance space."
+              }
+
             </p>
 
+
+            {/* EMAIL */}
+
+            {userEmail && (
+
+              <small className="profile-email">
+
+                {userEmail}
+
+              </small>
+
+            )}
+
           </div>
 
+
+
+          {/* MARK */}
 
           <div className="profile-mark">
+
             ✦
+
           </div>
 
+
         </div>
+
 
 
         {/* =================================
@@ -91,15 +242,19 @@ function Profile() {
         <div className="profile-stats">
 
 
+          {/* ORDERS */}
+
           <div className="profile-stat">
 
             <span>
               ORDERS
             </span>
 
+
             <strong>
               {orders.length}
             </strong>
+
 
             <small>
               fragrance orders
@@ -108,15 +263,20 @@ function Profile() {
           </div>
 
 
+
+          {/* WISHLIST */}
+
           <div className="profile-stat">
 
             <span>
               WISHLIST
             </span>
 
+
             <strong>
               {wishlistCount}
             </strong>
+
 
             <small>
               saved fragrances
@@ -125,15 +285,20 @@ function Profile() {
           </div>
 
 
+
+          {/* BAG */}
+
           <div className="profile-stat">
 
             <span>
               BAG
             </span>
 
+
             <strong>
               {cartCount}
             </strong>
+
 
             <small>
               items waiting
@@ -145,6 +310,7 @@ function Profile() {
         </div>
 
 
+
         {/* =================================
             QUICK ACTIONS
         ================================= */}
@@ -152,7 +318,9 @@ function Profile() {
         <div className="profile-actions-wrapper">
 
           <p className="profile-actions-title">
+
             QUICK ACCESS
+
           </p>
 
 
@@ -162,7 +330,7 @@ function Profile() {
             {/* ORDERS */}
 
             <Link
-              to="/account"
+              to="/orders"
               className="profile-button"
             >
 
@@ -172,17 +340,20 @@ function Profile() {
                   ORDER HISTORY
                 </span>
 
+
                 <small>
                   View your previous purchases
                 </small>
 
               </div>
 
+
               <strong>
                 →
               </strong>
 
             </Link>
+
 
 
             {/* WISHLIST */}
@@ -198,17 +369,20 @@ function Profile() {
                   YOUR WISHLIST
                 </span>
 
+
                 <small>
                   {wishlistCount} saved fragrances
                 </small>
 
               </div>
 
+
               <strong>
                 →
               </strong>
 
             </Link>
+
 
 
             {/* BAG */}
@@ -224,17 +398,20 @@ function Profile() {
                   YOUR BAG
                 </span>
 
+
                 <small>
                   {cartCount} items in your bag
                 </small>
 
               </div>
 
+
               <strong>
                 →
               </strong>
 
             </Link>
+
 
 
             {/* SHOP */}
@@ -250,11 +427,13 @@ function Profile() {
                   EXPLORE COLLECTION
                 </span>
 
+
                 <small>
                   Discover your next signature scent
                 </small>
 
               </div>
+
 
               <strong>
                 →
@@ -268,6 +447,7 @@ function Profile() {
         </div>
 
 
+
         {/* =================================
             PROFILE MESSAGE
         ================================= */}
@@ -278,11 +458,17 @@ function Profile() {
             ✦
           </span>
 
+
           <p>
+
             A fragrance is more than a scent.
+
             <br />
+
             It is a signature.
+
           </p>
+
 
           <span>
             ✦
@@ -294,6 +480,7 @@ function Profile() {
       </section>
 
 
+
       {/* =================================
           BACK HOME
       ================================= */}
@@ -302,11 +489,16 @@ function Profile() {
         to="/"
         className="profile-home"
       >
+
         ← BACK TO HOME
+
       </Link>
 
+
     </main>
+
   );
+
 }
 
 
