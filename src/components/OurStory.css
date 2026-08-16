@@ -1,0 +1,896 @@
+/* =========================================
+   OUR STORY
+========================================= */
+
+.our-story {
+  position: relative;
+
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: 0.9fr 1.1fr;
+
+  gap: 70px;
+
+  align-items: center;
+
+  padding: 100px 7% 120px;
+
+  box-sizing: border-box;
+
+  background: #f7f4ef;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   BACKGROUND NUMBER
+========================================= */
+
+.story-bg-number {
+  position: absolute;
+
+  top: 40px;
+
+  left: 43%;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 170px;
+
+  line-height: 1;
+
+  color: rgba(23, 21, 19, 0.045);
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.story-content {
+  position: relative;
+
+  z-index: 5;
+
+  max-width: 570px;
+}
+
+
+/* =========================================
+   EYEBROW
+========================================= */
+
+.story-eyebrow {
+  margin: 0 0 20px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  color: #9b7540;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.story-content h2 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(48px, 5vw, 72px);
+
+  font-weight: 400;
+
+  line-height: 0.98;
+
+  letter-spacing: -3px;
+
+  color: #171513;
+}
+
+.story-content h2 em {
+  color: #9b8065;
+
+  font-style: italic;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.story-divider {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  width: 120px;
+
+  margin: 25px 0;
+}
+
+.story-divider span {
+  width: 40px;
+
+  height: 1px;
+
+  background: #c5b8aa;
+}
+
+.story-divider b {
+  font-size: 12px;
+
+  font-weight: 400;
+
+  color: #9b7540;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.story-description {
+  max-width: 480px;
+
+  margin: 0 0 35px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.9;
+
+  color: #6f6962;
+}
+
+
+/* =========================================
+   VALUES
+========================================= */
+
+.story-values {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  max-width: 530px;
+
+  margin-bottom: 38px;
+}
+
+
+.story-value {
+  position: relative;
+
+  padding: 0 20px;
+
+  text-align: center;
+}
+
+.story-value:first-child {
+  padding-left: 0;
+}
+
+
+/* Vertical separators */
+
+.story-value + .story-value {
+  border-left: 1px solid #ded5ca;
+}
+
+
+/* =========================================
+   VALUE ICON
+========================================= */
+
+.value-icon {
+  width: 52px;
+  height: 52px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid #ded2c5;
+
+  border-radius: 50%;
+
+  font-family: Georgia, serif;
+
+  font-size: 22px;
+
+  color: #9b7540;
+}
+
+
+/* =========================================
+   VALUE TITLE
+========================================= */
+
+.story-value h3 {
+  margin: 0 0 10px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  line-height: 1.5;
+
+  letter-spacing: 1.5px;
+
+  color: #171513;
+}
+
+
+/* =========================================
+   VALUE DESCRIPTION
+========================================= */
+
+.story-value p {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  line-height: 1.6;
+
+  color: #8c857d;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.story-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 35px;
+
+  min-width: 270px;
+
+  padding: 17px 22px;
+
+  border: 1px solid #171513;
+
+  background: #171513;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    gap 0.3s ease;
+}
+
+.story-button span {
+  font-size: 19px;
+
+  line-height: 0;
+}
+
+.story-button:hover {
+  background: transparent;
+
+  color: #171513;
+
+  gap: 45px;
+}
+
+
+/* =========================================
+   RIGHT VISUAL
+========================================= */
+
+.story-visual {
+  position: relative;
+
+  min-height: 600px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* =========================================
+   IMAGE FRAME
+========================================= */
+
+.story-image-frame {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(570px, 100%);
+
+  height: 610px;
+
+  overflow: hidden;
+
+  border-radius: 285px 285px 0 0;
+
+  box-shadow:
+    0 30px 70px rgba(23, 21, 19, 0.12);
+}
+
+.story-image-frame img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.7s ease;
+}
+
+.story-image-frame:hover img {
+  transform: scale(1.03);
+}
+
+
+/* =========================================
+   IMAGE BACKGROUND SHAPE
+========================================= */
+
+.story-visual::before {
+  content: "";
+
+  position: absolute;
+
+  width: 500px;
+
+  height: 500px;
+
+  border-radius: 50%;
+
+  background: #e8dfd4;
+
+  filter: blur(2px);
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   ROUND BADGE
+========================================= */
+
+.story-badge {
+  position: absolute;
+
+  right: -15px;
+
+  bottom: 25px;
+
+  z-index: 5;
+
+  width: 125px;
+
+  height: 125px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #211e1b;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 15px 30px rgba(23, 21, 19, 0.2);
+}
+
+.story-badge span {
+  margin-bottom: 6px;
+
+  color: #c29a63;
+
+  font-size: 13px;
+}
+
+.story-badge p {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  line-height: 1.6;
+
+  letter-spacing: 1.2px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   DECORATIVE STAR
+========================================= */
+
+.story-star {
+  position: absolute;
+
+  right: 25px;
+
+  top: 55px;
+
+  z-index: 5;
+
+  font-size: 18px;
+
+  color: #9b7540;
+}
+
+
+/* =========================================
+   LARGE LAPTOP
+========================================= */
+
+@media (max-width: 1200px) {
+
+  .our-story {
+    gap: 45px;
+
+    padding: 85px 5% 100px;
+  }
+
+  .story-content h2 {
+    font-size: 58px;
+  }
+
+  .story-visual {
+    min-height: 540px;
+  }
+
+  .story-image-frame {
+    height: 540px;
+  }
+
+  .story-badge {
+    right: -5px;
+
+    width: 110px;
+    height: 110px;
+  }
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .our-story {
+    grid-template-columns: 1fr;
+
+    gap: 55px;
+
+    padding: 80px 7% 90px;
+
+    text-align: center;
+  }
+
+  .story-content {
+    max-width: 700px;
+
+    margin: 0 auto;
+  }
+
+  .story-description {
+    margin-left: auto;
+
+    margin-right: auto;
+  }
+
+  .story-divider {
+    margin-left: auto;
+
+    margin-right: auto;
+  }
+
+  .story-values {
+    margin-left: auto;
+
+    margin-right: auto;
+  }
+
+  .story-visual {
+    min-height: 550px;
+
+    width: 100%;
+  }
+
+  .story-image-frame {
+    width: min(550px, 85%);
+
+    height: 550px;
+  }
+
+  .story-bg-number {
+    left: auto;
+
+    right: 10%;
+
+    top: 30px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .our-story {
+    gap: 45px;
+
+    padding: 65px 6% 75px;
+  }
+
+  .story-eyebrow {
+    font-size: 9px;
+
+    letter-spacing: 3px;
+  }
+
+  .story-content h2 {
+    font-size: clamp(40px, 11vw, 55px);
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+  }
+
+  .story-description {
+    font-size: 12px;
+
+    line-height: 1.8;
+  }
+
+  .story-values {
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+
+    width: 100%;
+  }
+
+  .story-value {
+    padding: 0 10px;
+  }
+
+  .story-value + .story-value {
+    padding-top: 25px;
+
+    border-left: none;
+
+    border-top: 1px solid #ded5ca;
+  }
+
+  .story-value:first-child {
+    padding-left: 10px;
+  }
+
+  .story-visual {
+    min-height: 420px;
+  }
+
+  .story-image-frame {
+    width: 100%;
+
+    height: 430px;
+
+    border-radius: 210px 210px 0 0;
+  }
+
+  .story-visual::before {
+    width: 320px;
+
+    height: 320px;
+  }
+
+  .story-badge {
+    right: -5px;
+
+    bottom: 10px;
+
+    width: 95px;
+
+    height: 95px;
+  }
+
+  .story-badge p {
+    font-size: 7px;
+  }
+
+  .story-star {
+    right: 5px;
+
+    top: 35px;
+  }
+
+  .story-bg-number {
+    font-size: 110px;
+
+    top: 20px;
+
+    right: 5%;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .our-story {
+    padding-left: 15px;
+
+    padding-right: 15px;
+  }
+
+  .story-content h2 {
+    font-size: 37px;
+  }
+
+  .story-button {
+    width: 100%;
+
+    min-width: 0;
+  }
+
+  .story-visual {
+    min-height: 350px;
+  }
+
+  .story-image-frame {
+    height: 360px;
+
+    border-radius: 180px 180px 0 0;
+  }
+
+  .story-badge {
+    width: 85px;
+
+    height: 85px;
+  }
+
+}
+/* =========================================
+   DARK THEME - OUR STORY
+========================================= */
+
+body.dark-theme .our-story {
+  background: #11100f;
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   BACKGROUND NUMBER
+========================================= */
+
+body.dark-theme .story-bg-number {
+  color: rgba(243, 239, 233, 0.045);
+}
+
+
+/* =========================================
+   EYEBROW
+========================================= */
+
+body.dark-theme .story-eyebrow {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+body.dark-theme .story-content h2 {
+  color: #f3efe9;
+}
+
+body.dark-theme .story-content h2 em {
+  color: #a69a8d;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+body.dark-theme .story-divider span {
+  background: #4a443e;
+}
+
+body.dark-theme .story-divider b {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+body.dark-theme .story-description {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   VALUES
+========================================= */
+
+body.dark-theme .story-value + .story-value {
+  border-color: #39342f;
+}
+
+
+/* =========================================
+   VALUE ICON
+========================================= */
+
+body.dark-theme .value-icon {
+  border-color: #51483e;
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   VALUE TITLE
+========================================= */
+
+body.dark-theme .story-value h3 {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   VALUE DESCRIPTION
+========================================= */
+
+body.dark-theme .story-value p {
+  color: #918a82;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+body.dark-theme .story-button {
+  background: #f3efe9;
+  border-color: #f3efe9;
+  color: #11100f;
+}
+
+body.dark-theme .story-button:hover {
+  background: transparent;
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   IMAGE FRAME
+========================================= */
+
+body.dark-theme .story-image-frame {
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================
+   IMAGE BACKGROUND
+========================================= */
+
+body.dark-theme .story-visual::before {
+  background: #29241f;
+}
+
+
+/* =========================================
+   BADGE
+========================================= */
+
+body.dark-theme .story-badge {
+  background: #f3efe9;
+  color: #11100f;
+
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .story-badge span {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   STAR
+========================================= */
+
+body.dark-theme .story-star {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   MOBILE DARK THEME
+========================================= */
+
+@media (max-width: 600px) {
+
+  body.dark-theme .story-value + .story-value {
+    border-left: none;
+    border-top-color: #39342f;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .our-story * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+}

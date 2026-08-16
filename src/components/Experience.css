@@ -1,0 +1,636 @@
+/* =========================================
+   QAVERIN EXPERIENCE
+========================================= */
+
+.experience {
+  width: 100%;
+
+  padding: 70px 7% 75px;
+
+  box-sizing: border-box;
+
+  background: #211e1b;
+
+  color: #ffffff;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.experience-heading {
+  max-width: 700px;
+
+  margin-bottom: 45px;
+}
+
+.experience-eyebrow {
+  margin: 0 0 16px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  color: #c29a63;
+}
+
+.experience-heading h2 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(42px, 5vw, 68px);
+
+  font-weight: 400;
+
+  line-height: 1;
+
+  letter-spacing: -2px;
+}
+
+.experience-heading h2 em {
+  color: #b9a99a;
+
+  font-style: italic;
+}
+
+.experience-intro {
+  max-width: 470px;
+
+  margin: 20px 0 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   EXPERIENCE GRID
+========================================= */
+
+.experience-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+
+/* =========================================
+   EXPERIENCE CARD
+========================================= */
+
+.experience-card {
+  position: relative;
+
+  min-height: 250px;
+
+  padding: 32px 40px;
+
+  box-sizing: border-box;
+}
+
+.experience-card + .experience-card {
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.experience-icon {
+  width: 52px;
+
+  height: 52px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid rgba(194, 154, 99, 0.6);
+
+  border-radius: 50%;
+
+  font-family: Georgia, serif;
+
+  font-size: 20px;
+
+  color: #c29a63;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.experience-card:hover .experience-icon {
+  background: #c29a63;
+
+  color: #211e1b;
+
+  transform: rotate(10deg);
+}
+
+
+/* =========================================
+   NUMBER
+========================================= */
+
+.experience-number {
+  position: absolute;
+
+  top: 38px;
+
+  right: 40px;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  color: #706a64;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.experience-card h3 {
+  margin: 30px 0 12px;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 24px;
+
+  font-weight: 400;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.5px;
+
+  color: #ffffff;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.experience-card p {
+  max-width: 230px;
+
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+
+  line-height: 1.7;
+
+  color: #98918a;
+}
+
+
+/* =========================================
+   BOTTOM BRAND LINE
+========================================= */
+
+.experience::after {
+  content: "QAVERIN  ·  FINE FRAGRANCE";
+
+  display: block;
+
+  margin-top: 32px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  letter-spacing: 4px;
+
+  text-align: center;
+
+  color: #6f6860;
+}
+
+
+/* =========================================
+   LARGE LAPTOP
+========================================= */
+
+@media (max-width: 1200px) {
+
+  .experience {
+    padding: 65px 5% 70px;
+  }
+
+  .experience-card {
+    padding: 30px 30px;
+
+    min-height: 245px;
+  }
+
+  .experience-number {
+    right: 30px;
+
+    top: 35px;
+  }
+
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .experience-heading h2 {
+    font-size: 55px;
+  }
+
+  .experience-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .experience-card {
+    padding: 28px 25px;
+
+    min-height: 240px;
+  }
+
+  .experience-number {
+    right: 25px;
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 850px) {
+
+  .experience {
+    padding: 60px 6% 65px;
+  }
+
+  .experience-heading {
+    margin-bottom: 40px;
+  }
+
+  .experience-heading h2 {
+    font-size: 48px;
+
+    line-height: 1.02;
+  }
+
+  .experience-intro {
+    margin-top: 18px;
+
+    font-size: 12px;
+  }
+
+  .experience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-card {
+    min-height: 210px;
+
+    padding: 30px;
+  }
+
+  .experience-card + .experience-card {
+    border-left: none;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .experience-number {
+    top: 32px;
+
+    right: 30px;
+  }
+
+  .experience-card h3 {
+    margin-top: 28px;
+  }
+
+}
+
+
+/* =========================================
+   PHONE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .experience {
+    padding: 55px 6% 60px;
+  }
+
+  .experience-eyebrow {
+    margin-bottom: 14px;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+  }
+
+  .experience-heading {
+    margin-bottom: 35px;
+  }
+
+  .experience-heading h2 {
+    font-size: clamp(38px, 11vw, 52px);
+
+    line-height: 1.02;
+
+    letter-spacing: -1.5px;
+  }
+
+  .experience-intro {
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    margin-top: 18px;
+  }
+
+  .experience-card {
+    min-height: 200px;
+
+    padding: 28px 20px;
+  }
+
+  .experience-number {
+    top: 30px;
+
+    right: 20px;
+
+    font-size: 10px;
+  }
+
+  .experience-icon {
+    width: 48px;
+
+    height: 48px;
+
+    font-size: 18px;
+  }
+
+  .experience-card h3 {
+    margin: 25px 0 10px;
+
+    font-size: 21px;
+  }
+
+  .experience-card p {
+    font-size: 10px;
+
+    line-height: 1.6;
+  }
+
+  .experience::after {
+    margin-top: 28px;
+
+    font-size: 7px;
+
+    letter-spacing: 3px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .experience {
+    padding: 50px 15px 55px;
+  }
+
+  .experience-heading h2 {
+    font-size: 36px;
+  }
+
+  .experience-intro {
+    font-size: 11px;
+  }
+
+  .experience-card {
+    min-height: 190px;
+
+    padding: 25px 18px;
+  }
+
+  .experience-number {
+    right: 18px;
+
+    top: 27px;
+  }
+
+  .experience-card h3 {
+    font-size: 20px;
+  }
+
+  .experience-card p {
+    font-size: 10px;
+  }
+
+}
+
+
+/* =========================================
+   VERY SMALL PHONE
+========================================= */
+
+@media (max-width: 360px) {
+
+  .experience {
+    padding-left: 12px;
+
+    padding-right: 12px;
+  }
+
+  .experience-heading h2 {
+    font-size: 33px;
+  }
+
+  .experience-card {
+    padding-left: 16px;
+
+    padding-right: 16px;
+  }
+
+  .experience::after {
+    font-size: 6px;
+
+    letter-spacing: 2px;
+  }
+
+}
+
+/* =========================================
+   DARK THEME - EXPERIENCE
+========================================= */
+
+body.dark-theme .experience {
+  background: #0b0a09;
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   EYEBROW
+========================================= */
+
+body.dark-theme .experience-eyebrow {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+body.dark-theme .experience-heading h2 {
+  color: #f3efe9;
+}
+
+body.dark-theme .experience-heading h2 em {
+  color: #a69a8d;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+body.dark-theme .experience-intro {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   GRID BORDERS
+========================================= */
+
+body.dark-theme .experience-grid {
+  border-top-color: rgba(243, 239, 233, 0.14);
+  border-bottom-color: rgba(243, 239, 233, 0.14);
+}
+
+
+/* =========================================
+   CARD DIVIDERS
+========================================= */
+
+body.dark-theme .experience-card + .experience-card {
+  border-left-color: rgba(243, 239, 233, 0.14);
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+body.dark-theme .experience-icon {
+  border-color: rgba(199, 155, 93, 0.65);
+  color: #c79b5d;
+}
+
+body.dark-theme .experience-card:hover .experience-icon {
+  background: #c79b5d;
+  color: #0b0a09;
+}
+
+
+/* =========================================
+   NUMBER
+========================================= */
+
+body.dark-theme .experience-number {
+  color: #6f6860;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+body.dark-theme .experience-card h3 {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+body.dark-theme .experience-card p {
+  color: #918a82;
+}
+
+
+/* =========================================
+   BOTTOM BRAND LINE
+========================================= */
+
+body.dark-theme .experience::after {
+  color: #5f5953;
+}
+
+
+/* =========================================
+   TABLET / MOBILE DIVIDERS
+========================================= */
+
+@media (max-width: 850px) {
+
+  body.dark-theme .experience-card + .experience-card {
+    border-left: none;
+
+    border-top-color: rgba(243, 239, 233, 0.14);
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .experience * {
+    animation: none !important;
+
+    transition: none !important;
+  }
+
+}

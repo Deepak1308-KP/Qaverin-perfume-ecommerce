@@ -1,0 +1,687 @@
+/* ================================
+   HERO SECTION
+================================ */
+
+.hero {
+  min-height: auto;
+
+  padding: 30px 7% 35px;
+
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+
+  gap: 40px;
+
+  background: #f7f4ef;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* ================================
+   LEFT CONTENT
+================================ */
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+
+  max-width: 620px;
+}
+
+.hero-eyebrow {
+  margin: 0 0 25px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 3px;
+
+  color: #8c857d;
+}
+
+
+/* ================================
+   MAIN HEADING
+================================ */
+
+.hero h1 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(58px, 6vw, 92px);
+
+  font-weight: 400;
+
+  line-height: 0.92;
+
+  letter-spacing: -4px;
+
+  color: #171513;
+}
+
+.hero h1 span {
+  color: #77716b;
+
+  font-style: italic;
+}
+
+
+/* ================================
+   DESCRIPTION
+================================ */
+
+.hero-description {
+  max-width: 500px;
+
+  margin: 30px 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+
+  color: #6f6962;
+}
+
+
+/* ================================
+   BUTTON
+================================ */
+
+.hero-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 30px;
+
+  padding: 16px 22px;
+
+  border: 1px solid #171513;
+
+  background: #171513;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    gap 0.3s ease;
+}
+
+.hero-button span {
+  font-size: 18px;
+
+  line-height: 0;
+}
+
+.hero-button:hover {
+  background: transparent;
+
+  color: #171513;
+
+  gap: 40px;
+}
+
+
+/* ================================
+   HERO META
+================================ */
+
+.hero-meta {
+  margin-top: 35px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 2px;
+
+  color: #8c857d;
+}
+
+.hero-meta div {
+  width: 55px;
+
+  height: 1px;
+
+  background: #c9c1b8;
+}
+
+
+/* ================================
+   RIGHT VISUAL
+================================ */
+
+.hero-visual {
+  position: relative;
+
+  min-height: 500px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* ================================
+   BACKGROUND GLOW
+================================ */
+
+.hero-glow {
+  position: absolute;
+
+  width: 500px;
+
+  height: 500px;
+
+  border-radius: 50%;
+
+  background: #e8e0d6;
+
+  filter: blur(3px);
+
+  opacity: 0.75;
+}
+
+
+/* ================================
+   PERFUME IMAGE
+================================ */
+
+.hero-image-wrapper {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(430px, 78%);
+
+  animation: perfumeFloat 5s ease-in-out infinite;
+}
+
+.hero-image-wrapper img {
+  display: block;
+
+  width: 100%;
+
+  height: auto;
+
+  object-fit: contain;
+
+  filter: drop-shadow(
+    0 30px 30px rgba(23, 21, 19, 0.15)
+  );
+}
+
+
+/* ================================
+   PERFUME FLOAT ANIMATION
+================================ */
+
+@keyframes perfumeFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
+/* ================================
+   FRAGRANCE NOTES
+================================ */
+
+.hero-notes {
+  position: absolute;
+
+  right: 0;
+
+  bottom: 55px;
+
+  z-index: 3;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 2px;
+
+  color: #8c857d;
+}
+
+.hero-notes span {
+  text-align: right;
+}
+
+
+/* ================================
+   LARGE BACKGROUND NUMBER
+================================ */
+
+.hero-number {
+  position: absolute;
+
+  right: 0;
+
+  top: 25px;
+
+  z-index: 1;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 90px;
+
+  line-height: 1;
+
+  color: rgba(23, 21, 19, 0.05);
+}
+
+
+/* ================================
+   LAPTOP
+================================ */
+
+@media (max-width: 1100px) {
+
+  .hero {
+    padding: 25px 5% 30px;
+
+    gap: 20px;
+  }
+
+  .hero h1 {
+    font-size: 62px;
+
+    letter-spacing: -3px;
+  }
+
+  .hero-visual {
+    min-height: 450px;
+  }
+
+  .hero-glow {
+    width: 400px;
+
+    height: 400px;
+  }
+
+  .hero-image-wrapper {
+    width: min(390px, 80%);
+  }
+
+  .hero-notes {
+    right: 5px;
+  }
+}
+
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 850px) {
+
+  .hero {
+    grid-template-columns: 1fr;
+
+    min-height: auto;
+
+    padding: 45px 7% 55px;
+
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 700px;
+
+    margin: 0 auto;
+  }
+
+  .hero-description {
+    margin-left: auto;
+
+    margin-right: auto;
+  }
+
+  .hero-meta {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    min-height: 450px;
+
+    margin-top: 0;
+  }
+
+  .hero-notes {
+    right: 5%;
+
+    bottom: 25px;
+  }
+
+  .hero-number {
+    right: 5%;
+
+    top: 10px;
+  }
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 600px) {
+
+  .hero {
+    padding: 35px 6% 45px;
+  }
+
+  .hero-eyebrow {
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(45px, 13vw, 65px);
+
+    line-height: 0.95;
+
+    letter-spacing: -2px;
+  }
+
+  .hero-description {
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    margin: 25px auto;
+  }
+
+  .hero-button {
+    padding: 15px 20px;
+  }
+
+  .hero-meta {
+    margin-top: 30px;
+  }
+
+  .hero-visual {
+    min-height: 360px;
+
+    margin-top: 5px;
+  }
+
+  .hero-glow {
+    width: 300px;
+
+    height: 300px;
+  }
+
+  .hero-image-wrapper {
+    width: 85%;
+  }
+
+  .hero-notes {
+    right: 2%;
+
+    bottom: 15px;
+
+    font-size: 8px;
+  }
+
+  .hero-number {
+    right: 2%;
+
+    top: 5px;
+
+    font-size: 60px;
+  }
+}
+
+
+/* ================================
+   SMALL PHONE
+================================ */
+
+@media (max-width: 400px) {
+
+  .hero {
+    padding: 30px 5% 40px;
+  }
+
+  .hero h1 {
+    font-size: clamp(42px, 12vw, 58px);
+
+    letter-spacing: -2px;
+  }
+
+  .hero-description {
+    font-size: 12px;
+  }
+
+  .hero-visual {
+    min-height: 320px;
+  }
+
+  .hero-glow {
+    width: 270px;
+
+    height: 270px;
+  }
+
+  .hero-number {
+    font-size: 50px;
+  }
+
+  .hero-notes {
+    font-size: 7px;
+
+    letter-spacing: 1.5px;
+  }
+}
+
+
+/* ================================
+   VERY SMALL PHONE
+================================ */
+
+@media (max-width: 360px) {
+
+  .hero {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .hero-button {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .hero-visual {
+    min-height: 290px;
+  }
+}
+/* ================================
+   DARK THEME
+================================ */
+
+body.dark-theme .hero {
+  background: #11100f;
+  color: #f3efe9;
+}
+
+
+/* ================================
+   DARK HERO EYEBROW
+================================ */
+
+body.dark-theme .hero-eyebrow {
+  color: #aaa39b;
+}
+
+
+/* ================================
+   DARK HERO HEADING
+================================ */
+
+body.dark-theme .hero h1 {
+  color: #f3efe9;
+}
+
+body.dark-theme .hero h1 span {
+  color: #a69a8d;
+}
+
+
+/* ================================
+   DARK DESCRIPTION
+================================ */
+
+body.dark-theme .hero-description {
+  color: #aaa39b;
+}
+
+
+/* ================================
+   DARK BUTTON
+================================ */
+
+body.dark-theme .hero-button {
+  background: #f3efe9;
+  border-color: #f3efe9;
+  color: #11100f;
+}
+
+body.dark-theme .hero-button:hover {
+  background: transparent;
+  color: #f3efe9;
+}
+
+
+/* ================================
+   DARK META
+================================ */
+
+body.dark-theme .hero-meta {
+  color: #aaa39b;
+}
+
+body.dark-theme .hero-meta div {
+  background: #4a443e;
+}
+
+
+/* ================================
+   DARK HERO GLOW
+================================ */
+
+body.dark-theme .hero-glow {
+  background: #29241f;
+  opacity: 0.8;
+}
+
+
+/* ================================
+   DARK PERFUME IMAGE
+================================ */
+
+body.dark-theme .hero-image-wrapper img {
+  filter: drop-shadow(
+    0 30px 30px rgba(0, 0, 0, 0.45)
+  );
+}
+
+
+/* ================================
+   DARK FRAGRANCE NOTES
+================================ */
+
+body.dark-theme .hero-notes {
+  color: #aaa39b;
+}
+
+
+/* ================================
+   DARK BACKGROUND NUMBER
+================================ */
+
+body.dark-theme .hero-number {
+  color: rgba(243, 239, 233, 0.045);
+}
+
+
+/* ================================
+   DARK THEME - MOBILE
+================================ */
+
+@media (max-width: 850px) {
+
+  body.dark-theme .hero {
+    background: #11100f;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  body.dark-theme .hero-glow {
+    background: #29241f;
+  }
+
+}
+
+
+/* ================================
+   ACCESSIBILITY
+================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hero-image-wrapper {
+    animation: none !important;
+  }
+
+}

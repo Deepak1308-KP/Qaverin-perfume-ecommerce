@@ -1,0 +1,867 @@
+/* =========================================
+   SIGNATURE COLLECTION
+========================================= */
+
+.signature {
+  width: 100%;
+
+  padding: 45px 7% 100px;
+
+  background: #f7f4ef;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.signature-heading {
+  margin-bottom: 40px;
+}
+
+.signature-eyebrow {
+  margin: 0 0 12px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 3px;
+
+  color: #8c857d;
+}
+
+.signature-heading h2 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(32px, 3vw, 46px);
+
+  font-weight: 400;
+
+  line-height: 1.05;
+
+  letter-spacing: -1.5px;
+
+  color: #171513;
+}
+
+.signature-subtitle {
+  margin: 10px 0 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+
+  color: #817a73;
+}
+
+
+/* =========================================
+   PRODUCT GRID
+========================================= */
+
+.product-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 22px;
+
+  width: 100%;
+}
+
+
+/* =========================================
+   PRODUCT CARD
+========================================= */
+
+.product-card {
+  min-width: 0;
+
+  background: transparent;
+}
+
+
+/* =========================================
+   PRODUCT IMAGE
+========================================= */
+
+.product-image {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  background: #e9e4de;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.04);
+}
+
+
+/* =========================================
+   WISHLIST
+========================================= */
+
+.wishlist-button {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: rgba(247, 244, 239, 0.9);
+
+  color: #171513;
+
+  font-size: 24px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.wishlist-button:hover {
+  transform: scale(1.08);
+
+  background: #ffffff;
+}
+
+
+/* =========================================
+   PRODUCT INFORMATION
+========================================= */
+
+.product-info {
+  padding-top: 17px;
+}
+
+.product-name-row {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+}
+
+.product-name-row h3 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 17px;
+
+  font-weight: 400;
+
+  line-height: 1.2;
+
+  color: #171513;
+}
+
+.product-type {
+  margin: 5px 0 8px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+
+  color: #817a73;
+}
+
+
+/* =========================================
+   RATING
+========================================= */
+
+.product-rating {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  color: #9b7540;
+}
+
+.product-rating span:first-child {
+  letter-spacing: 1px;
+}
+
+
+/* =========================================
+   PRICE + BUTTON
+========================================= */
+
+.product-bottom {
+  margin-top: 13px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.product-price {
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 16px;
+
+  color: #171513;
+}
+
+.add-to-bag {
+  width: 100%;
+
+  height: 40px;
+
+  border: 1px solid #171513;
+
+  background: #171513;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.add-to-bag:hover {
+  background: transparent;
+
+  color: #171513;
+}
+
+
+/* =========================================
+   LARGE LAPTOP
+========================================= */
+
+@media (max-width: 1200px) {
+
+  .signature {
+    padding: 40px 5% 90px;
+  }
+
+  .product-grid {
+    gap: 18px;
+  }
+
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .signature-heading {
+    margin-bottom: 35px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 35px 22px;
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 850px) {
+
+  .signature {
+    padding: 45px 6% 80px;
+  }
+
+  .signature-heading h2 {
+    font-size: 38px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 30px 18px;
+  }
+
+  .product-name-row h3 {
+    font-size: 16px;
+  }
+
+}
+
+
+/* =========================================
+   PHONE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .signature {
+    padding: 40px 20px 70px;
+  }
+
+  .signature-heading {
+    margin-bottom: 30px;
+  }
+
+  .signature-eyebrow {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+  }
+
+  .signature-heading h2 {
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+
+  .signature-subtitle {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    justify-items: center;
+  }
+
+  .product-card {
+    width: 82%;
+    max-width: 330px;
+  }
+
+  .product-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .product-name-row h3 {
+    font-size: 18px;
+  }
+
+  .product-type {
+    font-size: 10px;
+  }
+
+  .product-price {
+    font-size: 16px;
+  }
+
+  .wishlist-button {
+    width: 36px;
+    height: 36px;
+    top: 10px;
+    right: 10px;
+    font-size: 22px;
+  }
+
+  .add-to-bag {
+    height: 43px;
+  }
+
+}
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .signature {
+    padding: 35px 15px 60px;
+  }
+
+  .signature-heading h2 {
+    font-size: 27px;
+  }
+
+  .product-grid {
+    gap: 35px;
+  }
+
+  .product-card {
+    width: 85%;
+    max-width: 300px;
+  }
+
+  .product-name-row h3 {
+    font-size: 17px;
+  }
+
+  .product-type {
+    font-size: 10px;
+  }
+
+  .product-price {
+    font-size: 15px;
+  }
+
+  .add-to-bag {
+    height: 42px;
+  }
+
+}
+
+/* =========================================
+   VERY SMALL PHONE
+========================================= */
+
+@media (max-width: 360px) {
+
+  .signature {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .signature-heading h2 {
+    font-size: 25px;
+  }
+
+  .signature-subtitle {
+    font-size: 11px;
+  }
+
+  .product-card {
+    width: 88%;
+    max-width: 280px;
+  }
+
+  .product-name-row h3 {
+    font-size: 16px;
+  }
+
+  .add-to-bag {
+    height: 41px;
+  }
+
+}
+
+/* =========================================
+   ACTIVE WISHLIST
+========================================= */
+
+.wishlist-button.active {
+  background: #171513;
+
+  color: #c29a63;
+
+  transform: scale(1.08);
+}
+
+
+/* =========================================
+   WISHLIST HOVER
+========================================= */
+
+.wishlist-button.active:hover {
+  background: #171513;
+
+  color: #d2a66d;
+
+  transform: scale(1.12);
+}
+
+
+/* =========================================
+   WISHLIST STATUS
+========================================= */
+
+.wishlist-status {
+  margin: 45px auto 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 1px;
+
+  color: #817a73;
+}
+
+
+.wishlist-status-heart {
+  color: #9b7540;
+
+  font-size: 16px;
+
+  animation: wishlistPulse 1.5s ease-in-out infinite;
+}
+
+
+/* =========================================
+   WISHLIST ANIMATION
+========================================= */
+
+@keyframes wishlistPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 550px) {
+
+  .wishlist-status {
+    margin-top: 35px;
+
+    font-size: 9px;
+
+    text-align: center;
+  }
+
+}
+/* =========================================
+   SIGNATURE NOTIFICATIONS
+========================================= */
+
+.shop-wishlist-message,
+.shop-cart-message {
+  position: fixed;
+
+  top: 110px;
+  right: 30px;
+
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 14px 20px;
+
+  background: #171513;
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 12px;
+
+  letter-spacing: 0.5px;
+
+  box-shadow:
+    0 10px 30px rgba(23, 21, 19, 0.15);
+
+  animation:
+    signatureNotificationIn
+    0.3s ease;
+}
+
+.shop-wishlist-message span:first-child {
+  color: #c29a63;
+
+  font-size: 17px;
+}
+
+.shop-cart-message span:first-child {
+  color: #c29a63;
+
+  font-size: 15px;
+}
+
+
+@keyframes signatureNotificationIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   MOBILE NOTIFICATION
+========================================= */
+
+@media (max-width: 600px) {
+
+  .shop-wishlist-message,
+  .shop-cart-message {
+
+    top: 85px;
+
+    right: 15px;
+    left: 15px;
+
+    justify-content: center;
+
+    text-align: center;
+
+    font-size: 11px;
+
+  }
+
+}
+/* =========================================
+   DARK THEME - SIGNATURE COLLECTION
+========================================= */
+
+body.dark-theme .signature {
+  background: #11100f;
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+body.dark-theme .signature-eyebrow {
+  color: #aaa39b;
+}
+
+body.dark-theme .signature-heading h2 {
+  color: #f3efe9;
+}
+
+body.dark-theme .signature-subtitle {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   PRODUCT CARD
+========================================= */
+
+body.dark-theme .product-card {
+  background: transparent;
+}
+
+
+/* =========================================
+   PRODUCT IMAGE
+========================================= */
+
+body.dark-theme .product-image {
+  background: #29241f;
+}
+
+
+/* =========================================
+   WISHLIST BUTTON
+========================================= */
+
+body.dark-theme .wishlist-button {
+  background: rgba(29, 27, 25, 0.92);
+
+  color: #f3efe9;
+}
+
+body.dark-theme .wishlist-button:hover {
+  background: #f3efe9;
+
+  color: #11100f;
+}
+
+
+/* =========================================
+   ACTIVE WISHLIST
+========================================= */
+
+body.dark-theme .wishlist-button.active {
+  background: #f3efe9;
+
+  color: #c79b5d;
+}
+
+body.dark-theme .wishlist-button.active:hover {
+  background: #f3efe9;
+
+  color: #d2a66d;
+}
+
+
+/* =========================================
+   PRODUCT INFORMATION
+========================================= */
+
+body.dark-theme .product-name-row h3 {
+  color: #f3efe9;
+}
+
+body.dark-theme .product-type {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   RATING
+========================================= */
+
+body.dark-theme .product-rating {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   PRICE
+========================================= */
+
+body.dark-theme .product-price {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   ADD TO BAG
+========================================= */
+
+body.dark-theme .add-to-bag {
+  background: #f3efe9;
+
+  border-color: #f3efe9;
+
+  color: #11100f;
+}
+
+body.dark-theme .add-to-bag:hover {
+  background: transparent;
+
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   WISHLIST STATUS
+========================================= */
+
+body.dark-theme .wishlist-status {
+  color: #aaa39b;
+}
+
+body.dark-theme .wishlist-status-heart {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   NOTIFICATIONS
+========================================= */
+
+body.dark-theme .shop-wishlist-message,
+body.dark-theme .shop-cart-message {
+  background: #f3efe9;
+
+  color: #11100f;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-theme .shop-wishlist-message span:first-child,
+body.dark-theme .shop-cart-message span:first-child {
+  color: #9b7540;
+}
+
+
+/* =========================================
+   DARK THEME - MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  body.dark-theme .signature {
+    background: #11100f;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .signature *,
+  .signature::before,
+  .signature::after {
+    animation: none !important;
+
+    transition: none !important;
+  }
+
+}

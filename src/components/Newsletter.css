@@ -1,0 +1,745 @@
+/* =========================================
+   NEWSLETTER / FINAL CTA
+========================================= */
+
+.newsletter {
+  position: relative;
+
+  width: 100%;
+  min-height: 500px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 75px 7%;
+
+  box-sizing: border-box;
+
+  background: #f7f4ef;
+
+  overflow: hidden;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   MAIN SOFT GLOW
+========================================= */
+
+.newsletter::before {
+  content: "";
+
+  position: absolute;
+
+  width: 560px;
+  height: 560px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(232, 222, 210, 0.95) 0%,
+      rgba(232, 222, 210, 0.65) 42%,
+      rgba(247, 244, 239, 0) 72%
+    );
+
+  filter: blur(4px);
+
+  pointer-events: none;
+
+  animation: mainGlow 8s ease-in-out infinite;
+}
+
+
+/* =========================================
+   SECOND GLOW
+========================================= */
+
+.newsletter::after {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  right: -100px;
+  top: -100px;
+
+  border-radius: 50%;
+
+  background: rgba(194, 154, 99, 0.08);
+
+  filter: blur(45px);
+
+  pointer-events: none;
+
+  animation: sideGlow 7s ease-in-out infinite;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.newsletter-content {
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+
+  max-width: 650px;
+}
+
+
+/* =========================================
+   EYEBROW
+========================================= */
+
+.newsletter-eyebrow {
+  margin: 0 0 18px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  color: #9b7540;
+
+  animation: fadeUp 0.8s ease both;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.newsletter h2 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(52px, 6vw, 82px);
+
+  font-weight: 400;
+
+  line-height: 0.95;
+
+  letter-spacing: -3px;
+
+  color: #171513;
+
+  animation: fadeUp 0.9s ease 0.1s both;
+}
+
+.newsletter h2 em {
+  color: #8b8178;
+
+  font-style: italic;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.newsletter-description {
+  margin: 22px auto 28px;
+
+  max-width: 420px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+  color: #6f6962;
+
+  animation: fadeUp 0.9s ease 0.2s both;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.newsletter-form {
+  width: min(320px, 100%);
+
+  margin: 0 auto;
+
+  display: flex;
+
+  align-items: center;
+
+  border-bottom: 1px solid #9a938b;
+
+  position: relative;
+
+  animation: fadeUp 0.9s ease 0.3s both;
+}
+
+
+/* =========================================
+   ANIMATED UNDERLINE
+========================================= */
+
+.newsletter-form::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+
+  bottom: -1px;
+
+  width: 0;
+
+  height: 1px;
+
+  background: #9b7540;
+
+  transform: translateX(-50%);
+
+  transition: width 0.5s ease;
+}
+
+.newsletter-form:focus-within::after {
+  width: 100%;
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+.newsletter-form input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 48px;
+
+  padding: 0 5px;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+
+  color: #171513;
+}
+
+.newsletter-form input::placeholder {
+  color: #9b948c;
+
+  transition: color 0.25s ease;
+}
+
+.newsletter-form input:focus::placeholder {
+  color: transparent;
+}
+
+
+/* =========================================
+   JOIN BUTTON
+========================================= */
+
+.newsletter-form button {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 0 5px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #171513;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.8px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.3s ease,
+    gap 0.3s ease;
+}
+
+.newsletter-form button span {
+  font-size: 18px;
+
+  line-height: 0;
+
+  transition: transform 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  color: #9b7540;
+
+  gap: 20px;
+}
+
+.newsletter-form button:hover span {
+  transform: translateX(4px);
+}
+
+
+/* =========================================
+   NOTE
+========================================= */
+
+.newsletter-note {
+  margin: 17px 0 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  line-height: 1.6;
+
+  color: #999189;
+
+  animation: fadeUp 0.9s ease 0.4s both;
+}
+
+
+/* =========================================
+   ROTATING DECORATIVE RING
+========================================= */
+
+.newsletter-decoration {
+  position: absolute;
+
+  right: 8%;
+
+  bottom: 55px;
+
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d3c5b6;
+
+  border-radius: 50%;
+
+  color: #9b7540;
+
+  font-size: 14px;
+
+  z-index: 4;
+
+  animation: slowRotate 12s linear infinite;
+}
+
+
+/* Inner ring */
+
+.newsletter-decoration::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 7px;
+
+  border: 1px dashed rgba(155, 117, 64, 0.35);
+
+  border-radius: 50%;
+}
+
+
+/* =========================================
+   FLOATING GOLD STAR - LEFT
+========================================= */
+
+.newsletter-content::before {
+  content: "✦";
+
+  position: absolute;
+
+  left: -170px;
+
+  top: 40px;
+
+  font-family: Georgia, serif;
+
+  font-size: 22px;
+
+  color: rgba(155, 117, 64, 0.4);
+
+  animation:
+    floatingStar 4s ease-in-out infinite,
+    starPulse 3s ease-in-out infinite;
+}
+
+
+/* =========================================
+   FLOATING GOLD STAR - RIGHT
+========================================= */
+
+.newsletter-content::after {
+  content: "✦";
+
+  position: absolute;
+
+  right: -160px;
+
+  bottom: 30px;
+
+  font-family: Georgia, serif;
+
+  font-size: 15px;
+
+  color: rgba(155, 117, 64, 0.35);
+
+  animation:
+    floatingStar 5s ease-in-out infinite reverse,
+    starPulse 4s ease-in-out infinite;
+}
+
+
+/* =========================================
+   EXTRA DECORATIVE DOTS
+========================================= */
+
+.newsletter-decoration span {
+  position: relative;
+
+  z-index: 2;
+
+  animation: starPulse 3s ease-in-out infinite;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes mainGlow {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 1;
+  }
+
+}
+
+
+@keyframes sideGlow {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+
+}
+
+
+@keyframes floatingStar {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(12deg);
+  }
+
+}
+
+
+@keyframes starPulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+}
+
+
+@keyframes slowRotate {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+@keyframes fadeUp {
+
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .newsletter {
+    min-height: 450px;
+
+    padding: 70px 5%;
+  }
+
+  .newsletter-decoration {
+    right: 5%;
+  }
+
+  .newsletter-content::before {
+    left: -100px;
+  }
+
+  .newsletter-content::after {
+    right: -100px;
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 850px) {
+
+  .newsletter {
+    min-height: 430px;
+
+    padding: 65px 6%;
+  }
+
+  .newsletter-decoration {
+    right: 6%;
+
+    bottom: 40px;
+
+    width: 52px;
+    height: 52px;
+  }
+
+  .newsletter-content::before {
+    left: -60px;
+  }
+
+  .newsletter-content::after {
+    right: -60px;
+  }
+
+}
+
+
+/* =========================================
+   PHONE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .newsletter {
+    min-height: 410px;
+
+    padding: 60px 6%;
+  }
+
+
+  /* Background glow */
+
+  .newsletter::before {
+    width: 340px;
+
+    height: 340px;
+  }
+
+
+  /* Eyebrow */
+
+  .newsletter-eyebrow {
+    font-size: 8px;
+
+    letter-spacing: 3px;
+  }
+
+
+  /* Heading */
+
+  .newsletter h2 {
+    font-size: clamp(44px, 13vw, 60px);
+
+    letter-spacing: -2px;
+  }
+
+
+  /* Description */
+
+  .newsletter-description {
+    margin-top: 20px;
+
+    margin-bottom: 25px;
+
+    font-size: 12px;
+  }
+
+
+  /* Form */
+
+  .newsletter-form {
+    width: min(320px, 100%);
+  }
+
+  .newsletter-form input {
+    height: 45px;
+
+    font-size: 11px;
+  }
+
+
+  /* Decoration */
+
+  .newsletter-decoration {
+    display: none;
+  }
+
+
+  /* Stars */
+
+  .newsletter-content::before {
+    left: 4%;
+
+    top: 10px;
+
+    font-size: 14px;
+  }
+
+  .newsletter-content::after {
+    right: 4%;
+
+    bottom: 5px;
+
+    font-size: 11px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .newsletter {
+    min-height: 390px;
+
+    padding: 55px 15px;
+  }
+
+  .newsletter::before {
+    width: 300px;
+
+    height: 300px;
+  }
+
+  .newsletter h2 {
+    font-size: 42px;
+  }
+
+  .newsletter-description {
+    font-size: 11px;
+  }
+
+  .newsletter-note {
+    font-size: 8px;
+  }
+
+  .newsletter-form {
+    width: min(290px, 100%);
+  }
+
+}
+
+
+/* =========================================
+   VERY SMALL PHONE
+========================================= */
+
+@media (max-width: 360px) {
+
+  .newsletter {
+    padding-left: 12px;
+
+    padding-right: 12px;
+  }
+
+  .newsletter h2 {
+    font-size: 38px;
+  }
+
+  .newsletter-form {
+    width: 100%;
+  }
+
+}

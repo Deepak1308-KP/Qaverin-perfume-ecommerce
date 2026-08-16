@@ -1,0 +1,1576 @@
+/* =========================================
+   SHOP PAGE
+========================================= */
+
+.shop {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 35px 7% 100px;
+
+  box-sizing: border-box;
+
+  background: #f7f4ef;
+
+  color: #171513;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   SHOP HEADER
+========================================= */
+
+.shop-header {
+  position: relative;
+
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  text-align: center;
+
+  padding: 25px 0 40px;
+
+  isolation: isolate;
+}
+
+
+/* =========================================
+   SOFT BACKGROUND GLOW
+========================================= */
+
+.shop-header::before {
+  content: "";
+
+  position: absolute;
+
+  width: 520px;
+  height: 260px;
+
+  left: 50%;
+  top: 0;
+
+  transform: translateX(-50%);
+
+  background: radial-gradient(
+    ellipse,
+    rgba(210, 190, 165, 0.25),
+    rgba(210, 190, 165, 0.08) 45%,
+    transparent 72%
+  );
+
+  filter: blur(15px);
+
+  z-index: -1;
+
+  animation: shopGlow 6s ease-in-out infinite;
+}
+
+
+/* =========================================
+   DECORATIVE GOLD LINE
+========================================= */
+
+.shop-header::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  bottom: 0;
+
+  width: 55px;
+  height: 1px;
+
+  background: #b28a55;
+
+  transform: translateX(-50%);
+
+  animation: shopLine 3s ease-in-out infinite;
+}
+
+
+/* =========================================
+   EYEBROW
+========================================= */
+
+.shop-eyebrow {
+  margin: 0 0 14px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  color: #9b7540;
+
+  animation: shopFadeUp 0.8s ease both;
+}
+
+
+/* =========================================
+   MAIN HEADING
+========================================= */
+
+.shop-header h1 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(52px, 6vw, 80px);
+
+  font-weight: 400;
+
+  line-height: 0.95;
+
+  letter-spacing: -3px;
+
+  animation: shopHeading 1s ease both;
+}
+
+
+.shop-header h1 em {
+  display: inline-block;
+
+  color: #8b8178;
+
+  font-style: italic;
+
+  animation: signatureFloat 4s ease-in-out infinite;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.shop-description {
+  max-width: 430px;
+
+  margin: 20px auto 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+  color: #77716b;
+
+  animation: shopFadeUp 1s ease 0.2s both;
+}
+
+
+/* =========================================
+   FLOATING PARTICLES
+========================================= */
+
+.shop-particle {
+  position: absolute;
+
+  color: #b28a55;
+
+  pointer-events: none;
+
+  opacity: 0.45;
+
+  z-index: -1;
+}
+
+
+.particle-one {
+  left: 10%;
+  top: 35%;
+
+  font-size: 13px;
+
+  animation:
+    particleFloat 5s ease-in-out infinite;
+}
+
+
+.particle-two {
+  right: 12%;
+  top: 25%;
+
+  font-size: 18px;
+
+  animation:
+    particleFloat 6s ease-in-out infinite 1s;
+}
+
+
+.particle-three {
+  left: 20%;
+  bottom: 25%;
+
+  font-size: 24px;
+
+  opacity: 0.2;
+
+  animation:
+    particleFloat 7s ease-in-out infinite 0.5s;
+}
+
+
+.particle-four {
+  right: 20%;
+  bottom: 20%;
+
+  font-size: 11px;
+
+  animation:
+    particleFloat 5.5s ease-in-out infinite 1.5s;
+}
+
+
+/* =========================================
+   CATEGORY FILTERS
+========================================= */
+
+.shop-filters {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 35px;
+
+  margin-bottom: 35px;
+
+  border-bottom: 1px solid #d8d1c9;
+}
+
+
+.filter-button {
+  position: relative;
+
+  padding: 14px 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #8b847d;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 2px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.filter-button::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -1px;
+
+  width: 0;
+  height: 1px;
+
+  background: #171513;
+
+  transition:
+    width 0.3s ease;
+}
+
+
+.filter-button:hover {
+  color: #171513;
+}
+
+
+.filter-button.active {
+  color: #171513;
+}
+
+
+.filter-button.active::after {
+  width: 100%;
+}
+
+
+/* =========================================
+   PRODUCT COUNT
+========================================= */
+
+.shop-top-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  letter-spacing: 2px;
+
+  color: #958d85;
+}
+
+
+/* =========================================
+   PRODUCT GRID
+========================================= */
+
+.shop-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 22px;
+
+  width: 100%;
+}
+
+
+/* =========================================
+   PRODUCT CARD
+========================================= */
+
+.shop-product {
+  min-width: 0;
+}
+
+
+/* =========================================
+   PRODUCT IMAGE
+========================================= */
+
+.shop-product-image {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 0.82;
+
+  overflow: hidden;
+
+  background: #e9e4de;
+}
+
+
+.shop-product-image img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.6s ease;
+}
+
+
+.shop-product:hover
+.shop-product-image img {
+  transform: scale(1.04);
+}
+
+
+/* =========================================
+   WISHLIST BUTTON
+========================================= */
+
+.shop-wishlist {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: rgba(247, 244, 239, 0.92);
+
+  color: #171513;
+
+  font-size: 25px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+
+.shop-wishlist:hover {
+  transform: scale(1.1);
+
+  background: #171513;
+
+  color: #c29a63;
+}
+
+
+/* =========================================
+   PRODUCT INFORMATION
+========================================= */
+
+.shop-product-info {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 17px 0 12px;
+}
+
+
+.shop-product-info h2 {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 17px;
+
+  font-weight: 400;
+}
+
+
+.shop-product-info p {
+  margin: 5px 0 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  color: #817a73;
+}
+
+
+.shop-price {
+  flex-shrink: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 15px;
+}
+
+
+/* =========================================
+   ADD TO BAG
+========================================= */
+
+.shop-add-button {
+  width: 100%;
+
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 15px;
+
+  border: 1px solid #171513;
+
+  background: #171513;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+
+.shop-add-button span {
+  font-size: 17px;
+
+  transition:
+    transform 0.3s ease;
+}
+
+
+.shop-add-button:hover {
+  background: transparent;
+
+  color: #171513;
+}
+
+
+.shop-add-button:hover span {
+  transform: translateX(5px);
+}
+
+
+/* =========================================
+   SHOP ANIMATIONS
+========================================= */
+
+@keyframes shopGlow {
+
+  0%,
+  100% {
+    opacity: 0.55;
+
+    transform:
+      translateX(-50%)
+      scale(0.95);
+  }
+
+  50% {
+    opacity: 1;
+
+    transform:
+      translateX(-50%)
+      scale(1.08);
+  }
+}
+
+
+@keyframes shopLine {
+
+  0%,
+  100% {
+    width: 35px;
+
+    opacity: 0.5;
+  }
+
+  50% {
+    width: 75px;
+
+    opacity: 1;
+  }
+}
+
+
+@keyframes shopFadeUp {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+@keyframes shopHeading {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+@keyframes signatureFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+
+@keyframes particleFloat {
+
+  0%,
+  100% {
+    transform:
+      translateY(0)
+      rotate(0deg);
+
+    opacity: 0.25;
+  }
+
+  50% {
+    transform:
+      translateY(-14px)
+      rotate(45deg);
+
+    opacity: 0.7;
+  }
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .shop {
+    padding-left: 5%;
+
+    padding-right: 5%;
+  }
+
+
+  .shop-grid {
+    gap: 18px;
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 850px) {
+
+  .shop {
+    padding:
+      30px
+      6%
+      80px;
+  }
+
+
+  .shop-header {
+    padding:
+      20px
+      0
+      35px;
+  }
+
+
+  .shop-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 35px 20px;
+  }
+
+}
+
+
+/* =========================================
+   PHONE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .shop {
+    padding:
+      25px
+      20px
+      70px;
+  }
+
+
+  .shop-header {
+    padding:
+      15px
+      0
+      30px;
+  }
+
+
+  .shop-header::before {
+    width: 350px;
+
+    height: 220px;
+  }
+
+
+  .shop-eyebrow {
+    font-size: 8px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 12px;
+  }
+
+
+  .shop-header h1 {
+    font-size: 48px;
+
+    line-height: 0.98;
+
+    letter-spacing: -2px;
+  }
+
+
+  .shop-description {
+    margin-top: 18px;
+
+    font-size: 12px;
+  }
+
+
+  /* =================================
+     HIDE PARTICLES
+  ================================= */
+
+  .shop-particle {
+    display: none;
+  }
+
+
+  /* =================================
+     FILTERS
+  ================================= */
+
+  .shop-filters {
+    justify-content: flex-start;
+
+    gap: 25px;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+  }
+
+
+  .shop-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .filter-button {
+    flex-shrink: 0;
+  }
+
+
+  /* =================================
+     PRODUCTS
+  ================================= */
+
+  .shop-grid {
+    grid-template-columns: 1fr;
+
+    gap: 40px;
+
+    justify-items: center;
+  }
+
+
+  /* =================================
+     SMALLER MOBILE PRODUCT
+  ================================= */
+
+  .shop-product {
+    width: 82%;
+
+    max-width: 330px;
+  }
+
+
+  .shop-product-image {
+    width: 100%;
+
+    aspect-ratio: 0.9;
+  }
+
+
+  .shop-product-info {
+    padding:
+      14px
+      0
+      10px;
+
+    gap: 10px;
+  }
+
+
+  .shop-product-info h2 {
+    font-size: 18px;
+  }
+
+
+  .shop-product-info p {
+    font-size: 10px;
+  }
+
+
+  .shop-price {
+    font-size: 16px;
+  }
+
+
+  .shop-wishlist {
+    width: 36px;
+    height: 36px;
+
+    top: 10px;
+    right: 10px;
+
+    font-size: 22px;
+  }
+
+
+  .shop-add-button {
+    height: 43px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 380px) {
+
+  .shop {
+    padding-left: 15px;
+
+    padding-right: 15px;
+  }
+
+
+  .shop-header h1 {
+    font-size: 43px;
+  }
+
+
+  .shop-description {
+    font-size: 11px;
+  }
+
+
+  .shop-filters {
+    gap: 20px;
+  }
+
+
+  /* SMALLER PRODUCT FOR SMALL PHONES */
+
+  .shop-product {
+    width: 85%;
+
+    max-width: 300px;
+  }
+
+
+  .shop-product-image {
+    aspect-ratio: 0.92;
+  }
+
+
+  .shop-product-info h2 {
+    font-size: 17px;
+  }
+
+
+  .shop-product-info p {
+    font-size: 9px;
+  }
+
+
+  .shop-price {
+    font-size: 15px;
+  }
+
+
+  .shop-add-button {
+    height: 42px;
+  }
+
+}
+
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .shop-header::before,
+  .shop-header::after,
+  .shop-eyebrow,
+  .shop-header h1,
+  .shop-header h1 em,
+  .shop-description,
+  .shop-particle {
+    animation: none;
+  }
+
+}
+
+
+/* =========================================
+   CLICKABLE PRODUCT
+========================================= */
+
+.shop-product-image {
+  cursor: pointer;
+}
+
+
+.shop-product-name {
+  cursor: pointer;
+}
+
+
+.shop-product-name:hover h2 {
+  text-decoration: underline;
+
+  text-underline-offset: 4px;
+}
+
+
+/* =================================
+   CART SUCCESS MESSAGE
+================================= */
+
+.shop-cart-message {
+  position: fixed;
+
+  top: 100px;
+  right: 30px;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px 22px;
+
+  background: #171513;
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.15);
+
+  animation:
+    cartMessageIn 0.35s ease;
+}
+
+
+.shop-cart-message span:first-child {
+  color: #c7964b;
+
+  font-size: 18px;
+}
+
+
+@keyframes cartMessageIn {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =================================
+   ACTIVE WISHLIST
+================================= */
+
+.shop-wishlist.active {
+  background: #171513;
+
+  color: #c7964b;
+}
+
+
+.shop-wishlist {
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.shop-wishlist:hover {
+  transform: scale(1.08);
+}
+
+
+/* =========================================
+   WISHLIST NOTIFICATION
+========================================= */
+
+.shop-wishlist-message {
+  position: fixed;
+
+  top: 115px;
+  right: 30px;
+
+  z-index: 2000;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 20px;
+
+  background: #171513;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  letter-spacing: 0.5px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15);
+
+  animation:
+    wishlistMessageIn 0.3s ease;
+}
+
+
+.shop-wishlist-message span:first-child {
+  font-size: 17px;
+}
+
+
+@keyframes wishlistMessageIn {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .shop-wishlist-message {
+    top: 85px;
+
+    left: 15px;
+    right: 15px;
+
+    justify-content: center;
+
+    font-size: 12px;
+  }
+
+}
+
+
+/* =========================================
+   SEARCH RESULT
+========================================= */
+
+.shop-search-result {
+  width: 90%;
+
+  max-width: 1400px;
+
+  margin: 0 auto 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 12px;
+
+  color: #77716b;
+
+  letter-spacing: 1px;
+}
+
+
+.shop-search-result strong {
+  color: #171513;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   NO SEARCH RESULTS
+========================================= */
+
+.shop-no-results {
+  min-height: 350px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 60px 20px;
+
+  box-sizing: border-box;
+}
+
+
+.shop-no-results-icon {
+  font-size: 45px;
+
+  color: #77716b;
+
+  margin-bottom: 20px;
+}
+
+
+.shop-no-results h2 {
+  margin: 0 0 10px;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 30px;
+
+  font-weight: 400;
+
+  color: #171513;
+}
+
+
+.shop-no-results p {
+  margin: 0 0 25px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 14px;
+
+  color: #77716b;
+}
+
+
+.shop-no-results button {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 14px 22px;
+
+  border: 1px solid #171513;
+
+  background: transparent;
+
+  color: #171513;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.shop-no-results button:hover {
+  background: #171513;
+
+  color: #ffffff;
+}
+
+
+/* =========================================
+   DARK THEME - SHOP PAGE
+========================================= */
+
+body.dark-theme .shop {
+  background: #11100f;
+
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   DARK SHOP HEADER
+========================================= */
+
+body.dark-theme .shop-header::before {
+  background: radial-gradient(
+    ellipse,
+    rgba(130, 100, 65, 0.18),
+    rgba(130, 100, 65, 0.06) 45%,
+    transparent 72%
+  );
+}
+
+
+body.dark-theme .shop-header::after {
+  background: #c79b5d;
+}
+
+
+body.dark-theme .shop-eyebrow {
+  color: #c79b5d;
+}
+
+
+body.dark-theme .shop-header h1 {
+  color: #f3efe9;
+}
+
+
+body.dark-theme .shop-header h1 em {
+  color: #a59c93;
+}
+
+
+body.dark-theme .shop-description {
+  color: #918b84;
+}
+
+
+/* =========================================
+   DARK PARTICLES
+========================================= */
+
+body.dark-theme .shop-particle {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   DARK FILTERS
+========================================= */
+
+body.dark-theme .shop-filters {
+  border-bottom-color: #302d29;
+}
+
+
+body.dark-theme .filter-button {
+  color: #918b84;
+}
+
+
+body.dark-theme .filter-button:hover,
+body.dark-theme .filter-button.active {
+  color: #f3efe9;
+}
+
+
+body.dark-theme .filter-button::after {
+  background: #c79b5d;
+}
+
+
+/* =========================================
+   DARK PRODUCT COUNT
+========================================= */
+
+body.dark-theme .shop-top-row {
+  color: #817a73;
+}
+
+
+/* =========================================
+   DARK PRODUCT IMAGE
+========================================= */
+
+body.dark-theme .shop-product-image {
+  background: #211f1d;
+}
+
+
+/* =========================================
+   DARK WISHLIST
+========================================= */
+
+body.dark-theme .shop-wishlist {
+  background: rgba(25, 23, 21, 0.92);
+
+  color: #e9e4de;
+}
+
+
+body.dark-theme .shop-wishlist:hover {
+  background: #f3efe9;
+
+  color: #9b7540;
+}
+
+
+body.dark-theme .shop-wishlist.active {
+  background: #f3efe9;
+
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   DARK PRODUCT INFORMATION
+========================================= */
+
+body.dark-theme .shop-product-info h2 {
+  color: #f3efe9;
+}
+
+
+body.dark-theme .shop-product-info p {
+  color: #918b84;
+}
+
+
+body.dark-theme .shop-price {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   DARK ADD TO BAG
+========================================= */
+
+body.dark-theme .shop-add-button {
+  background: #f3efe9;
+
+  border-color: #f3efe9;
+
+  color: #11100f;
+}
+
+
+body.dark-theme .shop-add-button:hover {
+  background: transparent;
+
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   DARK SEARCH RESULT
+========================================= */
+
+body.dark-theme .shop-search-result {
+  color: #918b84;
+}
+
+
+body.dark-theme .shop-search-result strong {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   DARK NO RESULTS
+========================================= */
+
+body.dark-theme .shop-no-results-icon {
+  color: #918b84;
+}
+
+
+body.dark-theme .shop-no-results h2 {
+  color: #f3efe9;
+}
+
+
+body.dark-theme .shop-no-results p {
+  color: #918b84;
+}
+
+
+body.dark-theme .shop-no-results button {
+  border-color: #f3efe9;
+
+  color: #f3efe9;
+}
+
+
+body.dark-theme .shop-no-results button:hover {
+  background: #f3efe9;
+
+  color: #11100f;
+}
+
+
+/* =========================================
+   DARK CART MESSAGE
+========================================= */
+
+body.dark-theme .shop-cart-message {
+  background: #f3efe9;
+
+  color: #11100f;
+}
+
+
+body.dark-theme .shop-cart-message span:first-child {
+  color: #9b7540;
+}
+
+
+/* =========================================
+   DARK WISHLIST MESSAGE
+========================================= */
+
+body.dark-theme .shop-wishlist-message {
+  background: #f3efe9;
+
+  color: #11100f;
+}
+
+
+body.dark-theme .shop-wishlist-message span:first-child {
+  color: #9b7540;
+}
+
+
+/* =========================================
+   DARK WISHLIST STATUS
+========================================= */
+
+body.dark-theme .wishlist-status {
+  color: #918b84;
+}
+
+
+body.dark-theme .wishlist-status-heart {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   DARK PRODUCT NAME
+========================================= */
+
+body.dark-theme .shop-product-name:hover h2 {
+  text-decoration-color: #c79b5d;
+}
+
+
+/* =========================================
+   DARK MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  body.dark-theme .shop {
+    background: #11100f;
+  }
+
+}
+
+
+/* =========================================
+   DARK THEME TRANSITION
+========================================= */
+
+.shop,
+.shop-header h1,
+.shop-header h1 em,
+.shop-description,
+.shop-filters,
+.filter-button,
+.shop-top-row,
+.shop-product-info h2,
+.shop-product-info p,
+.shop-price,
+.shop-product-image,
+.shop-wishlist,
+.shop-add-button,
+.shop-search-result,
+.shop-search-result strong,
+.shop-no-results h2,
+.shop-no-results p,
+.shop-no-results button {
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease;
+}

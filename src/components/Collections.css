@@ -1,0 +1,1145 @@
+/* =========================================
+   COLLECTIONS PAGE
+========================================= */
+
+.collections-page {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 70px 5% 90px;
+
+  box-sizing: border-box;
+
+  background: #f7f4ef;
+
+  color: #171513;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.collections-header {
+  max-width: 700px;
+
+  margin: 0 auto 55px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   EYEBROW
+========================================= */
+
+.collections-eyebrow {
+  margin: 0 0 14px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  color: #9b7540;
+
+  opacity: 0;
+
+  transform: translateY(-20px);
+
+  animation:
+    collectionEyebrowReveal
+    0.8s
+    ease
+    forwards;
+}
+
+
+/* =========================================
+   MAIN HEADING
+========================================= */
+
+.collections-header h1 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(44px, 5vw, 68px);
+
+  font-weight: 400;
+
+  line-height: 1;
+
+  letter-spacing: -2.5px;
+
+  opacity: 0;
+
+  transform: translateY(30px);
+
+  animation:
+    collectionHeadingReveal
+    1s
+    ease
+    0.15s
+    forwards;
+}
+
+
+/* =========================================
+   ITALIC HEADING
+========================================= */
+
+.collections-header h1 em {
+  color: #9b8065;
+
+  font-style: italic;
+
+  display: inline-block;
+
+  opacity: 0;
+
+  transform: translateY(20px);
+
+  animation:
+    collectionItalicReveal
+    0.9s
+    ease
+    0.45s
+    forwards;
+}
+
+
+/* =========================================
+   HEADER DESCRIPTION
+========================================= */
+
+.collections-description {
+  max-width: 500px;
+
+  margin: 20px auto 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+  color: #6f6962;
+
+  opacity: 0;
+
+  transform: translateY(20px);
+
+  animation:
+    collectionDescriptionReveal
+    0.8s
+    ease
+    0.7s
+    forwards;
+}
+
+
+/* =========================================
+   COLLECTION GRID
+========================================= */
+
+.collections-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+
+  width: 100%;
+}
+
+
+/* =========================================
+   COLLECTION CARD
+========================================= */
+
+.collection-card {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  min-width: 0;
+
+  min-height: 315px;
+
+  background: #fbfaf7;
+
+  border: 1px solid #e5ded5;
+
+  overflow: hidden;
+
+  opacity: 0;
+
+  transform: translateY(40px);
+
+  animation:
+    collectionCardReveal
+    0.9s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+
+/* =========================================
+   CARD ANIMATION DELAY
+========================================= */
+
+.collection-card:nth-child(1) {
+  animation-delay: 0.35s;
+}
+
+.collection-card:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.collection-card:nth-child(3) {
+  animation-delay: 0.65s;
+}
+
+.collection-card:nth-child(4) {
+  animation-delay: 0.8s;
+}
+
+
+/* =========================================
+   CARD HOVER
+========================================= */
+
+.collection-card:hover {
+  transform: translateY(-7px);
+
+  box-shadow:
+    0 20px 45px rgba(23, 21, 19, 0.11);
+}
+
+
+/* =========================================
+   COLLECTION IMAGE
+========================================= */
+
+.collection-image {
+  position: relative;
+
+  width: 100%;
+
+  height: 315px;
+
+  overflow: hidden;
+
+  background: #e9e4de;
+
+  cursor: pointer;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.collection-image img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  opacity: 0;
+
+  transform: scale(1.08);
+
+  animation:
+    collectionImageReveal
+    1.2s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+
+  transition:
+    transform 0.7s ease;
+}
+
+
+/* =========================================
+   IMAGE HOVER
+========================================= */
+
+.collection-image:hover img {
+  transform: scale(1.05);
+}
+
+
+/* =========================================
+   REMOVE NUMBER
+========================================= */
+
+.collection-number {
+  display: none !important;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.collection-content {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  padding: 30px 28px;
+
+  opacity: 0;
+
+  transform: translateX(25px);
+
+  animation:
+    collectionContentReveal
+    0.8s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    0.6s
+    forwards;
+}
+
+
+/* =========================================
+   SUBTITLE
+========================================= */
+
+.collection-subtitle {
+  margin: 0 0 12px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.7px;
+
+  line-height: 1.5;
+
+  color: #9b7540;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.collection-content h2 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 25px;
+
+  font-weight: 400;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.8px;
+
+  color: #171513;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.collection-divider {
+  width: 90px;
+
+  margin: 15px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+.collection-divider span {
+  width: 30px;
+
+  height: 1px;
+
+  background: #c5b8aa;
+}
+
+
+.collection-divider b {
+  font-size: 9px;
+
+  font-weight: 400;
+
+  color: #9b7540;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.collection-description {
+  margin: 0 0 20px;
+
+  max-width: 230px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 10px;
+
+  line-height: 1.7;
+
+  color: #6f6962;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.collection-button {
+  width: 100%;
+
+  max-width: 220px;
+
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #171513;
+
+  background: #171513;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  letter-spacing: 1.2px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.collection-button span {
+  font-size: 15px;
+
+  transition:
+    transform 0.3s ease;
+}
+
+
+.collection-button:hover {
+  background: transparent;
+
+  color: #171513;
+
+  transform: translateX(4px);
+}
+
+
+.collection-button:hover span {
+  transform: translateX(6px);
+}
+
+
+/* =========================================
+   FOOTER MESSAGE
+========================================= */
+
+.collections-footer {
+  margin-top: 70px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  text-align: center;
+
+  opacity: 0;
+
+  transform: translateY(20px);
+
+  animation:
+    collectionFooterReveal
+    0.8s
+    ease
+    1s
+    forwards;
+}
+
+
+.collections-footer span {
+  color: #9b7540;
+
+  font-size: 11px;
+}
+
+
+.collections-footer p {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  line-height: 1.7;
+
+  letter-spacing: 2.5px;
+
+  color: #817a73;
+}
+
+
+.collections-footer p em {
+  font-family: Georgia, serif;
+
+  font-size: 11px;
+
+  letter-spacing: 1px;
+
+  color: #171513;
+}
+
+
+/* =========================================
+   HEADER ANIMATIONS
+========================================= */
+
+@keyframes collectionEyebrowReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-20px);
+
+    letter-spacing: 7px;
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+
+    letter-spacing: 4px;
+  }
+
+}
+
+
+@keyframes collectionHeadingReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+@keyframes collectionItalicReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px)
+      scale(0.96);
+
+    letter-spacing: 4px;
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+    letter-spacing: 0;
+  }
+
+}
+
+
+@keyframes collectionDescriptionReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   CARD ANIMATION
+========================================= */
+
+@keyframes collectionCardReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(40px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================
+   IMAGE ANIMATION
+========================================= */
+
+@keyframes collectionImageReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      scale(1.08);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1);
+  }
+
+}
+
+
+/* =========================================
+   CONTENT ANIMATION
+========================================= */
+
+@keyframes collectionContentReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateX(25px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateX(0);
+  }
+
+}
+
+
+/* =========================================
+   FOOTER ANIMATION
+========================================= */
+
+@keyframes collectionFooterReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .collections-page {
+    padding-left: 4%;
+
+    padding-right: 4%;
+  }
+
+
+  .collection-card {
+    grid-template-columns:
+      1fr 1fr;
+
+    min-height: 290px;
+  }
+
+
+  .collection-image {
+    height: 290px;
+  }
+
+
+  .collection-content {
+    padding: 24px 20px;
+  }
+
+
+  .collection-content h2 {
+    font-size: 22px;
+  }
+
+
+  .collection-description {
+    font-size: 9px;
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .collections-page {
+    padding: 60px 5% 80px;
+  }
+
+
+  .collections-header {
+    margin-bottom: 45px;
+  }
+
+
+  .collections-grid {
+    grid-template-columns: 1fr;
+
+    gap: 22px;
+  }
+
+
+  .collection-card {
+    min-height: 300px;
+  }
+
+
+  .collection-image {
+    height: 300px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .collections-page {
+    padding: 50px 18px 65px;
+  }
+
+
+  .collections-eyebrow {
+    font-size: 9px;
+
+    letter-spacing: 3px;
+  }
+
+
+  .collections-header h1 {
+    font-size: 42px;
+
+    letter-spacing: -1.5px;
+  }
+
+
+  .collections-description {
+    font-size: 11px;
+
+    line-height: 1.7;
+  }
+
+
+  .collections-grid {
+    gap: 30px;
+  }
+
+
+  .collection-card {
+    grid-template-columns: 1fr;
+
+    min-height: 0;
+  }
+
+
+  .collection-image {
+    height: 280px;
+  }
+
+
+  .collection-content {
+    padding: 25px 22px 28px;
+
+    transform: translateY(20px);
+
+    animation:
+      collectionContentMobileReveal
+      0.8s
+      cubic-bezier(0.22, 1, 0.36, 1)
+      0.6s
+      forwards;
+  }
+
+
+  .collection-content h2 {
+    font-size: 27px;
+  }
+
+
+  .collection-description {
+    max-width: 100%;
+
+    font-size: 11px;
+  }
+
+
+  .collection-button {
+    max-width: 100%;
+
+    height: 43px;
+  }
+
+
+  .collections-footer {
+    margin-top: 55px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE CONTENT ANIMATION
+========================================= */
+
+@keyframes collectionContentMobileReveal {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .collections-page {
+    padding-left: 14px;
+
+    padding-right: 14px;
+  }
+
+
+  .collections-header h1 {
+    font-size: 37px;
+  }
+
+
+  .collection-image {
+    height: 250px;
+  }
+
+
+  .collection-content h2 {
+    font-size: 24px;
+  }
+
+
+  .collection-content {
+    padding:
+      24px 20px 26px;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .collections-eyebrow,
+  .collections-header h1,
+  .collections-header h1 em,
+  .collections-description,
+  .collection-card,
+  .collection-image img,
+  .collection-content,
+  .collections-footer {
+    animation: none;
+
+    opacity: 1;
+
+    transform: none;
+  }
+
+
+  .collection-card,
+  .collection-image img,
+  .collection-button,
+  .collection-button span {
+    transition: none;
+  }
+
+}
+
+
+/* =========================================
+   DARK THEME - COLLECTIONS
+========================================= */
+
+body.dark-theme .collections-page {
+  background: #11100f;
+
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+body.dark-theme .collections-eyebrow {
+  color: #c79b5d;
+}
+
+
+body.dark-theme .collections-header h1 {
+  color: #f3efe9;
+}
+
+
+body.dark-theme .collections-header h1 em {
+  color: #a69a8d;
+}
+
+
+body.dark-theme .collections-description {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   COLLECTION CARD
+========================================= */
+
+body.dark-theme .collection-card {
+  background: #1b1917;
+
+  border-color: #39342f;
+
+  box-shadow: none;
+}
+
+
+body.dark-theme .collection-card:hover {
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================
+   COLLECTION IMAGE
+========================================= */
+
+body.dark-theme .collection-image {
+  background: #24211e;
+}
+
+
+/* =========================================
+   COLLECTION CONTENT
+========================================= */
+
+body.dark-theme .collection-subtitle {
+  color: #c79b5d;
+}
+
+
+body.dark-theme .collection-content h2 {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+body.dark-theme .collection-divider span {
+  background: #4a443e;
+}
+
+
+body.dark-theme .collection-divider b {
+  color: #c79b5d;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+body.dark-theme .collection-description {
+  color: #aaa39b;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+body.dark-theme .collection-button {
+  background: #f3efe9;
+
+  border-color: #f3efe9;
+
+  color: #11100f;
+}
+
+
+body.dark-theme .collection-button:hover {
+  background: transparent;
+
+  border-color: #f3efe9;
+
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   FOOTER MESSAGE
+========================================= */
+
+body.dark-theme .collections-footer span {
+  color: #c79b5d;
+}
+
+
+body.dark-theme .collections-footer p {
+  color: #918a82;
+}
+
+
+body.dark-theme .collections-footer p em {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   MOBILE DARK THEME
+========================================= */
+
+@media (max-width: 600px) {
+
+  body.dark-theme .collection-card {
+    background: #1b1917;
+
+    border-color: #39342f;
+  }
+
+
+  body.dark-theme .collection-content {
+    background: #1b1917;
+  }
+
+}

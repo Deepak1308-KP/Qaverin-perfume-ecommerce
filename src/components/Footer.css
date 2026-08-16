@@ -1,0 +1,423 @@
+/* =========================================
+   QAVERIN FOOTER
+========================================= */
+
+.footer {
+  width: 100%;
+
+  background: #211e1b;
+
+  color: #ffffff;
+
+  padding: 70px 7% 25px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   MAIN FOOTER
+========================================= */
+
+.footer-main {
+  display: grid;
+
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+
+  gap: 50px;
+
+  padding-bottom: 65px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+
+/* =========================================
+   BRAND
+========================================= */
+
+.footer-brand h2 {
+  margin: 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 30px;
+
+  font-weight: 400;
+
+  letter-spacing: 1px;
+}
+
+.footer-brand span {
+  display: block;
+
+  margin-top: 3px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 6px;
+
+  letter-spacing: 4px;
+
+  color: #a49b92;
+}
+
+.footer-brand p {
+  margin: 35px 0 0;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 20px;
+
+  line-height: 1.25;
+
+  color: #b9a99a;
+}
+
+
+/* =========================================
+   FOOTER COLUMNS
+========================================= */
+
+.footer-column {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 13px;
+}
+
+.footer-column h3 {
+  margin: 0 0 12px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 3px;
+
+  color: #c29a63;
+}
+
+.footer-column a {
+  width: fit-content;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+
+  color: #aaa39b;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.footer-column a:hover {
+  color: #ffffff;
+
+  transform: translateX(4px);
+}
+
+
+/* =========================================
+   FOOTER BOTTOM
+========================================= */
+
+.footer-bottom {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding-top: 22px;
+}
+
+.footer-bottom p {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  letter-spacing: 1.5px;
+
+  color: #706a64;
+}
+
+.footer-bottom div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.footer-bottom a {
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  color: #706a64;
+
+  text-decoration: none;
+
+  transition: color 0.25s ease;
+}
+
+.footer-bottom a:hover {
+  color: #ffffff;
+}
+
+.footer-bottom span {
+  color: #5d5853;
+
+  font-size: 9px;
+}
+
+
+/* =========================================
+   LAPTOP
+========================================= */
+
+@media (max-width: 1100px) {
+
+  .footer {
+    padding: 65px 5% 25px;
+  }
+
+  .footer-main {
+    gap: 35px;
+  }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 850px) {
+
+  .footer {
+    padding: 60px 6% 25px;
+  }
+
+  .footer-main {
+    grid-template-columns: 1.5fr 1fr 1fr;
+
+    gap: 40px;
+
+    padding-bottom: 50px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-brand p {
+    margin-top: 20px;
+  }
+
+}
+
+
+/* =========================================
+   PHONE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .footer {
+    padding: 50px 6% 22px;
+  }
+
+  .footer-main {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 40px 25px;
+
+    padding-bottom: 40px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-brand h2 {
+    font-size: 27px;
+  }
+
+  .footer-brand p {
+    margin-top: 20px;
+
+    font-size: 18px;
+  }
+
+  .footer-column {
+    gap: 11px;
+  }
+
+  .footer-column h3 {
+    margin-bottom: 8px;
+  }
+
+  .footer-column a {
+    font-size: 10px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL PHONE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .footer {
+    padding-left: 15px;
+
+    padding-right: 15px;
+  }
+
+  .footer-main {
+    gap: 35px 20px;
+  }
+
+  .footer-brand h2 {
+    font-size: 25px;
+  }
+
+  .footer-brand p {
+    font-size: 17px;
+  }
+
+}
+.footer-brand-link {
+  display: inline-flex;
+  flex-direction: column;
+
+  text-decoration: none;
+
+  color: inherit;
+}
+
+.footer-brand-link h2 {
+  margin: 0;
+}
+
+.footer-brand-link span {
+  text-decoration: none;
+}
+/* =========================================
+   DARK THEME - FOOTER
+========================================= */
+
+body.dark-theme .footer {
+  background: #0d0c0b;
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   BRAND
+========================================= */
+
+body.dark-theme .footer-brand h2 {
+  color: #f3efe9;
+}
+
+body.dark-theme .footer-brand span {
+  color: #8f8881;
+}
+
+body.dark-theme .footer-brand p {
+  color: #aaa097;
+}
+
+
+/* =========================================
+   FOOTER COLUMNS
+========================================= */
+
+body.dark-theme .footer-column h3 {
+  color: #c79b5d;
+}
+
+body.dark-theme .footer-column a {
+  color: #9d968f;
+}
+
+body.dark-theme .footer-column a:hover {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+body.dark-theme .footer-main {
+  border-bottom-color: rgba(243, 239, 233, 0.12);
+}
+
+
+/* =========================================
+   FOOTER BOTTOM
+========================================= */
+
+body.dark-theme .footer-bottom p {
+  color: #625d58;
+}
+
+body.dark-theme .footer-bottom a {
+  color: #625d58;
+}
+
+body.dark-theme .footer-bottom a:hover {
+  color: #f3efe9;
+}
+
+body.dark-theme .footer-bottom span {
+  color: #4b4743;
+}
+
+
+/* =========================================
+   BRAND LINK
+========================================= */
+
+body.dark-theme .footer-brand-link {
+  color: #f3efe9;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  body.dark-theme .footer {
+    background: #0d0c0b;
+  }
+
+}

@@ -1,0 +1,155 @@
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   HTML
+========================================= */
+
+html {
+  background: #f7f4ef;
+
+  transition:
+    background 0.35s ease;
+}
+
+
+/* =========================================
+   BODY
+========================================= */
+
+body {
+  background: #f7f4ef;
+
+  color: #171513;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  transition:
+    background 0.35s ease,
+    color 0.35s ease;
+}
+
+
+/* =========================================
+   DARK THEME
+========================================= */
+
+body.dark-theme {
+  background: #11100f;
+
+  color: #f3efe9;
+}
+
+
+body.dark-theme html {
+  background: #11100f;
+}
+
+
+/* =========================================
+   FORM ELEMENTS
+========================================= */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+/* =========================================
+   LINKS
+========================================= */
+
+a {
+  color: inherit;
+}
+
+
+/* =========================================
+   IMAGES
+========================================= */
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+button {
+  cursor: pointer;
+}
+
+
+/* =========================================
+   DARK THEME - COMMON ELEMENTS
+========================================= */
+
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+  background: #181715;
+
+  color: #f3efe9;
+
+  border-color: #39342f;
+}
+
+
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder {
+  color: #8c857d;
+}
+
+
+/* =========================================
+   SELECTION
+========================================= */
+
+::selection {
+  background: #9b7540;
+  color: #ffffff;
+}
+
+
+/* =========================================
+   SMOOTH THEME TRANSITION
+========================================= */
+
+body,
+body * {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html,
+  body,
+  body * {
+    transition: none !important;
+  }
+
+}
