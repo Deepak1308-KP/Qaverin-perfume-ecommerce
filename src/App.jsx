@@ -4,6 +4,8 @@ import {
   Route,
 } from "react-router-dom";
 
+import { useEffect, useState } from "react";
+
 import { CartProvider } from "./context/CartProvider";
 import { WishlistProvider } from "./context/WishlistProvider";
 import { OrderProvider } from "./context/OrderProvider";
@@ -62,6 +64,199 @@ function Home() {
 
 
 /* =========================================
+   WELCOME POPUP
+   SHOW ONLY FOR LOGGED-OUT USERS
+========================================= */
+
+function EntryNotification() {
+
+  const [showNotification, setShowNotification] =
+    useState(false);
+
+
+  /* =========================================
+     CHECK LOGIN STATUS
+  ========================================= */
+
+  useEffect(() => {
+
+    const loggedIn =
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
+
+    /* Show only if NOT logged in */
+
+    if (!loggedIn) {
+
+      setShowNotification(true);
+
+    }
+
+
+    /* Hide after 5 seconds */
+
+    const timer = setTimeout(() => {
+
+      setShowNotification(false);
+
+    }, 5000);
+
+
+    return () => {
+
+      clearTimeout(timer);
+
+    };
+
+  }, []);
+
+
+  /* =========================================
+     DON'T SHOW FOR LOGGED-IN USER
+  ========================================= */
+
+  if (!showNotification) {
+
+    return null;
+
+  }
+
+
+  /* =========================================
+     POPUP
+  ========================================= */
+
+  return (
+
+    <div
+      style={{
+        position: "fixed",
+
+        top: "85px",
+
+        right: "25px",
+
+        zIndex: 999999,
+
+        width: "340px",
+
+        padding: "18px 20px",
+
+        display: "flex",
+
+        alignItems: "flex-start",
+
+        gap: "14px",
+
+        background:
+          "var(--popup-background, #f7f4ef)",
+
+        color:
+          "var(--popup-text, #171513)",
+
+        border:
+          "1px solid var(--popup-border, #d8c5aa)",
+
+        borderRadius: "4px",
+
+        boxShadow:
+          "0 12px 35px rgba(0, 0, 0, 0.18)",
+
+        fontFamily:
+          "Arial, sans-serif",
+
+        animation:
+          "qaverinPopupIn 0.4s ease",
+
+        pointerEvents: "none",
+      }}
+    >
+
+      {/* ICON */}
+
+      <span
+        style={{
+          flexShrink: 0,
+
+          width: "28px",
+
+          height: "28px",
+
+          display: "flex",
+
+          alignItems: "center",
+
+          justifyContent: "center",
+
+          color: "#9b7540",
+
+          fontSize: "17px",
+
+          border:
+            "1px solid #9b7540",
+
+          borderRadius: "50%",
+        }}
+      >
+        ✦
+      </span>
+
+
+      {/* CONTENT */}
+
+      <div
+        style={{
+          flex: 1,
+        }}
+      >
+
+        <strong
+          style={{
+            display: "block",
+
+            marginBottom: "6px",
+
+            fontSize: "9px",
+
+            fontWeight: "600",
+
+            letterSpacing: "2px",
+
+            color: "#9b7540",
+          }}
+        >
+          WELCOME TO QAVERIN
+        </strong>
+
+
+        <p
+          style={{
+            margin: 0,
+
+            fontSize: "12px",
+
+            lineHeight: "1.6",
+
+            color:
+              "var(--popup-message, #5f5952)",
+          }}
+        >
+          Please login or create an account
+          to enjoy your fragrance journey.
+        </p>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+
+/* =========================================
    NOT FOUND PAGE
 ========================================= */
 
@@ -74,8 +269,11 @@ function NotFound() {
         minHeight: "80vh",
 
         display: "flex",
+
         flexDirection: "column",
+
         alignItems: "center",
+
         justifyContent: "center",
 
         background: "#f7f4ef",
@@ -90,7 +288,8 @@ function NotFound() {
 
       <p
         style={{
-          fontFamily: "Arial, sans-serif",
+          fontFamily:
+            "Arial, sans-serif",
 
           fontSize: "10px",
 
@@ -105,7 +304,8 @@ function NotFound() {
 
       <h1
         style={{
-          fontFamily: "Georgia, serif",
+          fontFamily:
+            "Georgia, serif",
 
           fontSize: "60px",
 
@@ -120,7 +320,8 @@ function NotFound() {
 
       <p
         style={{
-          fontFamily: "Arial, sans-serif",
+          fontFamily:
+            "Arial, sans-serif",
 
           color: "#6f6962",
         }}
@@ -142,7 +343,8 @@ function NotFound() {
 
           textDecoration: "none",
 
-          fontFamily: "Arial, sans-serif",
+          fontFamily:
+            "Arial, sans-serif",
 
           fontSize: "10px",
 
@@ -177,6 +379,7 @@ function App() {
 
             <Navbar />
 
+            <EntryNotification />
 
             <Routes>
 

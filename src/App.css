@@ -123,6 +123,7 @@ body.dark-theme textarea::placeholder {
 
 ::selection {
   background: #9b7540;
+
   color: #ffffff;
 }
 
@@ -141,15 +142,378 @@ body * {
 
 
 /* =========================================
+   QAVERIN LOGIN POPUP
+========================================= */
+
+.qaverin-login-popup {
+  position: fixed;
+
+  top: 85px;
+  right: 25px;
+
+  z-index: 99999;
+
+  width: 340px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 14px;
+
+  padding: 18px 20px;
+
+  background: #171513;
+
+  color: #f7f4ef;
+
+  border: 1px solid #9b7540;
+
+  border-radius: 3px;
+
+  box-shadow:
+    0 12px 35px
+    rgba(0, 0, 0, 0.25);
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  /*
+    APPEAR
+    ↓
+    STAY
+    ↓
+    DISAPPEAR
+  */
+
+  animation:
+    qaverinPopup
+    5.5s
+    ease
+    forwards;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   POPUP ICON
+========================================= */
+
+.qaverin-popup-icon {
+  flex-shrink: 0;
+
+  width: 28px;
+
+  height: 28px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #c29a63;
+
+  font-size: 17px;
+
+  border: 1px solid #9b7540;
+
+  border-radius: 50%;
+}
+
+
+/* =========================================
+   POPUP CONTENT
+========================================= */
+
+.qaverin-popup-content {
+  flex: 1;
+}
+
+
+.qaverin-popup-content strong {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color: #c29a63;
+}
+
+
+.qaverin-popup-content p {
+  margin: 0;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+
+  color: #f7f4ef;
+}
+
+
+/* =========================================
+   POPUP ANIMATION
+========================================= */
+
+@keyframes qaverinPopup {
+
+  /* START HIDDEN */
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translateX(30px);
+  }
+
+
+  /* APPEAR */
+
+  8% {
+    opacity: 1;
+
+    transform:
+      translateX(0);
+  }
+
+
+  /* STAY */
+
+  82% {
+    opacity: 1;
+
+    transform:
+      translateX(0);
+  }
+
+
+  /* DISAPPEAR */
+
+  100% {
+    opacity: 0;
+
+    transform:
+      translateX(30px);
+
+    visibility: hidden;
+  }
+
+}
+
+
+/* =========================================
+   DARK THEME POPUP
+========================================= */
+
+body.dark-theme .qaverin-login-popup {
+  background: #f7f4ef;
+
+  color: #171513;
+
+  border-color: #c29a63;
+}
+
+
+body.dark-theme .qaverin-popup-content strong {
+  color: #9b7540;
+}
+
+
+body.dark-theme .qaverin-popup-content p {
+  color: #171513;
+}
+
+
+body.dark-theme .qaverin-popup-icon {
+  color: #9b7540;
+
+  border-color: #9b7540;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .qaverin-login-popup {
+    top: 80px;
+
+    right: 20px;
+
+    width: 320px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .qaverin-login-popup {
+
+    top: 75px;
+
+    right: 15px;
+
+    left: 15px;
+
+    width: auto;
+
+    padding: 16px;
+
+  }
+
+
+  .qaverin-popup-content strong {
+
+    font-size: 8px;
+
+    letter-spacing: 1.8px;
+
+  }
+
+
+  .qaverin-popup-content p {
+
+    font-size: 11px;
+
+    line-height: 1.55;
+
+  }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+
+  .qaverin-login-popup {
+
+    top: 70px;
+
+    right: 10px;
+
+    left: 10px;
+
+    padding: 15px;
+
+  }
+
+
+  .qaverin-popup-icon {
+
+    width: 26px;
+
+    height: 26px;
+
+    font-size: 15px;
+
+  }
+
+}
+
+
+/* =========================================
    ACCESSIBILITY
 ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
-  html,
-  body,
-  body * {
-    transition: none !important;
-  }
+  .qaverin-login-popup {
 
+    animation: none;
+
+    opacity: 1;
+
+  }
+}
+/* =========================================
+   QAVERIN POPUP - LIGHT THEME
+========================================= */
+
+.qaverin-login-popup {
+  background: #f7f4ef !important;
+
+  color: #171513 !important;
+
+  border-color: #d8c5aa !important;
+
+  box-shadow:
+    0 12px 35px
+    rgba(0, 0, 0, 0.15) !important;
+}
+
+
+.qaverin-popup-icon {
+  color: #9b7540 !important;
+
+  border-color: #9b7540 !important;
+}
+
+
+.qaverin-popup-content strong {
+  color: #9b7540 !important;
+}
+
+
+.qaverin-popup-content p {
+  color: #5f5952 !important;
+}
+
+
+/* =========================================
+   QAVERIN POPUP - DARK THEME
+========================================= */
+
+body.dark-theme .qaverin-login-popup {
+  background: #171513 !important;
+
+  color: #f7f4ef !important;
+
+  border-color: #9b7540 !important;
+
+  box-shadow:
+    0 12px 35px
+    rgba(0, 0, 0, 0.45) !important;
+}
+
+
+body.dark-theme .qaverin-popup-icon {
+  color: #c29a63 !important;
+
+  border-color: #9b7540 !important;
+}
+
+
+body.dark-theme .qaverin-popup-content strong {
+  color: #c29a63 !important;
+}
+
+
+body.dark-theme .qaverin-popup-content p {
+  color: #ddd5cb !important;
 }

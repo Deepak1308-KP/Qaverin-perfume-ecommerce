@@ -16,7 +16,20 @@ function ProductDetails() {
 
   const { id } = useParams();
 
-  const { addToCart } = useCart();
+
+  /* =========================================
+     CART
+  ========================================= */
+
+  const {
+    cartItems,
+    addToCart,
+  } = useCart();
+
+
+  /* =========================================
+     WISHLIST
+  ========================================= */
 
   const {
     toggleWishlist,
@@ -24,16 +37,17 @@ function ProductDetails() {
   } = useWishlist();
 
 
-  /* =================================
+  /* =========================================
      STATE
-  ================================= */
+  ========================================= */
 
-  const [quantity, setQuantity] = useState(1);
-
-  const [wishlistMessage, setWishlistMessage] =
-    useState("");
+  const [quantity, setQuantity] =
+    useState(1);
 
   const [cartMessage, setCartMessage] =
+    useState("");
+
+  const [wishlistMessage, setWishlistMessage] =
     useState("");
 
   const [addingToCart, setAddingToCart] =
@@ -43,100 +57,137 @@ function ProductDetails() {
     useState(null);
 
 
-  /* =================================
+  /* =========================================
      PRODUCTS
-  ================================= */
+  ========================================= */
 
   const products = [
+
     {
       id: "1",
+
       name: "QAVERIN NOIR",
+
       type: "Woody Eau de Parfum",
+
       price: 129,
+
       image: noir,
+
       notes: [
         "Cedarwood",
         "Amber",
         "Black Pepper",
       ],
+
       description:
         "A deep and sophisticated fragrance created for those who leave a lasting impression.",
+
       mood:
         "Mysterious · Warm · Sophisticated",
     },
 
+
     {
       id: "2",
+
       name: "QAVERIN ROSE",
+
       type: "Floral Eau de Parfum",
+
       price: 119,
+
       image: rose,
+
       notes: [
         "Rose",
         "Jasmine",
         "Vanilla",
       ],
+
       description:
         "A refined floral fragrance that balances elegance, softness and timeless beauty.",
+
       mood:
         "Elegant · Soft · Romantic",
     },
 
+
     {
       id: "3",
+
       name: "QAVERIN OUD",
+
       type: "Oud Eau de Parfum",
+
       price: 149,
+
       image: oud,
+
       notes: [
         "Oud",
         "Sandalwood",
         "Amber",
       ],
+
       description:
         "A rich and powerful oud composition with a warm and unforgettable character.",
+
       mood:
         "Rich · Bold · Intense",
     },
 
+
     {
       id: "4",
+
       name: "QAVERIN ÉCLAT",
+
       type: "Fresh Eau de Parfum",
+
       price: 109,
+
       image: eclat,
+
       notes: [
         "Bergamot",
         "Musk",
         "Citrus",
       ],
+
       description:
         "A fresh and luminous fragrance designed for effortless everyday elegance.",
+
       mood:
         "Fresh · Bright · Effortless",
     },
+
   ];
 
 
-  /* =================================
+  /* =========================================
      FIND PRODUCT
-  ================================= */
+  ========================================= */
 
   const product = products.find(
-    (item) => item.id === id
+    (item) =>
+      String(item.id) === String(id)
   );
 
 
-  /* =================================
+  /* =========================================
      PRODUCT NOT FOUND
-  ================================= */
+  ========================================= */
 
   if (!product) {
 
     return (
+
       <main className="product-not-found">
 
-        <span>✦</span>
+        <span>
+          ✦
+        </span>
 
         <p>
           QAVERIN · FINE FRAGRANCE
@@ -151,27 +202,28 @@ function ProductDetails() {
         </Link>
 
       </main>
+
     );
 
   }
 
 
-  /* =================================
-     WISHLIST
-  ================================= */
+  /* =========================================
+     WISHLIST STATUS
+  ========================================= */
 
   const wishlisted =
     isWishlisted(Number(product.id));
 
 
-  /* =================================
+  /* =========================================
      QUANTITY
-  ================================= */
+  ========================================= */
 
   const increaseQuantity = () => {
 
-    setQuantity((current) =>
-      current + 1
+    setQuantity(
+      (current) => current + 1
     );
 
   };
@@ -179,31 +231,76 @@ function ProductDetails() {
 
   const decreaseQuantity = () => {
 
-    setQuantity((current) =>
-      current > 1
-        ? current - 1
-        : 1
+    setQuantity(
+      (current) =>
+        current > 1
+          ? current - 1
+          : 1
     );
 
   };
 
 
-  /* =================================
-     ADD TO CART
-  ================================= */
+  /* =========================================
+     ADD TO BAG
+  ========================================= */
 
   const handleAddToCart = () => {
 
-    if (addingToCart) {
+    /* =======================================
+       ALWAYS CHECK CURRENT CART
+    ======================================= */
+
+    const alreadyInCart =
+      cartItems.some(
+        (item) =>
+          String(item.id) ===
+          String(product.id)
+      );
+
+
+    /* =======================================
+       PRODUCT ALREADY IN BAG
+    ======================================= */
+
+    if (alreadyInCart) {
+
+      setCartMessage(
+        `✓ ${product.name} is already in your bag`
+      );
+
+
+      setTimeout(() => {
+
+        setCartMessage("");
+
+      }, 2200);
+
+
       return;
+
     }
 
-    addToCart(product, quantity);
+
+    /* =======================================
+       ADD NEW PRODUCT
+    ======================================= */
+
+    addToCart(
+      product,
+      quantity
+    );
+
+
+    /* =======================================
+       SUCCESS MESSAGE
+    ======================================= */
 
     setAddingToCart(true);
 
+
     setCartMessage(
-      `${quantity} × ${product.name} added to your bag`
+      `✓ ${quantity} × ${product.name} added to your bag`
     );
 
 
@@ -218,23 +315,28 @@ function ProductDetails() {
   };
 
 
-  /* =================================
+  /* =========================================
      WISHLIST
-  ================================= */
+  ========================================= */
 
   const handleWishlist = () => {
 
-    const alreadyWishlisted =
-      isWishlisted(Number(product.id));
+    const currentlyWishlisted =
+      isWishlisted(
+        Number(product.id)
+      );
 
 
     toggleWishlist({
+
       ...product,
+
       id: Number(product.id),
+
     });
 
 
-    if (alreadyWishlisted) {
+    if (currentlyWishlisted) {
 
       setWishlistMessage(
         `${product.name} removed from your wishlist`
@@ -258,9 +360,9 @@ function ProductDetails() {
   };
 
 
-  /* =================================
-     NOTE CLICK
-  ================================= */
+  /* =========================================
+     FRAGRANCE NOTE
+  ========================================= */
 
   const handleNoteClick = (note) => {
 
@@ -273,35 +375,22 @@ function ProductDetails() {
   };
 
 
+  /* =========================================
+     RENDER
+  ========================================= */
+
   return (
 
     <main className="product-details">
 
 
-      {/* =================================
-          NOTIFICATIONS
-      ================================= */}
-
-      {wishlistMessage && (
-
-        <div className="product-wishlist-message">
-
-          <span>♥</span>
-
-          <span>
-            {wishlistMessage}
-          </span>
-
-        </div>
-
-      )}
-
+      {/* =====================================
+          CART NOTIFICATION
+      ===================================== */}
 
       {cartMessage && (
 
         <div className="product-cart-message">
-
-          <span>✓</span>
 
           <span>
             {cartMessage}
@@ -312,9 +401,30 @@ function ProductDetails() {
       )}
 
 
-      {/* =================================
+      {/* =====================================
+          WISHLIST NOTIFICATION
+      ===================================== */}
+
+      {wishlistMessage && (
+
+        <div className="product-wishlist-message">
+
+          <span>
+            ♥
+          </span>
+
+          <span>
+            {wishlistMessage}
+          </span>
+
+        </div>
+
+      )}
+
+
+      {/* =====================================
           BREADCRUMB
-      ================================= */}
+      ===================================== */}
 
       <div className="product-breadcrumb">
 
@@ -322,13 +432,17 @@ function ProductDetails() {
           HOME
         </Link>
 
-        <span>/</span>
+        <span>
+          /
+        </span>
 
         <Link to="/shop">
           SHOP
         </Link>
 
-        <span>/</span>
+        <span>
+          /
+        </span>
 
         <span>
           {product.name}
@@ -337,20 +451,21 @@ function ProductDetails() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================
           PRODUCT LAYOUT
-      ================================= */}
+      ===================================== */}
 
       <section className="product-layout">
 
 
-        {/* =================================
+        {/* ===================================
             PRODUCT IMAGE
-        ================================= */}
+        =================================== */}
 
         <div className="product-detail-image">
 
-          <div className="product-detail-glow"></div>
+          <div className="product-detail-glow">
+          </div>
 
 
           <div className="product-image-frame">
@@ -363,16 +478,12 @@ function ProductDetails() {
           </div>
 
 
-          {/* PRODUCT NUMBER */}
-
           <span className="product-detail-number">
 
             0{product.id}
 
           </span>
 
-
-          {/* IMAGE LABEL */}
 
           <span className="product-image-label">
 
@@ -381,23 +492,21 @@ function ProductDetails() {
           </span>
 
 
-          {/* FLOATING DECORATION */}
-
           <span className="product-floating-star">
+
             ✦
+
           </span>
 
         </div>
 
 
-        {/* =================================
+        {/* ===================================
             PRODUCT INFORMATION
-        ================================= */}
+        =================================== */}
 
         <div className="product-detail-info">
 
-
-          {/* EYEBROW */}
 
           <p className="product-detail-eyebrow">
 
@@ -406,14 +515,12 @@ function ProductDetails() {
           </p>
 
 
-          {/* NAME */}
-
           <h1>
+
             {product.name}
+
           </h1>
 
-
-          {/* TYPE */}
 
           <p className="product-detail-type">
 
@@ -427,19 +534,27 @@ function ProductDetails() {
           <div className="product-detail-rating">
 
             <span className="rating-stars">
+
               ★★★★★
+
             </span>
 
             <span>
+
               4.9 / 5
+
             </span>
 
             <span className="rating-divider">
+
               ·
+
             </span>
 
             <span>
+
               Signature fragrance
+
             </span>
 
           </div>
@@ -468,11 +583,15 @@ function ProductDetails() {
           <div className="product-mood">
 
             <span>
+
               THE CHARACTER
+
             </span>
 
             <strong>
+
               {product.mood}
+
             </strong>
 
           </div>
@@ -493,32 +612,36 @@ function ProductDetails() {
 
             <div className="notes-list">
 
-              {product.notes.map((note, index) => (
+              {product.notes.map(
+                (note, index) => (
 
-                <button
-                  type="button"
-                  key={note}
-                  className={
-                    `fragrance-note ${
-                      activeNote === note
-                        ? "active"
-                        : ""
-                    }`
-                  }
-                  onClick={() =>
-                    handleNoteClick(note)
-                  }
-                >
+                  <button
+                    type="button"
+                    key={note}
+                    className={
+                      `fragrance-note ${
+                        activeNote === note
+                          ? "active"
+                          : ""
+                      }`
+                    }
+                    onClick={() =>
+                      handleNoteClick(note)
+                    }
+                  >
 
-                  <span>
-                    0{index + 1}
-                  </span>
+                    <span>
 
-                  {note}
+                      0{index + 1}
 
-                </button>
+                    </span>
 
-              ))}
+                    {note}
+
+                  </button>
+
+                )
+              )}
 
             </div>
 
@@ -527,12 +650,18 @@ function ProductDetails() {
 
               <div className="active-note-message">
 
-                <span>✦</span>
+                <span>
+
+                  ✦
+
+                </span>
 
                 <p>
+
                   {activeNote} creates part of
                   the distinctive QAVERIN
                   fragrance character.
+
                 </p>
 
               </div>
@@ -558,12 +687,16 @@ function ProductDetails() {
                 onClick={decreaseQuantity}
                 aria-label="Decrease quantity"
               >
+
                 −
+
               </button>
 
 
               <span>
+
                 {quantity}
+
               </span>
 
 
@@ -572,7 +705,9 @@ function ProductDetails() {
                 onClick={increaseQuantity}
                 aria-label="Increase quantity"
               >
+
                 +
+
               </button>
 
             </div>
@@ -598,9 +733,11 @@ function ProductDetails() {
             >
 
               <span>
+
                 {wishlisted
                   ? "♥"
                   : "♡"}
+
               </span>
 
             </button>
@@ -614,6 +751,7 @@ function ProductDetails() {
 
           <button
             type="button"
+
             className={
               `detail-add-button ${
                 addingToCart
@@ -621,7 +759,9 @@ function ProductDetails() {
                   : ""
               }`
             }
+
             onClick={handleAddToCart}
+
             disabled={addingToCart}
           >
 
@@ -655,11 +795,15 @@ function ProductDetails() {
             <div>
 
               <span>
+
                 FREE SHIPPING
+
               </span>
 
               <small>
+
                 On orders over $100
+
               </small>
 
             </div>
@@ -668,11 +812,15 @@ function ProductDetails() {
             <div>
 
               <span>
+
                 LONG LASTING
+
               </span>
 
               <small>
+
                 Eau de Parfum concentration
+
               </small>
 
             </div>
@@ -681,11 +829,15 @@ function ProductDetails() {
             <div>
 
               <span>
+
                 SIGNATURE QUALITY
+
               </span>
 
               <small>
+
                 Crafted for lasting impression
+
               </small>
 
             </div>
@@ -698,21 +850,29 @@ function ProductDetails() {
       </section>
 
 
-      {/* =================================
-          BOTTOM BRAND MESSAGE
-      ================================= */}
+      {/* =====================================
+          BRAND MESSAGE
+      ===================================== */}
 
       <section className="product-brand-message">
 
-        <span>✦</span>
+        <span>
+          ✦
+        </span>
 
         <p>
+
           A fragrance is more than a scent.
+
           <br />
+
           It becomes part of your story.
+
         </p>
 
-        <span>✦</span>
+        <span>
+          ✦
+        </span>
 
       </section>
 

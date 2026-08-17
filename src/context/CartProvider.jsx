@@ -3,25 +3,21 @@ import { CartContext } from "./CartContext";
 
 export function CartProvider({ children }) {
 
-  /* =================================
-     LOAD CART FROM LOCAL STORAGE
-  ================================= */
-
   const [cartItems, setCartItems] = useState(() => {
 
     const savedCart =
       localStorage.getItem("qaverin-cart");
 
-    return savedCart
-      ? JSON.parse(savedCart)
-      : [];
+    try {
+      return savedCart
+        ? JSON.parse(savedCart)
+        : [];
+    } catch {
+      return [];
+    }
 
   });
 
-
-  /* =================================
-     SAVE CART TO LOCAL STORAGE
-  ================================= */
 
   useEffect(() => {
 
@@ -33,65 +29,99 @@ export function CartProvider({ children }) {
   }, [cartItems]);
 
 
-  /* =================================
+  /* =========================================
      ADD TO CART
-  ================================= */
+  ========================================= */
 
   const addToCart = (product, quantity = 1) => {
+
+    let wasAlreadyInCart = false;
+
 
     setCartItems((currentItems) => {
 
       const existingItem =
         currentItems.find(
-          (item) => item.id === product.id
+          (item) =>
+            String(item.id) ===
+            String(product.id)
         );
 
+
+      /* =====================================
+         ALREADY EXISTS
+      ===================================== */
 
       if (existingItem) {
 
-        return currentItems.map((item) =>
-          item.id === product.id
-            ? {
-                ...item,
-                quantity:
-                  item.quantity + quantity,
-              }
-            : item
-        );
+        wasAlreadyInCart = true;
+
+        return currentItems;
 
       }
 
 
+      /* =====================================
+         ADD NEW PRODUCT
+      ===================================== */
+
       return [
+
         ...currentItems,
 
         {
           ...product,
-          quantity,
+
+          quantity: Number(quantity) || 1,
+
         },
+
       ];
 
     });
 
+
+    return !wasAlreadyInCart;
+
   };
 
 
-  /* =================================
+  /* =========================================
+     CHECK CART
+  ========================================= */
+
+  const isInCart = (id) => {
+
+    return cartItems.some(
+      (item) =>
+        String(item.id) ===
+        String(id)
+    );
+
+  };
+
+
+  /* =========================================
      INCREASE QUANTITY
-  ================================= */
+  ========================================= */
 
   const increaseQuantity = (id) => {
 
     setCartItems((currentItems) =>
 
       currentItems.map((item) =>
-        item.id === id
+
+        String(item.id) === String(id)
+
           ? {
               ...item,
+
               quantity:
-                item.quantity + 1,
+                Number(item.quantity || 0) + 1,
             }
+
           : item
+
       )
 
     );
@@ -99,26 +129,34 @@ export function CartProvider({ children }) {
   };
 
 
-  /* =================================
+  /* =========================================
      DECREASE QUANTITY
-  ================================= */
+  ========================================= */
 
   const decreaseQuantity = (id) => {
 
     setCartItems((currentItems) =>
 
       currentItems
+
         .map((item) =>
-          item.id === id
+
+          String(item.id) === String(id)
+
             ? {
                 ...item,
+
                 quantity:
-                  item.quantity - 1,
+                  Number(item.quantity || 0) - 1,
               }
+
             : item
+
         )
+
         .filter(
-          (item) => item.quantity > 0
+          (item) =>
+            Number(item.quantity || 0) > 0
         )
 
     );
@@ -126,24 +164,27 @@ export function CartProvider({ children }) {
   };
 
 
-  /* =================================
-     REMOVE FROM CART
-  ================================= */
+  /* =========================================
+     REMOVE
+  ========================================= */
 
   const removeFromCart = (id) => {
 
     setCartItems((currentItems) =>
+
       currentItems.filter(
-        (item) => item.id !== id
+        (item) =>
+          String(item.id) !== String(id)
       )
+
     );
 
   };
 
 
-  /* =================================
-     CLEAR CART
-  ================================= */
+  /* =========================================
+     CLEAR
+  ========================================= */
 
   const clearCart = () => {
 
@@ -152,33 +193,38 @@ export function CartProvider({ children }) {
   };
 
 
-  /* =================================
-     CART COUNT
-  ================================= */
+  /* =========================================
+     COUNT
+  ========================================= */
 
   const cartCount = cartItems.reduce(
+
     (total, item) =>
-      total + item.quantity,
+
+      total +
+      Number(item.quantity || 0),
+
     0
+
   );
 
 
-  /* =================================
-     CART TOTAL
-  ================================= */
+  /* =========================================
+     TOTAL
+  ========================================= */
 
   const cartTotal = cartItems.reduce(
+
     (total, item) =>
+
       total +
-      Number(item.price) *
-      item.quantity,
+      Number(item.price || 0) *
+      Number(item.quantity || 0),
+
     0
+
   );
 
-
-  /* =================================
-     PROVIDER
-  ================================= */
 
   return (
 
@@ -188,6 +234,8 @@ export function CartProvider({ children }) {
         cartItems,
 
         addToCart,
+
+        isInCart,
 
         increaseQuantity,
 

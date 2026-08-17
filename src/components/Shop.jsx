@@ -21,7 +21,20 @@ function Shop() {
 
   const [searchParams] = useSearchParams();
 
-  const { addToCart } = useCart();
+
+  /* =========================================
+     CART
+  ========================================= */
+
+  const {
+    cartItems,
+    addToCart,
+  } = useCart();
+
+
+  /* =========================================
+     WISHLIST
+  ========================================= */
 
   const {
     toggleWishlist,
@@ -30,19 +43,26 @@ function Shop() {
   } = useWishlist();
 
 
+  /* =========================================
+     STATE
+  ========================================= */
+
   const [activeCategory, setActiveCategory] =
     useState("ALL");
 
   const [addedProduct, setAddedProduct] =
     useState(null);
 
+  const [cartMessage, setCartMessage] =
+    useState("");
+
   const [wishlistMessage, setWishlistMessage] =
     useState("");
 
 
-  /* =================================
-     SEARCH TEXT
-  ================================= */
+  /* =========================================
+     SEARCH
+  ========================================= */
 
   const searchText =
     searchParams.get("search") || "";
@@ -51,11 +71,12 @@ function Shop() {
     searchText.trim().toLowerCase();
 
 
-  /* =================================
+  /* =========================================
      PRODUCTS
-  ================================= */
+  ========================================= */
 
   const products = [
+
     {
       id: 1,
       name: "QAVERIN NOIR",
@@ -91,12 +112,13 @@ function Shop() {
       price: 109,
       image: eclat,
     },
+
   ];
 
 
-  /* =================================
+  /* =========================================
      CATEGORIES
-  ================================= */
+  ========================================= */
 
   const categories = [
     "ALL",
@@ -107,21 +129,17 @@ function Shop() {
   ];
 
 
-  /* =================================
+  /* =========================================
      FILTER PRODUCTS
-  ================================= */
+  ========================================= */
 
-  const filteredProducts = products.filter(
-    (product) => {
-
-      /* CATEGORY FILTER */
+  const filteredProducts =
+    products.filter((product) => {
 
       const matchesCategory =
         activeCategory === "ALL" ||
         product.category === activeCategory;
 
-
-      /* SEARCH FILTER */
 
       const matchesSearch =
         normalizedSearch === "" ||
@@ -140,13 +158,13 @@ function Shop() {
         matchesCategory &&
         matchesSearch
       );
-    }
-  );
+
+    });
 
 
-  /* =================================
-     OPEN PRODUCT DETAILS
-  ================================= */
+  /* =========================================
+     OPEN PRODUCT
+  ========================================= */
 
   const openProduct = (id) => {
 
@@ -155,26 +173,81 @@ function Shop() {
   };
 
 
-  /* =================================
+  /* =========================================
      ADD TO CART
-  ================================= */
+  ========================================= */
 
   const handleAddToCart = (product) => {
 
+    /* =======================================
+       CHECK CURRENT CART
+    ======================================= */
+
+    const alreadyInCart =
+      cartItems.some(
+        (item) =>
+          String(item.id) ===
+          String(product.id)
+      );
+
+
+    /* =======================================
+       ALREADY IN BAG
+    ======================================= */
+
+    if (alreadyInCart) {
+
+      setAddedProduct(
+        `already-${product.id}`
+      );
+
+      setCartMessage(
+        `✓ ${product.name} is already in your bag`
+      );
+
+
+      setTimeout(() => {
+
+        setAddedProduct(null);
+
+        setCartMessage("");
+
+      }, 2200);
+
+
+      return;
+
+    }
+
+
+    /* =======================================
+       ADD NEW PRODUCT
+    ======================================= */
+
     addToCart(product, 1);
+
 
     setAddedProduct(product.id);
 
+    setCartMessage(
+      `✓ 1 × ${product.name} added to your bag`
+    );
+
+
     setTimeout(() => {
+
       setAddedProduct(null);
-    }, 2000);
+
+      setCartMessage("");
+
+    }, 2200);
 
   };
 
 
-  /* =================================
-     TOGGLE WISHLIST
-  ================================= */
+  /* =========================================
+     WISHLIST
+  ========================================= */
 
   const handleWishlist = (product) => {
 
@@ -184,8 +257,6 @@ function Shop() {
 
     toggleWishlist(product);
 
-
-    /* NOTIFICATION */
 
     if (alreadyWishlisted) {
 
@@ -211,13 +282,18 @@ function Shop() {
   };
 
 
+  /* =========================================
+     RENDER
+  ========================================= */
+
   return (
+
     <main className="shop">
 
 
-      {/* =================================
+      {/* =====================================
           WISHLIST NOTIFICATION
-      ================================= */}
+      ===================================== */}
 
       {wishlistMessage && (
 
@@ -236,11 +312,11 @@ function Shop() {
       )}
 
 
-      {/* =================================
+      {/* =====================================
           CART NOTIFICATION
-      ================================= */}
+      ===================================== */}
 
-      {addedProduct && (
+      {cartMessage && (
 
         <div className="shop-cart-message">
 
@@ -249,7 +325,7 @@ function Shop() {
           </span>
 
           <span>
-            Added to your Qaverin bag
+            {cartMessage}
           </span>
 
         </div>
@@ -257,9 +333,9 @@ function Shop() {
       )}
 
 
-      {/* =================================
+      {/* =====================================
           SHOP HEADER
-      ================================= */}
+      ===================================== */}
 
       <section className="shop-header">
 
@@ -300,9 +376,9 @@ function Shop() {
       </section>
 
 
-      {/* =================================
+      {/* =====================================
           SEARCH RESULT
-      ================================= */}
+      ===================================== */}
 
       {normalizedSearch && (
 
@@ -321,9 +397,9 @@ function Shop() {
       )}
 
 
-      {/* =================================
+      {/* =====================================
           CATEGORY FILTER
-      ================================= */}
+      ===================================== */}
 
       <div className="shop-filters">
 
@@ -341,7 +417,9 @@ function Shop() {
               setActiveCategory(category)
             }
           >
+
             {category}
+
           </button>
 
         ))}
@@ -349,9 +427,9 @@ function Shop() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================
           PRODUCT COUNT
-      ================================= */}
+      ===================================== */}
 
       <div className="shop-top-row">
 
@@ -375,9 +453,9 @@ function Shop() {
       </div>
 
 
-      {/* =================================
+      {/* =====================================
           NO RESULTS
-      ================================= */}
+      ===================================== */}
 
       {filteredProducts.length === 0 ? (
 
@@ -398,18 +476,22 @@ function Shop() {
 
           <button
             type="button"
-            onClick={() => navigate("/shop")}
+            onClick={() =>
+              navigate("/shop")
+            }
           >
+
             VIEW ALL FRAGRANCES
+
             <span>
               →
             </span>
+
           </button>
 
         </section>
 
       ) : (
-
 
         /* =================================
            PRODUCT GRID
@@ -431,9 +513,9 @@ function Shop() {
               >
 
 
-                {/* =================================
+                {/* =========================
                     PRODUCT IMAGE
-                ================================= */}
+                ========================= */}
 
                 <div
                   className="shop-product-image"
@@ -452,9 +534,11 @@ function Shop() {
 
                   <button
                     type="button"
-                    className={`shop-wishlist ${
-                      active ? "active" : ""
-                    }`}
+                    className={
+                      `shop-wishlist ${
+                        active ? "active" : ""
+                      }`
+                    }
                     aria-label={
                       active
                         ? `Remove ${product.name} from wishlist`
@@ -480,9 +564,9 @@ function Shop() {
                 </div>
 
 
-                {/* =================================
+                {/* =========================
                     PRODUCT INFORMATION
-                ================================= */}
+                ========================= */}
 
                 <div className="shop-product-info">
 
@@ -511,9 +595,9 @@ function Shop() {
                 </div>
 
 
-                {/* =================================
+                {/* =========================
                     ADD TO BAG
-                ================================= */}
+                ========================= */}
 
                 <button
                   type="button"
@@ -538,6 +622,7 @@ function Shop() {
 
                 </button>
 
+
               </article>
 
             );
@@ -549,9 +634,9 @@ function Shop() {
       )}
 
 
-      {/* =================================
+      {/* =====================================
           WISHLIST STATUS
-      ================================= */}
+      ===================================== */}
 
       {wishlistCount > 0 && (
 
@@ -579,7 +664,9 @@ function Shop() {
       )}
 
     </main>
+
   );
+
 }
 
 
