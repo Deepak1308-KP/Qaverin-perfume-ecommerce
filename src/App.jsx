@@ -43,7 +43,6 @@ import Signup from "./components/Signup";
 ========================================= */
 
 function Home() {
-
   return (
     <>
       <Hero />
@@ -59,7 +58,6 @@ function Home() {
       <Footer />
     </>
   );
-
 }
 
 
@@ -69,48 +67,29 @@ function Home() {
 ========================================= */
 
 function EntryNotification() {
+  const [showNotification, setShowNotification] = useState(() => {
+    const loggedIn =
+      localStorage.getItem("qaverin-logged-in") === "true";
 
-  const [showNotification, setShowNotification] =
-    useState(false);
+    return !loggedIn;
+  });
 
 
   /* =========================================
-     CHECK LOGIN STATUS
+     HIDE AFTER 5 SECONDS
   ========================================= */
 
   useEffect(() => {
-
-    const loggedIn =
-      localStorage.getItem(
-        "qaverin-logged-in"
-      ) === "true";
-
-
-    /* Show only if NOT logged in */
-
-    if (!loggedIn) {
-
-      setShowNotification(true);
-
-    }
-
-
-    /* Hide after 5 seconds */
+    if (!showNotification) return;
 
     const timer = setTimeout(() => {
-
       setShowNotification(false);
-
-    }, 5000);
-
+    }, 3000);
 
     return () => {
-
       clearTimeout(timer);
-
     };
-
-  }, []);
+  }, [showNotification]);
 
 
   /* =========================================
@@ -118,9 +97,7 @@ function EntryNotification() {
   ========================================= */
 
   if (!showNotification) {
-
     return null;
-
   }
 
 
@@ -129,7 +106,6 @@ function EntryNotification() {
   ========================================= */
 
   return (
-
     <div
       style={{
         position: "fixed",
@@ -250,9 +226,7 @@ function EntryNotification() {
       </div>
 
     </div>
-
   );
-
 }
 
 
@@ -261,9 +235,7 @@ function EntryNotification() {
 ========================================= */
 
 function NotFound() {
-
   return (
-
     <main
       style={{
         minHeight: "80vh",
@@ -355,9 +327,7 @@ function NotFound() {
       </a>
 
     </main>
-
   );
-
 }
 
 
@@ -366,9 +336,7 @@ function NotFound() {
 ========================================= */
 
 function App() {
-
   return (
-
     <CartProvider>
 
       <WishlistProvider>
@@ -552,9 +520,7 @@ function App() {
       </WishlistProvider>
 
     </CartProvider>
-
   );
-
 }
 
 
