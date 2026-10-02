@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import { useCart } from "../context/useCart";
@@ -12,14 +12,18 @@ import oud from "../assets/oud.png";
 import eclat from "../assets/eclat.png";
 
 
+// =========================================
+// COMPONENT
+// =========================================
+
 function ProductDetails() {
 
   const { id } = useParams();
 
 
-  /* =========================================
-     CART
-  ========================================= */
+  // =========================================
+  // CART
+  // =========================================
 
   const {
     cartItems,
@@ -27,9 +31,9 @@ function ProductDetails() {
   } = useCart();
 
 
-  /* =========================================
-     WISHLIST
-  ========================================= */
+  // =========================================
+  // WISHLIST
+  // =========================================
 
   const {
     toggleWishlist,
@@ -37,147 +41,682 @@ function ProductDetails() {
   } = useWishlist();
 
 
-  /* =========================================
-     STATE
-  ========================================= */
+  // =========================================
+  // PRODUCT STATE
+  // =========================================
 
-  const [quantity, setQuantity] =
-    useState(1);
+  const [product, setProduct] = useState(null);
 
-  const [cartMessage, setCartMessage] =
-    useState("");
+  const [loading, setLoading] = useState(true);
 
-  const [wishlistMessage, setWishlistMessage] =
-    useState("");
-
-  const [addingToCart, setAddingToCart] =
-    useState(false);
-
-  const [activeNote, setActiveNote] =
-    useState(null);
+  const [productError, setProductError] = useState(false);
 
 
-  /* =========================================
-     PRODUCTS
-  ========================================= */
+  // =========================================
+  // OTHER STATE
+  // =========================================
 
-  const products = [
+  const [quantity, setQuantity] = useState(1);
 
-    {
-      id: "1",
+  const [cartMessage, setCartMessage] = useState("");
 
-      name: "QAVERIN NOIR",
+  const [wishlistMessage, setWishlistMessage] = useState("");
 
-      type: "Woody Eau de Parfum",
+  const [addingToCart, setAddingToCart] = useState(false);
 
-      price: 129,
-
-      image: noir,
-
-      notes: [
-        "Cedarwood",
-        "Amber",
-        "Black Pepper",
-      ],
-
-      description:
-        "A deep and sophisticated fragrance created for those who leave a lasting impression.",
-
-      mood:
-        "Mysterious · Warm · Sophisticated",
-    },
+  const [activeNote, setActiveNote] = useState(null);
 
 
-    {
-      id: "2",
+  // =========================================
+  // FETCH PRODUCT
+  // =========================================
 
-      name: "QAVERIN ROSE",
+  useEffect(() => {
 
-      type: "Floral Eau de Parfum",
+    let cancelled = false;
 
-      price: 119,
+    const getProduct = async () => {
 
-      image: rose,
+      try {
 
-      notes: [
-        "Rose",
-        "Jasmine",
-        "Vanilla",
-      ],
-
-      description:
-        "A refined floral fragrance that balances elegance, softness and timeless beauty.",
-
-      mood:
-        "Elegant · Soft · Romantic",
-    },
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/products"
+        );
 
 
-    {
-      id: "3",
-
-      name: "QAVERIN OUD",
-
-      type: "Oud Eau de Parfum",
-
-      price: 149,
-
-      image: oud,
-
-      notes: [
-        "Oud",
-        "Sandalwood",
-        "Amber",
-      ],
-
-      description:
-        "A rich and powerful oud composition with a warm and unforgettable character.",
-
-      mood:
-        "Rich · Bold · Intense",
-    },
+        const data = await response.json();
 
 
-    {
-      id: "4",
+        if (!response.ok) {
 
-      name: "QAVERIN ÉCLAT",
+          if (!cancelled) {
+            setProductError(true);
+          }
 
-      type: "Fresh Eau de Parfum",
-
-      price: 109,
-
-      image: eclat,
-
-      notes: [
-        "Bergamot",
-        "Musk",
-        "Citrus",
-      ],
-
-      description:
-        "A fresh and luminous fragrance designed for effortless everyday elegance.",
-
-      mood:
-        "Fresh · Bright · Effortless",
-    },
-
-  ];
+          return;
+        }
 
 
-  /* =========================================
-     FIND PRODUCT
-  ========================================= */
+        // =====================================
+        // FIND PRODUCT
+        // =====================================
 
-  const product = products.find(
-    (item) =>
-      String(item.id) === String(id)
-  );
+        const databaseProduct =
+          data.products.find(
+            (item) =>
+              String(item.id) === String(id)
+          );
 
 
-  /* =========================================
-     PRODUCT NOT FOUND
-  ========================================= */
+        if (!databaseProduct) {
+
+          if (!cancelled) {
+            setProduct(null);
+          }
+
+          return;
+        }
+
+
+        // =====================================
+        // PRODUCT NAME
+        // =====================================
+
+        const productName =
+          databaseProduct.name
+            ? databaseProduct.name.toLowerCase()
+            : "";
+
+
+        // =====================================
+        // PRODUCT IMAGE
+        // =====================================
+
+        let productImage = null;
+
+
+        if (productName.includes("noir")) {
+
+          productImage = noir;
+
+        } else if (productName.includes("rose")) {
+
+          productImage = rose;
+
+        } else if (productName.includes("oud")) {
+
+          productImage = oud;
+
+        } else if (
+          productName.includes("éclat") ||
+          productName.includes("eclat")
+        ) {
+
+          productImage = eclat;
+
+        }
+
+
+        // =====================================
+        // DEFAULT DETAILS
+        // =====================================
+
+        let notes = [
+          "Signature",
+          "Fragrance",
+          "Essence",
+        ];
+
+
+        let mood =
+          "Elegant · Sophisticated · Timeless";
+
+
+        // =====================================
+        // PRODUCT-SPECIFIC DETAILS
+        // =====================================
+
+        if (productName.includes("noir")) {
+
+          notes = [
+            "Cedarwood",
+            "Amber",
+            "Black Pepper",
+          ];
+
+          mood =
+            "Mysterious · Warm · Sophisticated";
+
+        } else if (productName.includes("rose")) {
+
+          notes = [
+            "Rose",
+            "Jasmine",
+            "Vanilla",
+          ];
+
+          mood =
+            "Elegant · Soft · Romantic";
+
+        } else if (productName.includes("oud")) {
+
+          notes = [
+            "Oud",
+            "Sandalwood",
+            "Amber",
+          ];
+
+          mood =
+            "Rich · Bold · Intense";
+
+        } else if (
+          productName.includes("éclat") ||
+          productName.includes("eclat")
+        ) {
+
+          notes = [
+            "Bergamot",
+            "Musk",
+            "Citrus",
+          ];
+
+          mood =
+            "Fresh · Bright · Effortless";
+        }
+
+
+        // =====================================
+        // FRONTEND PRODUCT
+        // =====================================
+
+        const formattedProduct = {
+
+          id:
+            String(databaseProduct.id),
+
+          name:
+            databaseProduct.name,
+
+          type:
+            databaseProduct.description ||
+            databaseProduct.brand ||
+            "Eau de Parfum",
+
+          price:
+            Number(databaseProduct.price),
+
+          image:
+            productImage,
+
+          notes:
+            notes,
+
+          description:
+            databaseProduct.description ||
+            "A refined Qaverin fragrance created for those who leave a lasting impression.",
+
+          mood:
+            mood,
+
+        };
+
+
+        if (!cancelled) {
+
+          setProduct(formattedProduct);
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Product details error:",
+          error
+        );
+
+        if (!cancelled) {
+          setProductError(true);
+        }
+
+      } finally {
+
+        if (!cancelled) {
+          setLoading(false);
+        }
+
+      }
+
+    };
+
+
+    getProduct();
+
+
+    return () => {
+
+      cancelled = true;
+
+    };
+
+  }, [id]);
+
+
+  // =========================================
+  // PRODUCT SEO
+  // =========================================
+
+  useEffect(() => {
+
+    if (!product) {
+      return;
+    }
+
+
+    const siteUrl =
+      "https://qaverin-perfume-ecommerce.vercel.app";
+
+
+    const productUrl =
+      `${siteUrl}/product/${product.id}`;
+
+
+    const productTitle =
+      `${product.name} | Qaverin Perfume`;
+
+
+    const productDescription =
+      `${product.name} by Qaverin. ${product.description} Discover the Qaverin fine fragrance collection.`;
+
+
+    // =======================================
+    // PAGE TITLE
+    // =======================================
+
+    document.title = productTitle;
+
+
+    // =======================================
+    // HELPER
+    // =======================================
+
+    const setMetaTag = (
+      attribute,
+      value,
+      content
+    ) => {
+
+      let element =
+        document.head.querySelector(
+          `meta[${attribute}="${value}"]`
+        );
+
+
+      if (!element) {
+
+        element =
+          document.createElement("meta");
+
+        element.setAttribute(
+          attribute,
+          value
+        );
+
+        document.head.appendChild(
+          element
+        );
+
+      }
+
+
+      element.setAttribute(
+        "content",
+        content
+      );
+
+      return element;
+
+    };
+
+
+    // =======================================
+    // META DESCRIPTION
+    // =======================================
+
+    const descriptionMeta =
+      setMetaTag(
+        "name",
+        "description",
+        productDescription
+      );
+
+
+    // =======================================
+    // OPEN GRAPH
+    // =======================================
+
+    const ogTitle =
+      setMetaTag(
+        "property",
+        "og:title",
+        productTitle
+      );
+
+
+    const ogDescription =
+      setMetaTag(
+        "property",
+        "og:description",
+        productDescription
+      );
+
+
+    const ogUrl =
+      setMetaTag(
+        "property",
+        "og:url",
+        productUrl
+      );
+
+
+    const ogType =
+      setMetaTag(
+        "property",
+        "og:type",
+        "product"
+      );
+
+
+    // =======================================
+    // PRODUCT IMAGE
+    // =======================================
+
+    let absoluteImageUrl = "";
+
+
+    if (product.image) {
+
+      absoluteImageUrl =
+        product.image.startsWith("http")
+          ? product.image
+          : `${window.location.origin}${product.image}`;
+
+    }
+
+
+    let ogImage = null;
+
+
+    if (absoluteImageUrl) {
+
+      ogImage =
+        setMetaTag(
+          "property",
+          "og:image",
+          absoluteImageUrl
+        );
+
+    }
+
+
+    // =======================================
+    // CANONICAL URL
+    // =======================================
+
+    let canonical =
+      document.head.querySelector(
+        'link[rel="canonical"]'
+      );
+
+
+    if (!canonical) {
+
+      canonical =
+        document.createElement("link");
+
+      canonical.setAttribute(
+        "rel",
+        "canonical"
+      );
+
+      document.head.appendChild(
+        canonical
+      );
+
+    }
+
+
+    canonical.setAttribute(
+      "href",
+      productUrl
+    );
+
+
+    // =======================================
+    // PRODUCT STRUCTURED DATA
+    // =======================================
+
+    const existingSchema =
+      document.getElementById(
+        "qaverin-product-schema"
+      );
+
+
+    if (existingSchema) {
+
+      existingSchema.remove();
+
+    }
+
+
+    const productSchema =
+      document.createElement("script");
+
+
+    productSchema.id =
+      "qaverin-product-schema";
+
+
+    productSchema.type =
+      "application/ld+json";
+
+
+    productSchema.textContent =
+      JSON.stringify({
+
+        "@context":
+          "https://schema.org",
+
+        "@type":
+          "Product",
+
+        name:
+          product.name,
+
+        description:
+          product.description,
+
+        image:
+          absoluteImageUrl
+            ? [absoluteImageUrl]
+            : [],
+
+        brand: {
+
+          "@type":
+            "Brand",
+
+          name:
+            "Qaverin",
+
+        },
+
+        sku:
+          String(product.id),
+
+        offers: {
+
+          "@type":
+            "Offer",
+
+          url:
+            productUrl,
+
+          priceCurrency:
+            "USD",
+
+          price:
+            product.price.toFixed(2),
+
+          seller: {
+
+            "@type":
+              "Organization",
+
+            name:
+              "Qaverin",
+
+          },
+
+        },
+
+      });
+
+
+    document.head.appendChild(
+      productSchema
+    );
+
+
+    // =======================================
+    // CLEANUP
+    // =======================================
+
+    return () => {
+
+      document.title =
+        "Qaverin | Luxury Perfumes & Fine Fragrances";
+
+
+      if (descriptionMeta) {
+        descriptionMeta.remove();
+      }
+
+
+      if (ogTitle) {
+        ogTitle.remove();
+      }
+
+
+      if (ogDescription) {
+        ogDescription.remove();
+      }
+
+
+      if (ogUrl) {
+        ogUrl.remove();
+      }
+
+
+      if (ogType) {
+        ogType.remove();
+      }
+
+
+      if (ogImage) {
+        ogImage.remove();
+      }
+
+
+      if (canonical) {
+        canonical.remove();
+      }
+
+
+      const schema =
+        document.getElementById(
+          "qaverin-product-schema"
+        );
+
+
+      if (schema) {
+        schema.remove();
+      }
+
+    };
+
+  }, [product]);
+
+
+  // =========================================
+  // LOADING
+  // =========================================
+
+  if (loading) {
+
+    return (
+
+      <main className="product-not-found">
+
+        <span>
+          ✦
+        </span>
+
+        <p>
+          QAVERIN · FINE FRAGRANCE
+        </p>
+
+        <h1>
+          Loading fragrance...
+        </h1>
+
+      </main>
+
+    );
+
+  }
+
+
+  // =========================================
+  // ERROR
+  // =========================================
+
+  if (productError) {
+
+    return (
+
+      <main className="product-not-found">
+
+        <span>
+          ✦
+        </span>
+
+        <p>
+          QAVERIN · FINE FRAGRANCE
+        </p>
+
+        <h1>
+          Unable to load fragrance.
+        </h1>
+
+        <p>
+          Please make sure the Flask backend
+          is running.
+        </p>
+
+        <Link to="/shop">
+          BACK TO SHOP →
+        </Link>
+
+      </main>
+
+    );
+
+  }
+
+
+  // =========================================
+  // PRODUCT NOT FOUND
+  // =========================================
 
   if (!product) {
 
@@ -208,22 +747,25 @@ function ProductDetails() {
   }
 
 
-  /* =========================================
-     WISHLIST STATUS
-  ========================================= */
+  // =========================================
+  // WISHLIST STATUS
+  // =========================================
 
   const wishlisted =
-    isWishlisted(Number(product.id));
+    isWishlisted(
+      Number(product.id)
+    );
 
 
-  /* =========================================
-     QUANTITY
-  ========================================= */
+  // =========================================
+  // QUANTITY
+  // =========================================
 
   const increaseQuantity = () => {
 
     setQuantity(
-      (current) => current + 1
+      (current) =>
+        current + 1
     );
 
   };
@@ -241,15 +783,16 @@ function ProductDetails() {
   };
 
 
-  /* =========================================
-     ADD TO BAG
-  ========================================= */
+  // =========================================
+  // ADD TO BAG
+  // =========================================
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
 
-    /* =======================================
-       ALWAYS CHECK CURRENT CART
-    ======================================= */
+    if (addingToCart) {
+      return;
+    }
+
 
     const alreadyInCart =
       cartItems.some(
@@ -258,10 +801,6 @@ function ProductDetails() {
           String(product.id)
       );
 
-
-    /* =======================================
-       PRODUCT ALREADY IN BAG
-    ======================================= */
 
     if (alreadyInCart) {
 
@@ -282,42 +821,58 @@ function ProductDetails() {
     }
 
 
-    /* =======================================
-       ADD NEW PRODUCT
-    ======================================= */
-
-    addToCart(
-      product,
-      quantity
-    );
-
-
-    /* =======================================
-       SUCCESS MESSAGE
-    ======================================= */
-
     setAddingToCart(true);
 
-
-    setCartMessage(
-      `✓ ${quantity} × ${product.name} added to your bag`
-    );
+    setCartMessage("");
 
 
-    setTimeout(() => {
+    try {
+
+      const success =
+        await addToCart(
+          product,
+          quantity
+        );
+
+
+      if (success) {
+
+        setCartMessage(
+          `✓ ${quantity} × ${product.name} added to your bag`
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Product add to cart error:",
+        error
+      );
+
+      setCartMessage(
+        "Unable to add product to your bag."
+      );
+
+    } finally {
 
       setAddingToCart(false);
 
-      setCartMessage("");
 
-    }, 2200);
+      setTimeout(() => {
+
+        setCartMessage("");
+
+      }, 2200);
+
+    }
 
   };
 
 
-  /* =========================================
-     WISHLIST
-  ========================================= */
+  // =========================================
+  // WISHLIST
+  // =========================================
 
   const handleWishlist = () => {
 
@@ -331,7 +886,8 @@ function ProductDetails() {
 
       ...product,
 
-      id: Number(product.id),
+      id:
+        Number(product.id),
 
     });
 
@@ -360,9 +916,9 @@ function ProductDetails() {
   };
 
 
-  /* =========================================
-     FRAGRANCE NOTE
-  ========================================= */
+  // =========================================
+  // FRAGRANCE NOTE
+  // =========================================
 
   const handleNoteClick = (note) => {
 
@@ -375,9 +931,9 @@ function ProductDetails() {
   };
 
 
-  /* =========================================
-     RENDER
-  ========================================= */
+  // =========================================
+  // RENDER
+  // =========================================
 
   return (
 
@@ -470,10 +1026,20 @@ function ProductDetails() {
 
           <div className="product-image-frame">
 
-            <img
-              src={product.image}
-              alt={product.name}
-            />
+            {product.image ? (
+
+              <img
+                src={product.image}
+                alt={`${product.name} perfume by Qaverin`}
+              />
+
+            ) : (
+
+              <div>
+                No Image
+              </div>
+
+            )}
 
           </div>
 
@@ -751,7 +1317,6 @@ function ProductDetails() {
 
           <button
             type="button"
-
             className={
               `detail-add-button ${
                 addingToCart
@@ -759,16 +1324,14 @@ function ProductDetails() {
                   : ""
               }`
             }
-
             onClick={handleAddToCart}
-
             disabled={addingToCart}
           >
 
             <span>
 
               {addingToCart
-                ? "ADDED TO BAG"
+                ? "ADDING..."
                 : "ADD TO BAG"}
 
             </span>
@@ -777,7 +1340,7 @@ function ProductDetails() {
             <span className="add-button-arrow">
 
               {addingToCart
-                ? "✓"
+                ? "..."
                 : "→"}
 
             </span>

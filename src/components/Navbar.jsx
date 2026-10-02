@@ -12,56 +12,92 @@ import { useWishlist } from "../context/useWishlist";
 import "./Navbar.css";
 
 
+// =========================================
+// NAVBAR
+// =========================================
+
 function Navbar() {
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  // =========================================
+  // MENU
+  // =========================================
 
-  const [searchText, setSearchText] = useState("");
+  const [menuOpen, setMenuOpen] =
+    useState(false);
 
-
-  /* =========================================
-     THEME
-  ========================================= */
-
-  const [darkMode, setDarkMode] = useState(() => {
-
-    const savedTheme =
-      localStorage.getItem("qaverin-theme");
-
-    return savedTheme === "dark";
-
-  });
+  const [searchText, setSearchText] =
+    useState("");
 
 
-  const navigate = useNavigate();
+  // =========================================
+  // AUTH STATE
+  // =========================================
 
-  const location = useLocation();
+  const [authVersion, setAuthVersion] =
+    useState(0);
 
 
-  /* =========================================
-     LOGIN STATUS
-  ========================================= */
+  // =========================================
+  // THEME
+  // =========================================
+
+  const [darkMode, setDarkMode] =
+    useState(() => {
+
+      const savedTheme =
+        localStorage.getItem(
+          "qaverin-theme"
+        );
+
+      return savedTheme === "dark";
+
+    });
+
+
+  // =========================================
+  // NAVIGATION
+  // =========================================
+
+  const navigate =
+    useNavigate();
+
+  const location =
+    useLocation();
+
+
+  // =========================================
+  // LOGIN STATUS
+  // =========================================
 
   const isLoggedIn =
+    authVersion >= 0 &&
     localStorage.getItem(
       "qaverin-logged-in"
     ) === "true";
 
 
-  /* =========================================
-     LOGGED-IN USER
-  ========================================= */
+  // =========================================
+  // LOGGED-IN USER
+  // =========================================
 
   let user = null;
 
   try {
 
     const savedUser =
-      localStorage.getItem("qaverin-user");
+      localStorage.getItem(
+        "qaverin-current-user"
+      ) ||
+      localStorage.getItem(
+        "qaverin-user"
+      );
 
     if (savedUser) {
 
-      user = JSON.parse(savedUser);
+      user =
+        JSON.parse(
+          savedUser
+        );
 
     }
 
@@ -72,9 +108,9 @@ function Navbar() {
   }
 
 
-  /* =========================================
-     USER NAME
-  ========================================= */
+  // =========================================
+  // USER NAME
+  // =========================================
 
   const userName =
     user?.name ||
@@ -87,18 +123,48 @@ function Navbar() {
     );
 
 
-  /* =========================================
-     CONTEXT
-  ========================================= */
+  // =========================================
+  // CART + WISHLIST
+  // =========================================
 
-  const { cartCount } = useCart();
+  const {
+    cartItems,
+  } = useCart();
 
-  const { wishlistCount } = useWishlist();
+  const {
+    wishlistCount,
+  } = useWishlist();
 
 
-  /* =========================================
-     APPLY THEME
-  ========================================= */
+  // =========================================
+  // CART ICON COUNT
+  // =========================================
+  //
+  // Shows number of different products.
+  //
+  // Example:
+  //
+  // Noir × 4
+  // Rose × 2
+  //
+  // Badge = 2
+  //
+  // Logged out:
+  //
+  // Badge = 0 / hidden
+  //
+  // =========================================
+
+  const cartCount =
+    isLoggedIn &&
+    Array.isArray(cartItems)
+      ? cartItems.length
+      : 0;
+
+
+  // =========================================
+  // APPLY THEME
+  // =========================================
 
   useEffect(() => {
 
@@ -129,33 +195,90 @@ function Navbar() {
   }, [darkMode]);
 
 
-  /* =========================================
-     TOGGLE THEME
-  ========================================= */
+  // =========================================
+  // LOGIN / LOGOUT STATE CHANGE
+  // =========================================
+  //
+  // Login.jsx and Account.jsx dispatch:
+  //
+  // qaverin-auth-change
+  //
+  // This forces Navbar to read the newest
+  // localStorage authentication information.
+  //
+  // =========================================
 
-  const toggleTheme = () => {
+  useEffect(() => {
 
-    setDarkMode(
-      previous => !previous
+    const handleAuthChange = () => {
+
+      setAuthVersion(
+        previous =>
+          previous + 1
+      );
+
+      setMenuOpen(false);
+
+    };
+
+
+    window.addEventListener(
+      "qaverin-auth-change",
+      handleAuthChange
+    );
+
+
+    return () => {
+
+      window.removeEventListener(
+        "qaverin-auth-change",
+        handleAuthChange
+      );
+
+    };
+
+  }, []);
+
+
+  // =========================================
+  // TOGGLE THEME
+  // =========================================
+
+ const toggleTheme = () => {
+  const newTheme = !darkMode;
+
+  localStorage.setItem(
+    "qaverin-theme",
+    newTheme ? "dark" : "light"
+  );
+
+  setDarkMode(newTheme);
+
+  window.dispatchEvent(
+    new CustomEvent("qaverin-theme-change", {
+      detail: {
+        darkMode: newTheme,
+      },
+    })
+  );
+};
+
+  // =========================================
+  // ACTIVE PAGE
+  // =========================================
+
+  const isActive = (path) => {
+
+    return (
+      location.pathname === path
     );
 
   };
 
 
-  /* =========================================
-     ACTIVE PAGE
-  ========================================= */
-
-  const isActive = (path) => {
-
-    return location.pathname === path;
-
-  };
-
-
-  /* =========================================
-     SEARCH
-  ========================================= */
+  // =========================================
+  // SEARCH
+  // =========================================
 
   const handleSearch = (event) => {
 
@@ -177,7 +300,9 @@ function Navbar() {
 
 
     navigate(
-      `/shop?search=${encodeURIComponent(search)}`
+      `/shop?search=${encodeURIComponent(
+        search
+      )}`
     );
 
     setMenuOpen(false);
@@ -185,9 +310,9 @@ function Navbar() {
   };
 
 
-  /* =========================================
-     SEARCH CHANGE
-  ========================================= */
+  // =========================================
+  // SEARCH CHANGE
+  // =========================================
 
   const handleSearchChange = (event) => {
 
@@ -198,9 +323,9 @@ function Navbar() {
   };
 
 
-  /* =========================================
-     LOGO CLICK
-  ========================================= */
+  // =========================================
+  // LOGO CLICK
+  // =========================================
 
   const handleLogoClick = () => {
 
@@ -211,9 +336,9 @@ function Navbar() {
   };
 
 
-  /* =========================================
-     NAVIGATION CLICK
-  ========================================= */
+  // =========================================
+  // NAVIGATION CLICK
+  // =========================================
 
   const handleNavigation = () => {
 
@@ -224,9 +349,9 @@ function Navbar() {
   };
 
 
-  /* =========================================
-     ACCOUNT CLICK
-  ========================================= */
+  // =========================================
+  // ACCOUNT CLICK
+  // =========================================
 
   const handleAccountClick = () => {
 
@@ -245,9 +370,9 @@ function Navbar() {
   };
 
 
-  /* =========================================
-     MOBILE ACCOUNT CLICK
-  ========================================= */
+  // =========================================
+  // MOBILE ACCOUNT CLICK
+  // =========================================
 
   const handleMobileAccountClick = () => {
 
@@ -265,6 +390,10 @@ function Navbar() {
 
   };
 
+
+  // =========================================
+  // RENDER
+  // =========================================
 
   return (
 
@@ -395,7 +524,9 @@ function Navbar() {
                   r="7"
                 />
 
-                <path d="m20 20-4-4" />
+                <path
+                  d="m20 20-4-4"
+                />
 
               </svg>
 
@@ -437,12 +568,19 @@ function Navbar() {
               strokeWidth="1.5"
             >
 
-              <path d="M20.8 8.6c0 5.5-8.8 10.4-8.8 10.4S3.2 14.1 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z" />
+              <path
+                d="M20.8 8.6c0 5.5-8.8 10.4-8.8 10.4S3.2 14.1 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z"
+              />
 
             </svg>
 
 
-            {wishlistCount > 0 && (
+            {/* =================================
+                WISHLIST BADGE
+            ================================= */}
+
+            {isLoggedIn &&
+              wishlistCount > 0 && (
 
               <span className="wishlist-count">
 
@@ -479,7 +617,9 @@ function Navbar() {
               strokeWidth="1.5"
             >
 
-              <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6" />
+              <path
+                d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"
+              />
 
               <circle
                 cx="10"
@@ -495,6 +635,10 @@ function Navbar() {
 
             </svg>
 
+
+            {/* =================================
+                CART BADGE
+            ================================= */}
 
             {cartCount > 0 && (
 
@@ -554,7 +698,9 @@ function Navbar() {
                   r="3"
                 />
 
-                <path d="M6.5 19c.9-2.7 3-4.2 5.5-4.2s4.6 1.5 5.5 4.2" />
+                <path
+                  d="M6.5 19c.9-2.7 3-4.2 5.5-4.2s4.6 1.5 5.5 4.2"
+                />
 
               </svg>
 
@@ -640,7 +786,9 @@ function Navbar() {
                 strokeWidth="1.6"
               >
 
-                <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z" />
+                <path
+                  d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"
+                />
 
               </svg>
 
@@ -657,7 +805,10 @@ function Navbar() {
             type="button"
             className="mobile-menu-button"
             onClick={() =>
-              setMenuOpen(previous => !previous)
+              setMenuOpen(
+                previous =>
+                  !previous
+              )
             }
             aria-label={
               menuOpen
@@ -741,12 +892,16 @@ function Navbar() {
         </Link>
 
 
-        {/* MOBILE ACCOUNT */}
+        {/* =================================
+            MOBILE ACCOUNT
+        ================================= */}
 
         <button
           type="button"
           className="mobile-account-button"
-          onClick={handleMobileAccountClick}
+          onClick={
+            handleMobileAccountClick
+          }
         >
 
           {isLoggedIn
@@ -756,7 +911,9 @@ function Navbar() {
         </button>
 
 
-        {/* MOBILE THEME */}
+        {/* =================================
+            MOBILE THEME
+        ================================= */}
 
         <button
           type="button"
@@ -771,6 +928,7 @@ function Navbar() {
               : "DARK MODE"}
 
           </span>
+
 
           <span>
 

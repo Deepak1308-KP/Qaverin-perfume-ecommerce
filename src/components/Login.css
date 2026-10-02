@@ -213,6 +213,83 @@
 
 
 /* =========================================
+   PASSWORD INPUT
+========================================= */
+
+.password-input-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+
+.password-input-wrapper input {
+  padding-right: 48px;
+}
+
+
+/* Small show/hide password icon */
+
+.password-toggle {
+  position: absolute;
+
+  top: 50%;
+  right: 16px;
+
+  width: 16px;
+  height: 16px;
+
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateY(-50%);
+
+  border: none;
+
+  background: transparent;
+
+  color: #706961;
+
+  cursor: pointer;
+
+  line-height: 0;
+
+  appearance: none;
+
+  -webkit-appearance: none;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.password-toggle svg {
+  width: 16px;
+  height: 16px;
+
+  display: block;
+
+  flex-shrink: 0;
+}
+
+
+.password-toggle:hover {
+  color: #9b7540;
+}
+
+
+.password-toggle:focus {
+  outline: none;
+
+  color: #9b7540;
+}
+
+
+/* =========================================
    OPTIONS
 ========================================= */
 
@@ -515,6 +592,385 @@
 
 
 /* =========================================
+   FORGOT PASSWORD MODAL
+========================================= */
+
+.forgot-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background:
+    rgba(
+      23,
+      21,
+      19,
+      0.55
+    );
+
+  backdrop-filter:
+    blur(4px);
+
+  -webkit-backdrop-filter:
+    blur(4px);
+}
+
+
+.forgot-modal {
+  position: relative;
+
+  width: 100%;
+
+  max-width: 440px;
+
+  padding: 45px 40px;
+
+  box-sizing: border-box;
+
+  text-align: left;
+
+  background:
+    #f7f4ef;
+
+  color:
+    #171513;
+
+  border:
+    1px solid
+    #d8d0c7;
+
+  box-shadow:
+    0 20px 60px
+    rgba(
+      23,
+      21,
+      19,
+      0.18
+    );
+
+  animation:
+    forgotModalFade
+    0.3s
+    ease
+    both;
+}
+
+
+.forgot-modal-close {
+  position: absolute;
+
+  top: 14px;
+  right: 16px;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background: transparent;
+
+  color:
+    #706961;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 25px;
+
+  font-weight: 300;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.forgot-modal-close:hover {
+  color:
+    #9b7540;
+}
+
+
+.forgot-modal .login-eyebrow {
+  margin-bottom: 14px;
+}
+
+
+.forgot-modal h2 {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 34px;
+
+  font-weight: 400;
+
+  line-height: 1.1;
+
+  color:
+    #171513;
+}
+
+
+.forgot-modal-description {
+  margin: 18px 0 28px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 12px;
+
+  line-height: 1.8;
+
+  color:
+    #706961;
+}
+
+
+.forgot-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.forgot-form label {
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color:
+    #9b7540;
+}
+
+
+.forgot-form input {
+  width: 100%;
+
+  height: 52px;
+
+  padding:
+    0 17px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    #d8d0c7;
+
+  outline: none;
+
+  background:
+    #fbfaf7;
+
+  color:
+    #171513;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.forgot-form input::placeholder {
+  color:
+    #aaa29a;
+}
+
+
+.forgot-form input:focus {
+  border-color:
+    #9b7540;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      155,
+      117,
+      64,
+      0.1
+    );
+}
+
+
+.forgot-error,
+.forgot-success {
+  margin: 5px 0 0;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+}
+
+
+.forgot-error {
+  color:
+    #a33a2b;
+}
+
+
+.forgot-success {
+  color:
+    #5f7a4f;
+}
+
+
+.forgot-submit {
+  width: 100%;
+
+  height: 52px;
+
+  margin-top: 10px;
+
+  border:
+    1px solid
+    #211e1b;
+
+  background:
+    #211e1b;
+
+  color:
+    #f7f4ef;
+
+  cursor: pointer;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.forgot-submit:hover {
+  background:
+    #9b7540;
+
+  border-color:
+    #9b7540;
+
+  transform:
+    translateY(-1px);
+}
+
+
+.forgot-submit:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+
+
+.forgot-back-button {
+  width: 100%;
+
+  margin-top: 2px;
+
+  padding: 8px 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #706961;
+
+  cursor: pointer;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.5px;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.forgot-back-button:hover {
+  color: #9b7540;
+}
+
+
+.forgot-back-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+body.dark-theme .forgot-back-button {
+  color: #aaa198;
+}
+
+
+body.dark-theme .forgot-back-button:hover {
+  color: #c29a63;
+}
+
+
+/* =========================================
    ANIMATION
 ========================================= */
 
@@ -532,6 +988,27 @@
 
     transform:
       translateY(0);
+  }
+
+}
+
+
+@keyframes forgotModalFade {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(15px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
   }
 
 }
@@ -614,6 +1091,23 @@ body.dark-theme .login-field input:focus {
       99,
       0.1
     );
+}
+
+
+/* =========================================
+   DARK PASSWORD ICON
+========================================= */
+
+body.dark-theme .password-toggle {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .password-toggle:hover,
+body.dark-theme .password-toggle:focus {
+  color:
+    #c29a63;
 }
 
 
@@ -719,6 +1213,118 @@ body.dark-theme .login-home:hover {
 
 
 /* =========================================
+   DARK FORGOT PASSWORD MODAL
+========================================= */
+
+body.dark-theme .forgot-modal {
+  background:
+    #211e1b;
+
+  border-color:
+    #403a34;
+
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .forgot-modal h2 {
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .forgot-modal-description {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .forgot-modal-close {
+  color:
+    #aaa198;
+}
+
+
+body.dark-theme .forgot-modal-close:hover {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .forgot-form label {
+  color:
+    #c29a63;
+}
+
+
+body.dark-theme .forgot-form input {
+  background:
+    #171513;
+
+  border-color:
+    #403a34;
+
+  color:
+    #f7f4ef;
+}
+
+
+body.dark-theme .forgot-form input::placeholder {
+  color:
+    #817a73;
+}
+
+
+body.dark-theme .forgot-form input:focus {
+  border-color:
+    #c29a63;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      194,
+      154,
+      99,
+      0.1
+    );
+}
+
+
+body.dark-theme .forgot-error {
+  color:
+    #e18b7f;
+}
+
+
+body.dark-theme .forgot-success {
+  color:
+    #9db889;
+}
+
+
+body.dark-theme .forgot-submit {
+  background:
+    #f7f4ef;
+
+  border-color:
+    #f7f4ef;
+
+  color:
+    #171513;
+}
+
+
+body.dark-theme .forgot-submit:hover {
+  background:
+    #c29a63;
+
+  border-color:
+    #c29a63;
+}
+
+
+/* =========================================
    TABLET
 ========================================= */
 
@@ -808,6 +1414,11 @@ body.dark-theme .login-home:hover {
   }
 
 
+  .password-toggle {
+    right: 15px;
+  }
+
+
   .login-options {
     align-items:
       flex-start;
@@ -829,6 +1440,21 @@ body.dark-theme .login-home:hover {
   .login-home {
     margin-top:
       38px;
+  }
+
+
+  .forgot-modal {
+    max-width:
+      100%;
+
+    padding:
+      40px 25px;
+  }
+
+
+  .forgot-modal h2 {
+    font-size:
+      29px;
   }
 
 }
@@ -878,6 +1504,24 @@ body.dark-theme .login-home:hover {
       9px;
   }
 
+
+  .forgot-modal {
+    padding:
+      38px 20px;
+  }
+
+
+  .forgot-modal h2 {
+    font-size:
+      26px;
+  }
+
+
+  .forgot-modal-description {
+    font-size:
+      11px;
+  }
+
 }
 
 
@@ -887,16 +1531,65 @@ body.dark-theme .login-home:hover {
 
 @media (prefers-reduced-motion: reduce) {
 
-  .login-container {
+  .login-container,
+  .forgot-modal {
     animation:
       none;
   }
 
   .login-button,
   .login-button span,
-  .signup-link a {
+  .signup-link a,
+  .password-toggle,
+  .forgot-submit,
+  .forgot-modal-close {
     transition:
       none;
   }
 
+}
+
+
+/* =========================================
+   PASSWORD RESET SUCCESS MESSAGE
+   ========================================= */
+
+.password-reset-success {
+  text-align: center;
+  padding: 20px;
+}
+
+.password-reset-success h3 {
+  margin: 10px 0;
+  font-size: 22px;
+  color: #2e7d32;
+}
+
+.password-reset-success p {
+  margin: 8px 0 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.password-reset-success-icon {
+  font-size: 32px;
+  color: #2e7d32;
+  margin-bottom: 5px;
+}
+
+.password-reset-login-button {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.password-reset-login-button:hover {
+  opacity: 0.85;
 }

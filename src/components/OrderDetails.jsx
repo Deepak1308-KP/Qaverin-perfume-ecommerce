@@ -1,20 +1,96 @@
-import { Link, Navigate, useParams } from "react-router-dom";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-import { useOrder } from "../context/useOrder";
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 
 import "./OrderDetails.css";
 
+import noir from "../assets/noir.png";
+import rose from "../assets/rose.png";
+import oud from "../assets/oud.png";
+import eclat from "../assets/eclat.png";
+
+
+// =========================================
+// PRODUCT IMAGE
+// =========================================
+
+function getProductImage(name) {
+
+  const productName =
+    name
+      ? name.toLowerCase()
+      : "";
+
+  if (productName.includes("noir")) {
+    return noir;
+  }
+
+  if (productName.includes("rose")) {
+    return rose;
+  }
+
+  if (productName.includes("oud")) {
+    return oud;
+  }
+
+  if (
+    productName.includes("éclat") ||
+    productName.includes("eclat")
+  ) {
+    return eclat;
+  }
+
+  return null;
+}
+
+
+// =========================================
+// COMPONENT
+// =========================================
 
 function OrderDetails() {
 
   const { id } = useParams();
 
-  const { orders } = useOrder();
+  const location = useLocation();
 
 
-  /* =========================================
-     LOGIN STATUS
-  ========================================= */
+  // =========================================
+  // STATE
+  // =========================================
+
+  const [order, setOrder] =
+    useState(null);
+
+  const [customerOrderNumber, setCustomerOrderNumber] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+
+
+  // =========================================
+  // CUSTOMER ORDER NUMBER FROM NAVIGATION
+  // =========================================
+
+  const passedOrderNumber =
+    location.state?.customerOrderNumber || null;
+
+
+  // =========================================
+  // LOGIN STATUS
+  // =========================================
 
   const isLoggedIn =
     localStorage.getItem(
@@ -22,9 +98,313 @@ function OrderDetails() {
     ) === "true";
 
 
-  /* =========================================
-     PROTECT ORDER DETAILS PAGE
-  ========================================= */
+  // =========================================
+  // FETCH ORDER
+  // =========================================
+
+  useEffect(() => {
+
+    let cancelled = false;
+
+
+    const fetchOrder = async () => {
+
+      const token =
+        localStorage.getItem(
+          "qaverin-token"
+        );
+
+
+      // =====================================
+      // TOKEN CHECK
+      // =====================================
+
+      if (!token) {
+
+        if (!cancelled) {
+
+          setError(
+            "Login session expired."
+          );
+
+          setLoading(false);
+
+        }
+
+        return;
+
+      }
+
+
+      try {
+
+        // =====================================
+        // FETCH SPECIFIC ORDER
+        // =====================================
+
+        const orderResponse =
+          await fetch(
+            `http://127.0.0.1:5000/api/orders/${id}`,
+            {
+              method: "GET",
+
+              headers: {
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
+          );
+
+
+        const orderData =
+          await orderResponse.json();
+
+
+        if (cancelled) {
+          return;
+        }
+
+
+        // =====================================
+        // API ERROR
+        // =====================================
+
+        if (!orderResponse.ok) {
+
+          setError(
+            orderData.message ||
+            "Unable to load order."
+          );
+
+          setOrder(null);
+
+          setLoading(false);
+
+          return;
+
+        }
+
+
+        // =====================================
+        // CURRENT ORDER
+        // =====================================
+
+        const currentOrder =
+          orderData.order;
+
+
+        if (!currentOrder) {
+
+          setError(
+            "Order information was not returned."
+          );
+
+          setOrder(null);
+
+          setLoading(false);
+
+          return;
+
+        }
+
+
+        setOrder(
+          currentOrder
+        );
+
+
+        // =====================================
+        // CUSTOMER ORDER NUMBER
+        // =====================================
+        //
+        // First priority:
+        // Number passed from Orders.jsx
+        //
+        // Second priority:
+        // Calculate from all orders.
+        //
+        // Never use database ID as the
+        // customer-facing order number.
+        // =====================================
+
+        if (passedOrderNumber) {
+
+          setCustomerOrderNumber(
+            Number(passedOrderNumber)
+          );
+
+        } else {
+
+          try {
+
+            const ordersResponse =
+              await fetch(
+                "http://127.0.0.1:5000/api/orders",
+                {
+                  method: "GET",
+
+                  headers: {
+                    Authorization:
+                      `Bearer ${token}`,
+                  },
+                }
+              );
+
+
+            const ordersData =
+              await ordersResponse.json();
+
+
+            if (
+              ordersResponse.ok &&
+              Array.isArray(
+                ordersData.orders
+              )
+            ) {
+
+              const allOrders =
+                [...ordersData.orders];
+
+
+              // =================================
+              // SORT NEWEST FIRST
+              // =================================
+
+              allOrders.sort(
+                (a, b) => {
+
+                  const dateA =
+                    new Date(
+                      a.created_at ||
+                      a.createdAt ||
+                      a.date ||
+                      0
+                    ).getTime();
+
+
+                  const dateB =
+                    new Date(
+                      b.created_at ||
+                      b.createdAt ||
+                      b.date ||
+                      0
+                    ).getTime();
+
+
+                  if (
+                    !Number.isNaN(dateA) &&
+                    !Number.isNaN(dateB) &&
+                    dateA !== dateB
+                  ) {
+
+                    return dateB - dateA;
+
+                  }
+
+
+                  return (
+                    Number(b.id || 0) -
+                    Number(a.id || 0)
+                  );
+
+                }
+              );
+
+
+              // =================================
+              // FIND CURRENT ORDER
+              // =================================
+
+              const currentId =
+                Number(
+                  currentOrder?.id || id
+                );
+
+
+              const currentIndex =
+                allOrders.findIndex(
+                  (item) =>
+                    Number(item.id) ===
+                    currentId
+                );
+
+
+              // =================================
+              // CALCULATE CUSTOMER NUMBER
+              // =================================
+
+              if (currentIndex !== -1) {
+
+                const calculatedNumber =
+                  allOrders.length -
+                  currentIndex;
+
+
+                setCustomerOrderNumber(
+                  calculatedNumber
+                );
+
+              }
+
+            }
+
+          } catch (ordersError) {
+
+            console.error(
+              "Unable to calculate customer order number:",
+              ordersError
+            );
+
+          }
+
+        }
+
+
+        setLoading(false);
+
+
+      } catch (fetchError) {
+
+        if (cancelled) {
+          return;
+        }
+
+
+        console.error(
+          "Order details error:",
+          fetchError
+        );
+
+
+        setError(
+          "Unable to connect to the server."
+        );
+
+
+        setOrder(null);
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+    fetchOrder();
+
+
+    return () => {
+
+      cancelled = true;
+
+    };
+
+  }, [id, passedOrderNumber]);
+
+
+  // =========================================
+  // LOGIN PROTECTION
+  // =========================================
 
   if (!isLoggedIn) {
 
@@ -38,19 +418,49 @@ function OrderDetails() {
   }
 
 
-  /* =========================================
-     FIND ORDER
-  ========================================= */
+  // =========================================
+  // LOADING
+  // =========================================
 
-  const order = orders.find(
-    (item) =>
-      String(item.id) === String(id)
-  );
+  if (loading) {
+
+    return (
+
+      <main className="order-details-page">
+
+        <section className="order-details-empty">
+
+          <span className="order-details-empty-icon">
+            ✦
+          </span>
 
 
-  /* =========================================
-     ORDER NOT FOUND
-  ========================================= */
+          <p className="order-details-eyebrow">
+            QAVERIN · ORDER
+          </p>
+
+
+          <h1>
+            Loading <em>order.</em>
+          </h1>
+
+
+          <p>
+            Fetching your order details.
+          </p>
+
+        </section>
+
+      </main>
+
+    );
+
+  }
+
+
+  // =========================================
+  // ORDER NOT FOUND
+  // =========================================
 
   if (!order) {
 
@@ -64,17 +474,22 @@ function OrderDetails() {
             ✦
           </span>
 
+
           <p className="order-details-eyebrow">
             QAVERIN · ORDER
           </p>
+
 
           <h1>
             Order <em>not found.</em>
           </h1>
 
+
           <p>
-            We couldn't find the order you're looking for.
+            {error ||
+              "We couldn't find the order you're looking for."}
           </p>
+
 
           <Link
             to="/orders"
@@ -92,9 +507,9 @@ function OrderDetails() {
   }
 
 
-  /* =========================================
-     ORDER ITEMS
-  ========================================= */
+  // =========================================
+  // ORDER ITEMS
+  // =========================================
 
   const orderItems =
     Array.isArray(order.items)
@@ -102,40 +517,144 @@ function OrderDetails() {
       : [];
 
 
-  /* =========================================
-     PAYMENT LABEL
-  ========================================= */
+  // =========================================
+  // PAYMENT LABEL
+  // =========================================
 
   const paymentMethod =
-    order.payment === "card"
+    order.payment_method === "card"
       ? "Credit / Debit Card"
-      : order.payment === "upi"
+      : order.payment_method === "upi"
       ? "UPI"
-      : order.payment === "cod"
+      : order.payment_method === "cod"
       ? "Cash on Delivery"
       : "—";
 
 
-  /* =========================================
-     ORDER TOTAL
-  ========================================= */
+  // =========================================
+  // ORDER TOTAL
+  // =========================================
 
   const orderTotal =
-    Number(order.total || 0);
+    Number(
+      order.total_amount ||
+      order.total ||
+      0
+    );
 
 
-  /* =========================================
-     RENDER
-  ========================================= */
+  // =========================================
+  // ORDER DATE
+  // =========================================
+
+  const formatOrderDate = () => {
+
+    const rawDate =
+      order.created_at ||
+      order.createdAt ||
+      order.date;
+
+
+    if (!rawDate) {
+      return "—";
+    }
+
+
+    const date =
+      new Date(rawDate);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return "—";
+
+    }
+
+
+    return date.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    );
+
+  };
+
+
+  // =========================================
+  // CUSTOMER INFORMATION
+  // =========================================
+
+  const customerName =
+    order.customer_name ||
+    order.customer?.name ||
+    "—";
+
+
+  const customerEmail =
+    order.email ||
+    order.customer?.email ||
+    "—";
+
+
+  const customerPhone =
+    order.phone ||
+    order.customer?.phone ||
+    "—";
+
+
+  const customerAddress =
+    order.address ||
+    order.customer?.address ||
+    "—";
+
+
+  const customerCity =
+    order.city ||
+    order.customer?.city ||
+    "—";
+
+
+  const customerState =
+    order.state ||
+    order.customer?.state ||
+    "—";
+
+
+  const customerPincode =
+    order.pincode ||
+    order.customer?.pincode ||
+    "—";
+
+
+  // =========================================
+  // DISPLAY ORDER NUMBER
+  // =========================================
+
+  const displayOrderNumber =
+    customerOrderNumber ||
+    passedOrderNumber ||
+    "—";
+
+
+  // =========================================
+  // RENDER
+  // =========================================
 
   return (
 
     <main className="order-details-page">
 
 
-      {/* =========================================
+      {/* =====================================
           HEADER
-      ========================================= */}
+      ===================================== */}
 
       <section className="order-details-header">
 
@@ -143,28 +662,32 @@ function OrderDetails() {
           QAVERIN · ORDER DETAILS
         </p>
 
+
         <h1>
           Your <em>order.</em>
         </h1>
 
+
         <p className="order-details-description">
+
           Thank you for choosing QAVERIN.
           Here are the details of your fragrance order.
+
         </p>
 
       </section>
 
 
-      {/* =========================================
+      {/* =====================================
           ORDER CONTENT
-      ========================================= */}
+      ===================================== */}
 
       <section className="order-details-content">
 
 
-        {/* =========================================
+        {/* ===================================
             ORDER TOP
-        ========================================= */}
+        =================================== */}
 
         <div className="order-details-top">
 
@@ -174,23 +697,27 @@ function OrderDetails() {
               ORDER NUMBER
             </span>
 
+
             <h2>
-              #{order.id}
+              #{displayOrderNumber}
             </h2>
 
           </div>
 
 
           <div className="order-details-status">
-            {order.status || "ORDER PLACED"}
+
+            {order.status ||
+              "Pending"}
+
           </div>
 
         </div>
 
 
-        {/* =========================================
+        {/* ===================================
             ORDER META
-        ========================================= */}
+        =================================== */}
 
         <div className="order-details-meta">
 
@@ -200,8 +727,9 @@ function OrderDetails() {
               ORDER DATE
             </span>
 
+
             <p>
-              {order.date || "—"}
+              {formatOrderDate()}
             </p>
 
           </div>
@@ -212,6 +740,7 @@ function OrderDetails() {
             <span>
               PAYMENT
             </span>
+
 
             <p>
               {paymentMethod}
@@ -226,6 +755,7 @@ function OrderDetails() {
               TOTAL
             </span>
 
+
             <strong>
               ${orderTotal.toFixed(2)}
             </strong>
@@ -235,9 +765,9 @@ function OrderDetails() {
         </div>
 
 
-        {/* =========================================
+        {/* ===================================
             PRODUCTS
-        ========================================= */}
+        =================================== */}
 
         <section className="order-products">
 
@@ -246,6 +776,7 @@ function OrderDetails() {
             <span>
               YOUR FRAGRANCES
             </span>
+
 
             <span>
 
@@ -264,79 +795,124 @@ function OrderDetails() {
 
             {orderItems.length > 0 ? (
 
-              orderItems.map((item, index) => (
+              orderItems.map(
+                (item, index) => {
 
-                <article
-                  className="order-product"
-                  key={`${item.id}-${index}`}
-                >
+                  const productImage =
+                    getProductImage(
+                      item.name
+                    );
 
 
-                  {/* IMAGE */}
+                  return (
 
-                  <div className="order-product-image">
-
-                    <img
-                      src={item.image}
-                      alt={
-                        item.name ||
-                        "Product"
+                    <article
+                      className="order-product"
+                      key={
+                        `${item.id}-${index}`
                       }
-                    />
-
-                    <span>
-                      {Number(
-                        item.quantity || 0
-                      )}
-                    </span>
-
-                  </div>
+                    >
 
 
-                  {/* INFO */}
+                      {/* IMAGE */}
 
-                  <div className="order-product-info">
+                      <div className="order-product-image">
 
-                    <p>
-                      {item.type ||
-                        "FRAGRANCE"}
-                    </p>
+                        {productImage ? (
 
-                    <h3>
-                      {item.name ||
-                        "Unnamed Product"}
-                    </h3>
+                          <img
+                            src={productImage}
+                            alt={
+                              item.name ||
+                              "Qaverin fragrance"
+                            }
+                          />
 
-                  </div>
+                        ) : (
+
+                          <div className="order-product-image-fallback">
+
+                            QAVERIN
+
+                          </div>
+
+                        )}
 
 
-                  {/* PRICE */}
+                        <span>
 
-                  <div className="order-product-price">
+                          {Number(
+                            item.quantity || 0
+                          )}
 
-                    <span>
-                      $
-                      {Number(
-                        item.price || 0
-                      ).toFixed(2)}
-                    </span>
+                        </span>
 
-                    <small>
-                      {Number(
-                        item.quantity || 0
-                      )} ×
-                    </small>
+                      </div>
 
-                  </div>
 
-                </article>
+                      {/* INFO */}
 
-              ))
+                      <div className="order-product-info">
+
+                        <p>
+                          {item.type ||
+                            "FRAGRANCE"}
+                        </p>
+
+
+                        <h3>
+                          {item.name ||
+                            "Unnamed Product"}
+                        </h3>
+
+
+                        <small>
+                          {item.description ||
+                            "A sophisticated Qaverin fragrance."}
+                        </small>
+
+                      </div>
+
+
+                      {/* PRICE */}
+
+                      <div className="order-product-price">
+
+                        <span>
+
+                          $
+                          {Number(
+                            item.price || 0
+                          ).toFixed(2)}
+
+                        </span>
+
+
+                        <small>
+
+                          {Number(
+                            item.quantity || 0
+                          )} ×
+
+                        </small>
+
+                      </div>
+
+                    </article>
+
+                  );
+
+                }
+
+              )
 
             ) : (
 
               <p className="order-details-no-products">
-                No product information available.
+
+                No product information
+                available.
+
               </p>
 
             )}
@@ -346,9 +922,9 @@ function OrderDetails() {
         </section>
 
 
-        {/* =========================================
+        {/* ===================================
             CUSTOMER INFORMATION
-        ========================================= */}
+        =================================== */}
 
         <section className="order-customer">
 
@@ -363,24 +939,19 @@ function OrderDetails() {
 
           <div className="order-customer-grid">
 
-
-            {/* NAME */}
-
             <div>
 
               <span>
                 FULL NAME
               </span>
 
+
               <p>
-                {order.customer?.name ||
-                  "—"}
+                {customerName}
               </p>
 
             </div>
 
-
-            {/* EMAIL */}
 
             <div>
 
@@ -388,15 +959,13 @@ function OrderDetails() {
                 EMAIL
               </span>
 
+
               <p>
-                {order.customer?.email ||
-                  "—"}
+                {customerEmail}
               </p>
 
             </div>
 
-
-            {/* PHONE */}
 
             <div>
 
@@ -404,15 +973,13 @@ function OrderDetails() {
                 PHONE
               </span>
 
+
               <p>
-                {order.customer?.phone ||
-                  "—"}
+                {customerPhone}
               </p>
 
             </div>
 
-
-            {/* ADDRESS */}
 
             <div>
 
@@ -420,15 +987,13 @@ function OrderDetails() {
                 ADDRESS
               </span>
 
+
               <p>
-                {order.customer?.address ||
-                  "—"}
+                {customerAddress}
               </p>
 
             </div>
 
-
-            {/* CITY */}
 
             <div>
 
@@ -436,15 +1001,13 @@ function OrderDetails() {
                 CITY
               </span>
 
+
               <p>
-                {order.customer?.city ||
-                  "—"}
+                {customerCity}
               </p>
 
             </div>
 
-
-            {/* STATE */}
 
             <div>
 
@@ -452,15 +1015,13 @@ function OrderDetails() {
                 STATE
               </span>
 
+
               <p>
-                {order.customer?.state ||
-                  "—"}
+                {customerState}
               </p>
 
             </div>
 
-
-            {/* PIN CODE */}
 
             <div>
 
@@ -468,9 +1029,9 @@ function OrderDetails() {
                 PIN CODE
               </span>
 
+
               <p>
-                {order.customer?.pincode ||
-                  "—"}
+                {customerPincode}
               </p>
 
             </div>
@@ -480,9 +1041,9 @@ function OrderDetails() {
         </section>
 
 
-        {/* =========================================
+        {/* ===================================
             PRICE SUMMARY
-        ========================================= */}
+        =================================== */}
 
         <section className="order-summary">
 
@@ -491,6 +1052,7 @@ function OrderDetails() {
             <span>
               Subtotal
             </span>
+
 
             <span>
               ${orderTotal.toFixed(2)}
@@ -505,6 +1067,7 @@ function OrderDetails() {
               Shipping
             </span>
 
+
             <span>
               FREE
             </span>
@@ -512,7 +1075,8 @@ function OrderDetails() {
           </div>
 
 
-          <div className="order-summary-divider"></div>
+          <div className="order-summary-divider">
+          </div>
 
 
           <div className="order-summary-total">
@@ -520,6 +1084,7 @@ function OrderDetails() {
             <span>
               TOTAL
             </span>
+
 
             <strong>
               ${orderTotal.toFixed(2)}
@@ -530,9 +1095,9 @@ function OrderDetails() {
         </section>
 
 
-        {/* =========================================
+        {/* ===================================
             ACTIONS
-        ========================================= */}
+        =================================== */}
 
         <div className="order-details-actions">
 

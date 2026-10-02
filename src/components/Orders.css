@@ -1075,3 +1075,28 @@ body.dark-theme .orders-back:hover {
   }
 
 }
+/* Cancel Order Button */
+.orders-cancel-button {
+  margin-left: 20px;
+  margin-bottom: 30px;
+  padding: 10px 22px;
+  border: 1px solid #b58a52;
+  background: transparent;
+  color: #8a642f;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.orders-cancel-button:hover {
+  background: #8a642f;
+  color: #ffffff;
+}
+
+.orders-cancel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

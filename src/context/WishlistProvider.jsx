@@ -1,144 +1,500 @@
 import { useEffect, useState } from "react";
 import { WishlistContext } from "./WishlistContext";
 
-export function WishlistProvider({ children }) {
 
-  /* =================================
-     LOAD WISHLIST FROM LOCAL STORAGE
-  ================================= */
+/* =========================================
+   GET CURRENT USER
+========================================= */
 
-  const [wishlistItems, setWishlistItems] =
-    useState(() => {
+function getCurrentUser() {
 
-      const savedWishlist =
-        localStorage.getItem(
-          "qaverin-wishlist"
-        );
+  try {
 
-      return savedWishlist
-        ? JSON.parse(savedWishlist)
-        : [];
+    const savedUser =
+      localStorage.getItem(
+        "qaverin-current-user"
+      );
 
-    });
+    if (!savedUser) {
+      return null;
+    }
+
+    return JSON.parse(savedUser);
+
+  } catch (error) {
+
+    console.error(
+      "Current user load error:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
 
 
-  /* =================================
-     SAVE WISHLIST TO LOCAL STORAGE
-  ================================= */
+/* =========================================
+   GET USER WISHLIST KEY
+========================================= */
+
+function getWishlistKey() {
+
+  const user =
+    getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+
+  /*
+    Prefer user ID because it is unique.
+    If ID is not available, use email.
+  */
+
+  const userIdentifier =
+    user.id ||
+    user.user_id ||
+    user.email;
+
+
+  if (!userIdentifier) {
+    return null;
+  }
+
+
+  return `qaverin-wishlist-${userIdentifier}`;
+
+}
+
+
+/* =========================================
+   LOAD WISHLIST
+========================================= */
+
+function loadWishlist() {
+
+  const isLoggedIn =
+    localStorage.getItem(
+      "qaverin-logged-in"
+    ) === "true";
+
+  const token =
+    localStorage.getItem(
+      "qaverin-token"
+    );
+
+
+  if (!isLoggedIn || !token) {
+
+    return [];
+
+  }
+
+
+  const wishlistKey =
+    getWishlistKey();
+
+
+  if (!wishlistKey) {
+
+    return [];
+
+  }
+
+
+  try {
+
+    const savedWishlist =
+      localStorage.getItem(
+        wishlistKey
+      );
+
+
+    return savedWishlist
+      ? JSON.parse(savedWishlist)
+      : [];
+
+  } catch (error) {
+
+    console.error(
+      "Wishlist load error:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+export function WishlistProvider({
+  children
+}) {
+
+
+  /* =========================================
+     WISHLIST STATE
+  ========================================= */
+
+  const [
+    wishlistItems,
+    setWishlistItems
+  ] = useState(
+    loadWishlist
+  );
+
+
+  /* =========================================
+     SAVE WISHLIST
+  ========================================= */
 
   useEffect(() => {
 
+    const isLoggedIn =
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
+
+
+    if (!isLoggedIn || !token) {
+
+      return;
+
+    }
+
+
+    const wishlistKey =
+      getWishlistKey();
+
+
+    if (!wishlistKey) {
+
+      return;
+
+    }
+
+
     localStorage.setItem(
-      "qaverin-wishlist",
-      JSON.stringify(wishlistItems)
+      wishlistKey,
+      JSON.stringify(
+        wishlistItems
+      )
     );
 
   }, [wishlistItems]);
 
 
-  /* =================================
-     ADD TO WISHLIST
-  ================================= */
+  /* =========================================
+     LOGIN LISTENER
+  ========================================= */
 
-  const addToWishlist = (product) => {
+  useEffect(() => {
 
-    setWishlistItems((currentItems) => {
+    const handleAuthChange = () => {
 
-      const alreadyExists =
-        currentItems.some(
-          (item) => item.id === product.id
+      /*
+        After login the page normally reloads,
+        but this also makes the provider respond
+        if login state changes without reload.
+      */
+
+      const isLoggedIn =
+        localStorage.getItem(
+          "qaverin-logged-in"
+        ) === "true";
+
+      const token =
+        localStorage.getItem(
+          "qaverin-token"
         );
 
 
-      if (alreadyExists) {
+      if (!isLoggedIn || !token) {
 
-        return currentItems;
+        setWishlistItems([]);
+
+        return;
 
       }
 
 
-      return [
-        ...currentItems,
-        product,
-      ];
+      setWishlistItems(
+        loadWishlist()
+      );
 
-    });
-
-  };
+    };
 
 
-  /* =================================
-     REMOVE FROM WISHLIST
-  ================================= */
+    window.addEventListener(
+      "qaverin-auth-change",
+      handleAuthChange
+    );
 
-  const removeFromWishlist = (id) => {
 
-    setWishlistItems((currentItems) =>
-      currentItems.filter(
-        (item) => item.id !== id
-      )
+    return () => {
+
+      window.removeEventListener(
+        "qaverin-auth-change",
+        handleAuthChange
+      );
+
+    };
+
+  }, []);
+
+
+  /* =========================================
+     LOGOUT LISTENER
+  ========================================= */
+
+  useEffect(() => {
+
+    const handleLogout = () => {
+
+      /*
+        Clear only the CURRENT user's
+        wishlist from React state.
+
+        IMPORTANT:
+        We do NOT delete the user's
+        saved wishlist from localStorage.
+
+        This means:
+
+        User A
+        ↓
+        Wishlist A saved
+
+        Logout
+        ↓
+        UI becomes empty
+
+        Login again
+        ↓
+        Wishlist A comes back
+      */
+
+      setWishlistItems([]);
+
+    };
+
+
+    window.addEventListener(
+      "qaverin-logout",
+      handleLogout
+    );
+
+
+    return () => {
+
+      window.removeEventListener(
+        "qaverin-logout",
+        handleLogout
+      );
+
+    };
+
+  }, []);
+
+
+  /* =========================================
+     CHECK LOGIN
+  ========================================= */
+
+  const isUserLoggedIn = () => {
+
+    const isLoggedIn =
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
+
+
+    return (
+      isLoggedIn &&
+      !!token
     );
 
   };
 
 
-  /* =================================
-     TOGGLE WISHLIST
-  ================================= */
+  /* =========================================
+     ADD TO WISHLIST
+  ========================================= */
 
-  const toggleWishlist = (product) => {
+  const addToWishlist = (
+    product
+  ) => {
 
-    setWishlistItems((currentItems) => {
+    if (!isUserLoggedIn()) {
 
-      const alreadyExists =
-        currentItems.some(
-          (item) => item.id === product.id
-        );
+      alert(
+        "Please login before adding products to your wishlist."
+      );
+
+      return false;
+
+    }
 
 
-      if (alreadyExists) {
+    setWishlistItems(
+      (currentItems) => {
 
-        return currentItems.filter(
-          (item) => item.id !== product.id
-        );
+        const alreadyExists =
+          currentItems.some(
+            (item) =>
+              Number(item.id) ===
+              Number(product.id)
+          );
+
+
+        if (alreadyExists) {
+
+          return currentItems;
+
+        }
+
+
+        return [
+          ...currentItems,
+          product,
+        ];
 
       }
+    );
 
 
-      return [
-        ...currentItems,
-        product,
-      ];
-
-    });
+    return true;
 
   };
 
 
-  /* =================================
-     CHECK WISHLIST
-  ================================= */
+  /* =========================================
+     REMOVE FROM WISHLIST
+  ========================================= */
 
-  const isWishlisted = (id) => {
+  const removeFromWishlist = (
+    id
+  ) => {
+
+    if (!isUserLoggedIn()) {
+
+      return false;
+
+    }
+
+
+    setWishlistItems(
+      (currentItems) =>
+        currentItems.filter(
+          (item) =>
+            Number(item.id) !==
+            Number(id)
+        )
+    );
+
+
+    return true;
+
+  };
+
+
+  /* =========================================
+     TOGGLE WISHLIST
+  ========================================= */
+
+  const toggleWishlist = (
+    product
+  ) => {
+
+    if (!isUserLoggedIn()) {
+
+      alert(
+        "Please login before adding products to your wishlist."
+      );
+
+      return false;
+
+    }
+
+
+    setWishlistItems(
+      (currentItems) => {
+
+        const alreadyExists =
+          currentItems.some(
+            (item) =>
+              Number(item.id) ===
+              Number(product.id)
+          );
+
+
+        if (alreadyExists) {
+
+          return currentItems.filter(
+            (item) =>
+              Number(item.id) !==
+              Number(product.id)
+          );
+
+        }
+
+
+        return [
+          ...currentItems,
+          product,
+        ];
+
+      }
+    );
+
+
+    return true;
+
+  };
+
+
+  /* =========================================
+     CHECK WISHLIST
+  ========================================= */
+
+  const isWishlisted = (
+    id
+  ) => {
 
     return wishlistItems.some(
-      (item) => item.id === id
+      (item) =>
+        Number(item.id) ===
+        Number(id)
     );
 
   };
 
 
-  /* =================================
+  /* =========================================
      WISHLIST COUNT
-  ================================= */
+  ========================================= */
 
   const wishlistCount =
     wishlistItems.length;
 
 
-  /* =================================
+  /* =========================================
      PROVIDER
-  ================================= */
+  ========================================= */
 
   return (
 

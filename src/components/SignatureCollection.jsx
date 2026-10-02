@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useCart } from "../context/useCart";
@@ -16,7 +16,19 @@ function SignatureCollection() {
 
   const navigate = useNavigate();
 
-  const { addToCart } = useCart();
+
+  // =========================================
+  // CART
+  // =========================================
+
+  const {
+    addToCart,
+  } = useCart();
+
+
+  // =========================================
+  // WISHLIST
+  // =========================================
 
   const {
     toggleWishlist,
@@ -25,6 +37,10 @@ function SignatureCollection() {
   } = useWishlist();
 
 
+  // =========================================
+  // NOTIFICATIONS
+  // =========================================
+
   const [addedProduct, setAddedProduct] =
     useState(null);
 
@@ -32,9 +48,9 @@ function SignatureCollection() {
     useState("");
 
 
-  /* =================================
-     PRODUCTS
-  ================================= */
+  // =========================================
+  // PRODUCTS
+  // =========================================
 
   const products = [
 
@@ -77,49 +93,243 @@ function SignatureCollection() {
   ];
 
 
-  /* =================================
-     OPEN PRODUCT
-  ================================= */
+  // =========================================
+  // CLEAR NOTIFICATIONS AFTER LOGOUT
+  // =========================================
+
+  useEffect(() => {
+
+    const handleLogout = () => {
+
+      // Clear cart notification
+      setAddedProduct(null);
+
+      // Clear wishlist notification
+      setWishlistMessage("");
+
+    };
+
+
+    window.addEventListener(
+      "qaverin-logout",
+      handleLogout
+    );
+
+
+    return () => {
+
+      window.removeEventListener(
+        "qaverin-logout",
+        handleLogout
+      );
+
+    };
+
+  }, []);
+
+
+  // =========================================
+  // OPEN PRODUCT
+  // =========================================
 
   const openProduct = (id) => {
 
-    navigate(`/product/${id}`);
+    navigate(
+      `/product/${id}`
+    );
 
   };
 
 
-  /* =================================
-     ADD TO CART
-  ================================= */
+  // =========================================
+  // ADD TO CART
+  // =========================================
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (
+    product
+  ) => {
 
-    addToCart(product, 1);
+    // =======================================
+    // CHECK LOGIN
+    // =======================================
 
-    setAddedProduct(product.id);
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
 
-    setTimeout(() => {
+    const isLoggedIn =
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
+
+    // =======================================
+    // NOT LOGGED IN
+    // =======================================
+
+    if (
+      !token ||
+      !isLoggedIn
+    ) {
+
+      // Make sure old notification
+      // is not visible.
 
       setAddedProduct(null);
 
-    }, 2000);
+      alert(
+        "Please login before adding products to your bag."
+      );
+
+      return;
+
+    }
+
+
+    // =======================================
+    // ADD PRODUCT
+    // =======================================
+
+    try {
+
+      const success =
+        await addToCart(
+          product,
+          1
+        );
+
+
+      // =====================================
+      // ADD FAILED
+      // =======================================
+      //
+      // Do NOT show "ADDED TO BAG"
+      // if the backend/cart operation failed.
+      //
+
+      if (!success) {
+
+        setAddedProduct(null);
+
+        return;
+
+      }
+
+
+      // =====================================
+      // SUCCESS
+      // =====================================
+
+      setAddedProduct(
+        product.id
+      );
+
+
+      setTimeout(() => {
+
+        setAddedProduct(null);
+
+      }, 2000);
+
+
+    } catch (error) {
+
+      console.error(
+        "Signature collection cart error:",
+        error
+      );
+
+      setAddedProduct(null);
+
+    }
 
   };
 
 
-  /* =================================
-     WISHLIST
-  ================================= */
+  // =========================================
+  // WISHLIST
+  // =========================================
 
-  const handleWishlist = (product) => {
+  const handleWishlist = (
+    product
+  ) => {
+
+    // =======================================
+    // CHECK LOGIN
+    // =======================================
+
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
+
+    const isLoggedIn =
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
+
+    // =======================================
+    // NOT LOGGED IN
+    // =======================================
+
+    if (
+      !token ||
+      !isLoggedIn
+    ) {
+
+      setWishlistMessage("");
+
+      alert(
+        "Please login before adding products to your wishlist."
+      );
+
+      return;
+
+    }
+
+
+    // =======================================
+    // CHECK CURRENT STATE
+    // =======================================
 
     const alreadyWishlisted =
-      isWishlisted(product.id);
+      isWishlisted(
+        product.id
+      );
 
-    toggleWishlist(product);
+
+    // =======================================
+    // TOGGLE
+    // =======================================
+
+    const success =
+      toggleWishlist(
+        product
+      );
 
 
-    if (alreadyWishlisted) {
+    // =======================================
+    // SAFETY CHECK
+    // =======================================
+
+    if (success === false) {
+
+      setWishlistMessage("");
+
+      return;
+
+    }
+
+
+    // =======================================
+    // MESSAGE
+    // =======================================
+
+    if (
+      alreadyWishlisted
+    ) {
 
       setWishlistMessage(
         `${product.name} removed from your wishlist`
@@ -142,6 +352,10 @@ function SignatureCollection() {
 
   };
 
+
+  // =========================================
+  // RENDER
+  // =========================================
 
   return (
 
@@ -200,13 +414,17 @@ function SignatureCollection() {
           OUR COLLECTION
         </p>
 
+
         <h2>
           OUR SIGNATURE COLLECTION
         </h2>
 
+
         <p className="signature-subtitle">
+
           Discover fragrances created to become
           uniquely yours.
+
         </p>
 
       </div>
@@ -221,7 +439,9 @@ function SignatureCollection() {
         {products.map((product) => {
 
           const active =
-            isWishlisted(product.id);
+            isWishlisted(
+              product.id
+            );
 
 
           return (
@@ -239,7 +459,9 @@ function SignatureCollection() {
               <div
                 className="product-image"
                 onClick={() =>
-                  openProduct(product.id)
+                  openProduct(
+                    product.id
+                  )
                 }
               >
 
@@ -249,12 +471,16 @@ function SignatureCollection() {
                 />
 
 
-                {/* WISHLIST */}
+                {/* =================================
+                    WISHLIST
+                ================================= */}
 
                 <button
                   type="button"
                   className={`wishlist-button ${
-                    active ? "active" : ""
+                    active
+                      ? "active"
+                      : ""
                   }`}
                   onClick={(event) => {
 
@@ -262,7 +488,9 @@ function SignatureCollection() {
 
                     event.stopPropagation();
 
-                    handleWishlist(product);
+                    handleWishlist(
+                      product
+                    );
 
                   }}
                   aria-label={
@@ -290,7 +518,9 @@ function SignatureCollection() {
                 <div
                   className="product-name-row"
                   onClick={() =>
-                    openProduct(product.id)
+                    openProduct(
+                      product.id
+                    )
                   }
                 >
 
@@ -302,7 +532,9 @@ function SignatureCollection() {
 
 
                 <p className="product-type">
+
                   {product.type}
+
                 </p>
 
 
@@ -318,15 +550,23 @@ function SignatureCollection() {
                 <div className="product-bottom">
 
                   <span className="product-price">
+
                     ${product.price}
+
                   </span>
 
+
+                  {/* =================================
+                      ADD TO BAG
+                  ================================= */}
 
                   <button
                     type="button"
                     className="add-to-bag"
                     onClick={() =>
-                      handleAddToCart(product)
+                      handleAddToCart(
+                        product
+                      )
                     }
                   >
 
@@ -360,6 +600,7 @@ function SignatureCollection() {
           <span className="wishlist-status-heart">
             ♥
           </span>
+
 
           <span>
 

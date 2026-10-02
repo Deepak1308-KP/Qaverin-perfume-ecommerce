@@ -1,4 +1,8 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 
 import { useCart } from "../context/useCart";
 import { useWishlist } from "../context/useWishlist";
@@ -8,17 +12,23 @@ import "./Account.css";
 
 function Account() {
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
 
   /* =========================================
      CONTEXT HOOKS
-     ALWAYS RUN BEFORE ANY RETURN
   ========================================= */
 
-  const { cartCount } = useCart();
+  const {
+    cartCount,
+    clearCartState,
+  } = useCart();
 
-  const { wishlistCount } = useWishlist();
+
+  const {
+    wishlistCount,
+  } = useWishlist();
 
 
   /* =========================================
@@ -26,7 +36,9 @@ function Account() {
   ========================================= */
 
   const isLoggedIn =
-    localStorage.getItem("qaverin-logged-in") === "true";
+    localStorage.getItem(
+      "qaverin-logged-in"
+    ) === "true";
 
 
   /* =========================================
@@ -35,19 +47,33 @@ function Account() {
 
   let user = null;
 
+
   try {
 
     const savedUser =
-      localStorage.getItem("qaverin-current-user") ||
-      localStorage.getItem("qaverin-user");
+      localStorage.getItem(
+        "qaverin-current-user"
+      ) ||
+      localStorage.getItem(
+        "qaverin-user"
+      );
+
 
     if (savedUser) {
 
-      user = JSON.parse(savedUser);
+      user =
+        JSON.parse(
+          savedUser
+        );
 
     }
 
-  } catch {
+  } catch (error) {
+
+    console.error(
+      "User data error:",
+      error
+    );
 
     user = null;
 
@@ -98,7 +124,8 @@ function Account() {
     userName
       .trim()
       .charAt(0)
-      .toUpperCase() || "Q";
+      .toUpperCase() ||
+    "Q";
 
 
   /* =========================================
@@ -107,32 +134,112 @@ function Account() {
 
   const handleLogout = () => {
 
-    /* Remove login status */
+    // =======================================
+    // 1. CLEAR FRONTEND CART STATE
+    // =======================================
+
+    if (
+      typeof clearCartState ===
+      "function"
+    ) {
+
+      clearCartState();
+
+    }
+
+
+    // =======================================
+    // 2. REMOVE LOGIN STATUS
+    // =======================================
 
     localStorage.removeItem(
       "qaverin-logged-in"
     );
 
 
-    /* Remove current logged-in user */
+    // =======================================
+    // 3. REMOVE JWT TOKEN
+    // =======================================
+
+    localStorage.removeItem(
+      "qaverin-token"
+    );
+
+
+    // =======================================
+    // 4. REMOVE CURRENT USER
+    // =======================================
 
     localStorage.removeItem(
       "qaverin-current-user"
     );
 
 
-    /* =======================================
-       GO TO HOME
-    ======================================= */
+    // =======================================
+    // 5. REMOVE OLD USER KEY
+    // =======================================
 
-    navigate("/", {
-      replace: true,
-    });
+    localStorage.removeItem(
+      "qaverin-user"
+    );
 
 
-    /* =======================================
-       ALWAYS START HOME FROM TOP
-    ======================================= */
+    // =======================================
+    // 6. TELL CART + WISHLIST PROVIDERS
+    // =======================================
+    //
+    // CartProvider:
+    //     cartItems → []
+    //
+    // WishlistProvider:
+    //     wishlistItems → []
+    //
+    // SignatureCollection:
+    //     removes old notifications
+    //
+    // =======================================
+
+    window.dispatchEvent(
+      new Event(
+        "qaverin-logout"
+      )
+    );
+
+
+    // =======================================
+    // 7. TELL NAVBAR AUTH CHANGED
+    // =======================================
+    //
+    // localStorage changes alone do not
+    // automatically cause React components
+    // to render again.
+    //
+    // Navbar listens for this event.
+    //
+    // =======================================
+
+    window.dispatchEvent(
+      new Event(
+        "qaverin-auth-change"
+      )
+    );
+
+
+    // =======================================
+    // 8. GO TO HOME
+    // =======================================
+
+    navigate(
+      "/",
+      {
+        replace: true,
+      }
+    );
+
+
+    // =======================================
+    // 9. START HOME FROM TOP
+    // =======================================
 
     setTimeout(() => {
 
@@ -153,10 +260,16 @@ function Account() {
 
   const handleOrders = () => {
 
-    navigate("/orders");
+    navigate(
+      "/orders"
+    );
 
   };
 
+
+  /* =========================================
+     RENDER
+  ========================================= */
 
   return (
 
@@ -195,7 +308,6 @@ function Account() {
         </p>
 
       </section>
-
 
 
       {/* =========================================
@@ -269,7 +381,6 @@ function Account() {
         </Link>
 
 
-
         {/* =========================================
             ACCOUNT OPTIONS
         ========================================= */}
@@ -285,7 +396,9 @@ function Account() {
             type="button"
             className="account-option"
             onClick={() =>
-              navigate("/wishlist")
+              navigate(
+                "/wishlist"
+              )
             }
           >
 
@@ -325,7 +438,6 @@ function Account() {
           </button>
 
 
-
           {/* =====================================
               YOUR BAG
           ===================================== */}
@@ -334,7 +446,9 @@ function Account() {
             type="button"
             className="account-option"
             onClick={() =>
-              navigate("/cart")
+              navigate(
+                "/cart"
+              )
             }
           >
 
@@ -374,7 +488,6 @@ function Account() {
           </button>
 
 
-
           {/* =====================================
               MY ORDERS
           ===================================== */}
@@ -382,7 +495,9 @@ function Account() {
           <button
             type="button"
             className="account-option"
-            onClick={handleOrders}
+            onClick={
+              handleOrders
+            }
           >
 
             <div className="account-option-icon">
@@ -400,8 +515,10 @@ function Account() {
 
 
               <p>
+
                 View and manage your
                 fragrance orders
+
               </p>
 
             </div>
@@ -412,7 +529,6 @@ function Account() {
             </strong>
 
           </button>
-
 
 
           {/* =====================================
@@ -455,7 +571,6 @@ function Account() {
         </div>
 
 
-
         {/* =========================================
             ACCOUNT MESSAGE
         ========================================= */}
@@ -483,7 +598,6 @@ function Account() {
         </div>
 
 
-
         {/* =========================================
             LOGOUT
         ========================================= */}
@@ -491,7 +605,9 @@ function Account() {
         <button
           type="button"
           className="account-logout-button"
-          onClick={handleLogout}
+          onClick={
+            handleLogout
+          }
         >
 
           <span>
@@ -504,7 +620,6 @@ function Account() {
           </strong>
 
         </button>
-
 
 
         {/* =========================================
@@ -522,7 +637,6 @@ function Account() {
 
 
       </section>
-
 
     </main>
 

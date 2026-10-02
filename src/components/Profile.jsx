@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
 import { useCart } from "../context/useCart";
@@ -21,20 +22,107 @@ function Profile() {
 
 
   /* =========================================
-     LOGIN STATUS
+     JWT TOKEN
   ========================================= */
 
-  const isLoggedIn =
-    localStorage.getItem(
-      "qaverin-logged-in"
-    ) === "true";
+  const token =
+    localStorage.getItem("qaverin-token");
+
+
+  /* =========================================
+     USER STATE
+  ========================================= */
+
+  const [user, setUser] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+
+  const [profileError, setProfileError] = useState(false);
+
+
+  /* =========================================
+     FETCH PROFILE FROM FLASK
+  ========================================= */
+
+  useEffect(() => {
+
+    /*
+      If there is no token, do nothing here.
+
+      The redirect is handled below the hook.
+    */
+
+    if (!token) {
+      return;
+    }
+
+
+    const getProfile = async () => {
+
+      try {
+
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/profile",
+          {
+            method: "GET",
+
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+
+        const data = await response.json();
+
+
+        /* =====================================
+           HANDLE API ERROR
+        ===================================== */
+
+        if (!response.ok) {
+
+          setProfileError(true);
+
+          return;
+
+        }
+
+
+        /* =====================================
+           SAVE USER FROM MYSQL
+        ===================================== */
+
+        setUser(data.user);
+
+      } catch (error) {
+
+        console.error(
+          "Profile error:",
+          error
+        );
+
+        setProfileError(true);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+    getProfile();
+
+  }, [token]);
 
 
   /* =========================================
      PROTECT PROFILE PAGE
   ========================================= */
 
-  if (!isLoggedIn) {
+  if (!token) {
 
     return (
       <Navigate
@@ -47,41 +135,71 @@ function Profile() {
 
 
   /* =========================================
-     GET CURRENT USER
+     INVALID / EXPIRED TOKEN
   ========================================= */
 
-  let user = null;
+  if (profileError) {
 
-  try {
+    localStorage.removeItem(
+      "qaverin-token"
+    );
 
-    const currentUser =
-      localStorage.getItem(
-        "qaverin-current-user"
-      );
+    localStorage.removeItem(
+      "qaverin-logged-in"
+    );
 
-    const savedUser =
-      localStorage.getItem(
-        "qaverin-user"
-      );
+    localStorage.removeItem(
+      "qaverin-current-user"
+    );
 
 
-    if (currentUser) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
 
-      user = JSON.parse(
-        currentUser
-      );
+  }
 
-    } else if (savedUser) {
 
-      user = JSON.parse(
-        savedUser
-      );
+  /* =========================================
+     LOADING
+  ========================================= */
 
-    }
+  if (loading) {
 
-  } catch {
+    return (
 
-    user = null;
+      <main className="profile-page">
+
+        <section className="profile-header">
+
+          <p className="profile-eyebrow">
+
+            QAVERIN · YOUR PROFILE
+
+          </p>
+
+
+          <h1>
+
+            Loading <em>profile...</em>
+
+          </h1>
+
+
+          <p className="profile-description">
+
+            Please wait while we load your profile.
+
+          </p>
+
+        </section>
+
+      </main>
+
+    );
 
   }
 
@@ -132,7 +250,9 @@ function Profile() {
       <section className="profile-header">
 
         <p className="profile-eyebrow">
+
           QAVERIN · YOUR PROFILE
+
         </p>
 
 
@@ -247,17 +367,23 @@ function Profile() {
           <div className="profile-stat">
 
             <span>
+
               ORDERS
+
             </span>
 
 
             <strong>
+
               {orders.length}
+
             </strong>
 
 
             <small>
+
               fragrance orders
+
             </small>
 
           </div>
@@ -269,17 +395,23 @@ function Profile() {
           <div className="profile-stat">
 
             <span>
+
               WISHLIST
+
             </span>
 
 
             <strong>
+
               {wishlistCount}
+
             </strong>
 
 
             <small>
+
               saved fragrances
+
             </small>
 
           </div>
@@ -291,17 +423,23 @@ function Profile() {
           <div className="profile-stat">
 
             <span>
+
               BAG
+
             </span>
 
 
             <strong>
+
               {cartCount}
+
             </strong>
 
 
             <small>
+
               items waiting
+
             </small>
 
           </div>
@@ -337,19 +475,25 @@ function Profile() {
               <div>
 
                 <span>
+
                   ORDER HISTORY
+
                 </span>
 
 
                 <small>
+
                   View your previous purchases
+
                 </small>
 
               </div>
 
 
               <strong>
+
                 →
+
               </strong>
 
             </Link>
@@ -366,19 +510,25 @@ function Profile() {
               <div>
 
                 <span>
+
                   YOUR WISHLIST
+
                 </span>
 
 
                 <small>
+
                   {wishlistCount} saved fragrances
+
                 </small>
 
               </div>
 
 
               <strong>
+
                 →
+
               </strong>
 
             </Link>
@@ -395,19 +545,25 @@ function Profile() {
               <div>
 
                 <span>
+
                   YOUR BAG
+
                 </span>
 
 
                 <small>
+
                   {cartCount} items in your bag
+
                 </small>
 
               </div>
 
 
               <strong>
+
                 →
+
               </strong>
 
             </Link>
@@ -424,19 +580,25 @@ function Profile() {
               <div>
 
                 <span>
+
                   EXPLORE COLLECTION
+
                 </span>
 
 
                 <small>
+
                   Discover your next signature scent
+
                 </small>
 
               </div>
 
 
               <strong>
+
                 →
+
               </strong>
 
             </Link>
@@ -455,7 +617,9 @@ function Profile() {
         <div className="profile-message">
 
           <span>
+
             ✦
+
           </span>
 
 
@@ -471,7 +635,9 @@ function Profile() {
 
 
           <span>
+
             ✦
+
           </span>
 
         </div>

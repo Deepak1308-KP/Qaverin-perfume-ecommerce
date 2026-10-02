@@ -3,133 +3,181 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "./Signup.css";
 
-
 function Signup() {
-
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] =
+    useState("");
 
-
-  const handleSignup = (event) => {
-
+  const handleSignup = async (event) => {
     event.preventDefault();
-
 
     /* =========================================
        CHECK PASSWORD
     ========================================= */
 
     if (password !== confirmPassword) {
-
       alert("Passwords do not match.");
-
       return;
     }
 
+    try {
+      /* =========================================
+         SEND DATA TO FLASK BACKEND
+      ========================================= */
 
-    /* =========================================
-       CHECK EXISTING USER
-    ========================================= */
+      const response = await fetch(
+        "http://127.0.0.1:5000/api/register",
+        {
+          method: "POST",
 
-    const existingUser =
-      JSON.parse(
-        localStorage.getItem("qaverin-user")
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            password: password,
+          }),
+        }
       );
 
+      const data =
+        await response.json();
 
-    if (
-      existingUser &&
-      existingUser.email.trim().toLowerCase() ===
-        email.trim().toLowerCase()
-    ) {
+      /* =========================================
+         HANDLE BACKEND ERROR
+      ========================================= */
+
+      if (!response.ok) {
+        alert(
+          data.message ||
+            "Registration failed."
+        );
+
+        return;
+      }
+
+      /* =========================================
+         GET REGISTERED USER
+      ========================================= */
+
+      const registeredUser =
+        data.user || {
+          name: name.trim(),
+          email: email.trim(),
+          role: "customer",
+        };
+
+      /* =========================================
+         MAKE SURE ROLE IS CUSTOMER
+      ========================================= */
+
+      const customerUser = {
+        ...registeredUser,
+        name:
+          registeredUser.name ||
+          name.trim(),
+
+        email:
+          registeredUser.email ||
+          email.trim(),
+
+        role: "customer",
+      };
+
+      /* =========================================
+         CLEAR OLD LOGIN DATA
+      ========================================= */
+
+      localStorage.removeItem(
+        "qaverin-token"
+      );
+
+      localStorage.removeItem(
+        "qaverin-current-user"
+      );
+
+      localStorage.removeItem(
+        "qaverin-logged-in"
+      );
+
+      /* =========================================
+         SAVE CUSTOMER LOGIN STATUS
+      ========================================= */
+
+      localStorage.setItem(
+        "qaverin-logged-in",
+        "true"
+      );
+
+      /* =========================================
+         SAVE CUSTOMER USER
+      ========================================= */
+
+      localStorage.setItem(
+        "qaverin-current-user",
+        JSON.stringify(customerUser)
+      );
+
+      /* =========================================
+         SAVE TOKEN IF BACKEND RETURNS ONE
+      ========================================= */
+
+      if (data.token) {
+        localStorage.setItem(
+          "qaverin-token",
+          data.token
+        );
+      }
+
+      /* =========================================
+         REGISTRATION SUCCESS
+      ========================================= */
 
       alert(
-        "An account with this email already exists."
+        "Account created successfully!"
       );
 
-      navigate("/login");
+      /* =========================================
+         GO TO HOME
+      ========================================= */
 
-      return;
-    }
-
-
-    /* =========================================
-       CREATE USER
-    ========================================= */
-
-    const user = {
-
-      name: name.trim(),
-
-      email: email.trim(),
-
-      password: password,
-
-    };
-
-
-    /* =========================================
-       SAVE USER
-    ========================================= */
-
-    localStorage.setItem(
-      "qaverin-user",
-      JSON.stringify(user)
-    );
-
-
-    /* =========================================
-       LOGIN USER AUTOMATICALLY
-    ========================================= */
-
-    localStorage.setItem(
-      "qaverin-logged-in",
-      "true"
-    );
-
-
-    localStorage.setItem(
-      "qaverin-current-user",
-      JSON.stringify(user)
-    );
-
-
-    /* =========================================
-       GO TO HOME
-    ========================================= */
-
-    navigate("/", {
-      replace: true,
-    });
-
-
-    /* =========================================
-       SCROLL TO TOP OF HOME
-    ========================================= */
-
-    setTimeout(() => {
-
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "instant",
+      navigate("/", {
+        replace: true,
       });
 
-    }, 50);
+      /* =========================================
+         SCROLL TO TOP
+      ========================================= */
 
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "instant",
+        });
+      }, 50);
+
+    } catch (error) {
+      console.error(
+        "Registration error:",
+        error
+      );
+
+      alert(
+        "Unable to connect to the server. Please make sure the Flask backend is running."
+      );
+    }
   };
 
-
   return (
-
     <main className="signup-page">
-
       <section className="signup-container">
-
 
         {/* =================================
             HEADER
@@ -141,29 +189,18 @@ function Signup() {
             JOIN QAVERIN
           </p>
 
-
           <h1>
-
             Create
-
             <br />
-
-            <em>
-              your account.
-            </em>
-
+            <em>your account.</em>
           </h1>
 
-
           <p className="signup-description">
-
-            Begin your personal fragrance journey
-            with Qaverin.
-
+            Begin your personal fragrance
+            journey with Qaverin.
           </p>
 
         </div>
-
 
 
         {/* =================================
@@ -175,24 +212,22 @@ function Signup() {
           onSubmit={handleSignup}
         >
 
-
           {/* NAME */}
 
           <div className="signup-field">
 
             <label htmlFor="signup-name">
-
               FULL NAME
-
             </label>
-
 
             <input
               id="signup-name"
               type="text"
               value={name}
               onChange={(event) =>
-                setName(event.target.value)
+                setName(
+                  event.target.value
+                )
               }
               placeholder="Enter your full name"
               required
@@ -201,24 +236,22 @@ function Signup() {
           </div>
 
 
-
           {/* EMAIL */}
 
           <div className="signup-field">
 
             <label htmlFor="signup-email">
-
               EMAIL ADDRESS
-
             </label>
-
 
             <input
               id="signup-email"
               type="email"
               value={email}
               onChange={(event) =>
-                setEmail(event.target.value)
+                setEmail(
+                  event.target.value
+                )
               }
               placeholder="Enter your email"
               required
@@ -227,24 +260,22 @@ function Signup() {
           </div>
 
 
-
           {/* PASSWORD */}
 
           <div className="signup-field">
 
             <label htmlFor="signup-password">
-
               PASSWORD
-
             </label>
-
 
             <input
               id="signup-password"
               type="password"
               value={password}
               onChange={(event) =>
-                setPassword(event.target.value)
+                setPassword(
+                  event.target.value
+                )
               }
               placeholder="Create a password"
               minLength="6"
@@ -254,17 +285,13 @@ function Signup() {
           </div>
 
 
-
           {/* CONFIRM PASSWORD */}
 
           <div className="signup-field">
 
             <label htmlFor="signup-confirm-password">
-
               CONFIRM PASSWORD
-
             </label>
-
 
             <input
               id="signup-confirm-password"
@@ -283,24 +310,20 @@ function Signup() {
           </div>
 
 
-
           {/* SUBMIT */}
 
           <button
             type="submit"
             className="signup-button"
           >
-
             CREATE ACCOUNT
 
             <span>
               →
             </span>
-
           </button>
 
         </form>
-
 
 
         {/* =================================
@@ -313,19 +336,15 @@ function Signup() {
             ALREADY HAVE AN ACCOUNT?
           </p>
 
-
           <Link to="/login">
-
             SIGN IN
 
             <span>
               →
             </span>
-
           </Link>
 
         </div>
-
 
 
         {/* =================================
@@ -336,19 +355,12 @@ function Signup() {
           to="/"
           className="signup-home"
         >
-
           ← BACK TO QAVERIN
-
         </Link>
 
-
       </section>
-
     </main>
-
   );
-
 }
-
 
 export default Signup;

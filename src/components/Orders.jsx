@@ -1,18 +1,77 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-
-import { useOrder } from "../context/useOrder";
 
 import "./Orders.css";
 
+import noir from "../assets/noir.png";
+import rose from "../assets/rose.png";
+import oud from "../assets/oud.png";
+import eclat from "../assets/eclat.png";
+
+
+
+// =========================================
+// PRODUCT IMAGE
+// =========================================
+
+function getProductImage(name) {
+
+  const productName =
+    name
+      ? name.toLowerCase()
+      : "";
+
+  if (productName.includes("noir")) {
+    return noir;
+  }
+
+  if (productName.includes("rose")) {
+    return rose;
+  }
+
+  if (productName.includes("oud")) {
+    return oud;
+  }
+
+  if (
+    productName.includes("éclat") ||
+    productName.includes("eclat")
+  ) {
+    return eclat;
+  }
+
+  return null;
+}
+
+
+
+// =========================================
+// ORDERS COMPONENT
+// =========================================
 
 function Orders() {
 
-  const { orders } = useOrder();
+  // =========================================
+  // STATE
+  // =========================================
+
+  const [orders, setOrders] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+
+  const [cancellingOrderId, setCancellingOrderId] =
+    useState(null);
 
 
-  /* =========================================
-     LOGIN STATUS
-  ========================================= */
+
+  // =========================================
+  // LOGIN STATUS
+  // =========================================
 
   const isLoggedIn =
     localStorage.getItem(
@@ -20,9 +79,234 @@ function Orders() {
     ) === "true";
 
 
-  /* =========================================
-     PROTECT ORDERS PAGE
-  ========================================= */
+
+  // =========================================
+  // FETCH ORDERS
+  // =========================================
+
+  useEffect(() => {
+
+    let cancelled = false;
+
+    const loadOrders = async () => {
+
+      const token =
+        localStorage.getItem(
+          "qaverin-token"
+        );
+
+
+
+      // =====================================
+      // NO TOKEN
+      // =====================================
+
+      if (!token) {
+
+        if (!cancelled) {
+
+          setOrders([]);
+
+          setLoading(false);
+
+        }
+
+        return;
+
+      }
+
+
+
+      try {
+
+        // ===================================
+        // API REQUEST
+        // ===================================
+
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/orders",
+          {
+            method: "GET",
+
+            headers: {
+
+              Authorization:
+                `Bearer ${token}`,
+
+            },
+
+          }
+        );
+
+
+
+        const data =
+          await response.json();
+
+
+
+        if (cancelled) {
+          return;
+        }
+
+
+
+        // ===================================
+        // API ERROR
+        // ===================================
+
+        if (!response.ok) {
+
+          setError(
+            data.message ||
+            "Unable to load orders."
+          );
+
+          setOrders([]);
+
+        }
+
+
+
+        // ===================================
+        // SUCCESS
+        // ===================================
+
+        else {
+
+          const backendOrders =
+            Array.isArray(data.orders)
+              ? data.orders
+              : [];
+
+
+
+          /*
+           * IMPORTANT
+           *
+           * Newest order first.
+           *
+           * We use created_at when available.
+           * If created_at is unavailable,
+           * we fall back to the database id.
+           */
+
+          const sortedOrders =
+            [...backendOrders].sort(
+              (a, b) => {
+
+                const dateA =
+                  new Date(
+                    a.created_at ||
+                    a.createdAt ||
+                    a.date ||
+                    0
+                  ).getTime();
+
+                const dateB =
+                  new Date(
+                    b.created_at ||
+                    b.createdAt ||
+                    b.date ||
+                    0
+                  ).getTime();
+
+
+
+                /*
+                 * If both dates are valid,
+                 * newest date comes first.
+                 */
+
+                if (
+                  !Number.isNaN(dateA) &&
+                  !Number.isNaN(dateB) &&
+                  dateA !== dateB
+                ) {
+
+                  return dateB - dateA;
+
+                }
+
+
+
+                /*
+                 * Fallback:
+                 * Higher database ID = newer order.
+                 */
+
+                return (
+                  Number(b.id || 0) -
+                  Number(a.id || 0)
+                );
+
+              }
+            );
+
+
+
+          setOrders(
+            sortedOrders
+          );
+
+          setError("");
+
+        }
+
+
+
+        setLoading(false);
+
+
+
+      } catch (error) {
+
+        if (cancelled) {
+          return;
+        }
+
+
+
+        console.error(
+          "Orders fetch error:",
+          error
+        );
+
+
+
+        setError(
+          "Unable to connect to the server."
+        );
+
+
+
+        setOrders([]);
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+
+    loadOrders();
+
+
+
+    return () => {
+
+      cancelled = true;
+
+    };
+
+  }, []);
+
+
+
+  // =========================================
+  // PROTECT ORDERS PAGE
+  // =========================================
 
   if (!isLoggedIn) {
 
@@ -36,20 +320,27 @@ function Orders() {
   }
 
 
-  /* =========================================
-     FORMAT ORDER DATE
-  ========================================= */
+
+  // =========================================
+  // FORMAT ORDER DATE
+  // =========================================
 
   const formatOrderDate = (order) => {
 
-    if (order?.createdAt) {
+    if (order?.created_at) {
 
-      const date = new Date(
-        order.createdAt
-      );
+      const date =
+        new Date(
+          order.created_at
+        );
 
 
-      if (!Number.isNaN(date.getTime())) {
+
+      if (
+        !Number.isNaN(
+          date.getTime()
+        )
+      ) {
 
         return date.toLocaleDateString(
           "en-IN",
@@ -64,39 +355,129 @@ function Orders() {
 
     }
 
+
+
+    if (order?.createdAt) {
+
+      const date =
+        new Date(
+          order.createdAt
+        );
+
+
+
+      if (
+        !Number.isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return date.toLocaleDateString(
+          "en-IN",
+          {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }
+        );
+
+      }
+
+    }
+
+
+
     return order?.date || "—";
 
   };
 
 
-  /* =========================================
-     PAYMENT NAME
-  ========================================= */
+
+  // =========================================
+  // PAYMENT NAME
+  // =========================================
 
   const getPaymentName = (payment) => {
 
-    switch (payment) {
+    if (!payment) {
+      return "—";
+    }
+
+    const method =
+      String(payment)
+        .trim()
+        .toLowerCase();
+
+
+
+    switch (method) {
+
+      // =====================================
+      // CARD
+      // =====================================
 
       case "card":
+      case "credit":
+      case "credit_card":
+      case "debit":
+      case "debit_card":
+
         return "Credit / Debit Card";
 
+
+
+      // =====================================
+      // UPI
+      // =====================================
+
       case "upi":
+
         return "UPI";
 
+
+
+      // =====================================
+      // CASH ON DELIVERY
+      // =====================================
+
       case "cod":
+      case "cash":
+      case "cash_on_delivery":
+
         return "Cash on Delivery";
 
+
+
+      // =====================================
+      // NET BANKING
+      // =====================================
+
+      case "netbanking":
+      case "net_banking":
+      case "net-banking":
+      case "cashfree":
+
+        return "Net Banking";
+
+
+
+      // =====================================
+      // OTHER PAYMENT METHODS
+      // =====================================
+
       default:
-        return "—";
+
+        return payment;
 
     }
 
   };
 
 
-  /* =========================================
-     ITEM COUNT
-  ========================================= */
+
+  // =========================================
+  // ITEM COUNT
+  // =========================================
 
   const getItemCount = (items) => {
 
@@ -105,32 +486,307 @@ function Orders() {
     }
 
 
+
     return items.reduce(
-      (total, item) =>
-        total +
-        Number(item.quantity || 0),
+      (total, item) => {
+
+        return (
+          total +
+          Number(
+            item.quantity || 0
+          )
+        );
+
+      },
       0
     );
 
   };
 
 
-  /* =========================================
-     ORDER TOTAL
-  ========================================= */
+
+  // =========================================
+  // ORDER TOTAL
+  // =========================================
 
   const getOrderTotal = (order) => {
 
     return Number(
-      order?.total || 0
+      order?.total_amount ||
+      order?.total ||
+      0
     ).toFixed(2);
 
   };
 
 
+
+  // =========================================
+  // CUSTOMER ORDER NUMBER
+  // =========================================
+
+  /*
+   * Because orders are now sorted newest first:
+   *
+   * index 0 = latest order
+   * index 1 = second latest
+   * index 2 = oldest
+   *
+   * Customer-facing number:
+   *
+   * latest  = total orders
+   * oldest  = #1
+   */
+
+  const getCustomerOrderNumber = (index) => {
+
+    return (
+      orders.length - index
+    );
+
+  };
+
+
+
+  // =========================================
+  // CANCEL ORDER
+  // =========================================
+
+  const handleCancelOrder = async (orderId) => {
+
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to cancel this order?"
+      );
+
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
+
+
+
+    if (!token) {
+
+      setError(
+        "Please login again."
+      );
+
+      return;
+
+    }
+
+
+
+    try {
+
+      setCancellingOrderId(
+        orderId
+      );
+
+      setError("");
+
+
+
+      const response = await fetch(
+        `http://127.0.0.1:5000/api/orders/${orderId}/cancel`,
+        {
+          method: "PUT",
+
+          headers: {
+
+            Authorization:
+              `Bearer ${token}`,
+
+          },
+
+        }
+      );
+
+
+
+      const data =
+        await response.json();
+
+
+
+      if (!response.ok) {
+
+        setError(
+          data.message ||
+          "Unable to cancel order."
+        );
+
+        return;
+
+      }
+
+
+
+      // Update only the cancelled order
+      // without changing the other orders.
+
+      setOrders(
+        (currentOrders) =>
+          currentOrders.map(
+            (order) =>
+              Number(order.id) ===
+              Number(orderId)
+                ? {
+                    ...order,
+                    status: "Cancelled",
+                  }
+                : order
+          )
+      );
+
+
+
+    } catch (error) {
+
+      console.error(
+        "Cancel order error:",
+        error
+      );
+
+
+
+      setError(
+        "Unable to connect to the server."
+      );
+
+
+
+    } finally {
+
+      setCancellingOrderId(
+        null
+      );
+
+    }
+
+  };
+
+
+
+  // =========================================
+  // LOADING
+  // =========================================
+
+  if (loading) {
+
+    return (
+
+      <main className="orders-page">
+
+        <section className="orders-content">
+
+          <div className="orders-empty">
+
+            <div className="orders-empty-icon">
+              ✦
+            </div>
+
+
+
+            <h2>
+              Loading orders...
+            </h2>
+
+
+
+            <p>
+              Fetching your fragrance orders.
+            </p>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    );
+
+  }
+
+
+
+  // =========================================
+  // ERROR
+  // =========================================
+
+  if (error) {
+
+    return (
+
+      <main className="orders-page">
+
+        <section className="orders-content">
+
+          <div className="orders-empty">
+
+            <div className="orders-empty-icon">
+              !
+            </div>
+
+
+
+            <h2>
+              Unable to load orders.
+            </h2>
+
+
+
+            <p>
+              {error}
+            </p>
+
+
+
+            <button
+              type="button"
+              className="orders-shop-button"
+              onClick={() =>
+                window.location.reload()
+              }
+            >
+
+              TRY AGAIN
+
+              <span>
+                →
+              </span>
+
+            </button>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    );
+
+  }
+
+
+
+  // =========================================
+  // MAIN RENDER
+  // =========================================
+
   return (
 
     <main className="orders-page">
+
 
 
       {/* =====================================
@@ -144,6 +800,7 @@ function Orders() {
         </p>
 
 
+
         <div className="orders-title-row">
 
           <div>
@@ -151,6 +808,7 @@ function Orders() {
             <h1>
               My <em>orders.</em>
             </h1>
+
 
 
             <p className="orders-description">
@@ -161,6 +819,7 @@ function Orders() {
             </p>
 
           </div>
+
 
 
           <span className="orders-count">
@@ -188,6 +847,7 @@ function Orders() {
       <section className="orders-content">
 
 
+
         {/* ===================================
             EMPTY ORDERS
         =================================== */}
@@ -201,9 +861,11 @@ function Orders() {
             </div>
 
 
+
             <h2>
               No orders yet.
             </h2>
+
 
 
             <p>
@@ -212,6 +874,7 @@ function Orders() {
               with your first order.
 
             </p>
+
 
 
             <Link
@@ -231,23 +894,43 @@ function Orders() {
 
         ) : (
 
-
           /* =================================
              ORDERS LIST
           ================================= */
 
           <div className="orders-list">
 
-            {orders.map((order) => {
+            {orders.map((order, index) => {
 
               const items =
-                Array.isArray(order.items)
+                Array.isArray(
+                  order.items
+                )
                   ? order.items
                   : [];
 
 
+
               const itemCount =
                 getItemCount(items);
+
+
+
+              /*
+               * Customer-facing order number.
+               *
+               * Example with 3 orders:
+               *
+               * index 0 → #3
+               * index 1 → #2
+               * index 2 → #1
+               */
+
+              const customerOrderNumber =
+                getCustomerOrderNumber(
+                  index
+                );
+
 
 
               return (
@@ -256,6 +939,7 @@ function Orders() {
                   className="orders-card"
                   key={order.id}
                 >
+
 
 
                   {/* =========================
@@ -271,11 +955,13 @@ function Orders() {
                       </span>
 
 
+
                       <h2>
-                        #{order.id}
+                        #{customerOrderNumber}
                       </h2>
 
                     </div>
+
 
 
                     <div className="orders-status">
@@ -307,71 +993,105 @@ function Orders() {
                     ) : (
 
                       items.map(
-                        (item, index) => (
+                        (item, itemIndex) => {
 
-                          <div
-                            className="orders-item"
-                            key={
-                              `${order.id}-${item.id}-${index}`
-                            }
-                          >
-
-
-                            {/* IMAGE */}
-
-                            <div className="orders-item-image">
-
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                              />
+                          const image =
+                            getProductImage(
+                              item.name
+                            ) ||
+                            item.image;
 
 
-                              <span>
-                                {item.quantity}
-                              </span>
+
+                          return (
+
+                            <div
+                              className="orders-item"
+                              key={
+                                `${order.id}-${item.id}-${itemIndex}`
+                              }
+                            >
+
+
+
+                              {/* IMAGE */}
+
+                              <div className="orders-item-image">
+
+                                {image ? (
+
+                                  <img
+                                    src={image}
+                                    alt={
+                                      item.name ||
+                                      "Qaverin fragrance"
+                                    }
+                                  />
+
+                                ) : (
+
+                                  <div
+                                    className="orders-image-placeholder"
+                                  >
+                                    QAVERIN
+                                  </div>
+
+                                )}
+
+
+
+                                <span>
+                                  {item.quantity}
+                                </span>
+
+                              </div>
+
+
+
+                              {/* ITEM INFORMATION */}
+
+                              <div className="orders-item-info">
+
+                                <h3>
+                                  {item.name}
+                                </h3>
+
+
+
+                                <p>
+
+                                  {item.type ||
+                                    item.description ||
+                                    "Qaverin fragrance"}
+
+                                </p>
+
+                              </div>
+
+
+
+                              {/* ITEM PRICE */}
+
+                              <strong>
+
+                                $
+
+                                {(
+                                  Number(
+                                    item.price || 0
+                                  ) *
+                                  Number(
+                                    item.quantity || 0
+                                  )
+                                ).toFixed(2)}
+
+                              </strong>
 
                             </div>
 
+                          );
 
-
-                            {/* ITEM INFORMATION */}
-
-                            <div className="orders-item-info">
-
-                              <h3>
-                                {item.name}
-                              </h3>
-
-
-                              <p>
-                                {item.type}
-                              </p>
-
-                            </div>
-
-
-
-                            {/* ITEM PRICE */}
-
-                            <strong>
-
-                              $
-
-                              {(
-                                Number(
-                                  item.price || 0
-                                ) *
-                                Number(
-                                  item.quantity || 0
-                                )
-                              ).toFixed(2)}
-
-                            </strong>
-
-                          </div>
-
-                        )
+                        }
                       )
 
                     )}
@@ -387,11 +1107,15 @@ function Orders() {
                   <div className="orders-details">
 
 
+
+                    {/* ORDER DATE */}
+
                     <div>
 
                       <span>
                         ORDER DATE
                       </span>
+
 
 
                       <p>
@@ -403,6 +1127,9 @@ function Orders() {
                     </div>
 
 
+
+                    {/* PAYMENT */}
+
                     <div>
 
                       <span>
@@ -410,9 +1137,11 @@ function Orders() {
                       </span>
 
 
+
                       <p>
 
                         {getPaymentName(
+                          order.payment_method ||
                           order.payment
                         )}
 
@@ -421,11 +1150,15 @@ function Orders() {
                     </div>
 
 
+
+                    {/* ITEMS */}
+
                     <div>
 
                       <span>
                         ITEMS
                       </span>
+
 
 
                       <p>
@@ -443,11 +1176,15 @@ function Orders() {
                     </div>
 
 
+
+                    {/* TOTAL */}
+
                     <div>
 
                       <span>
                         TOTAL
                       </span>
+
 
 
                       <strong>
@@ -463,6 +1200,7 @@ function Orders() {
                     </div>
 
 
+
                   </div>
 
 
@@ -474,6 +1212,10 @@ function Orders() {
                   <Link
                     to={`/order/${order.id}`}
                     className="orders-view-button"
+                    state={{
+                      customerOrderNumber:
+                        customerOrderNumber,
+                    }}
                   >
 
                     VIEW ORDER DETAILS
@@ -483,6 +1225,39 @@ function Orders() {
                     </span>
 
                   </Link>
+
+
+
+                  {/* =========================
+                      CANCEL ORDER
+                  ========================= */}
+
+                  {(order.status === "Pending" ||
+                    order.status === "Confirmed") && (
+
+                    <button
+                      type="button"
+                      className="orders-cancel-button"
+                      onClick={() =>
+                        handleCancelOrder(
+                          order.id
+                        )
+                      }
+                      disabled={
+                        cancellingOrderId ===
+                        order.id
+                      }
+                    >
+
+                      {cancellingOrderId ===
+                      order.id
+                        ? "CANCELLING..."
+                        : "CANCEL ORDER"}
+
+                    </button>
+
+                  )}
+
 
 
                 </article>
@@ -513,11 +1288,13 @@ function Orders() {
       </Link>
 
 
+
     </main>
 
   );
 
 }
+
 
 
 export default Orders;

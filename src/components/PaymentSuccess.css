@@ -1,0 +1,273 @@
+/* =========================================
+   QAVERIN PAYMENT PAGE
+========================================= */
+
+.payment-success-page {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 70px 20px;
+  background: #f8f6f2;
+  box-sizing: border-box;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.payment-success-content {
+  width: 100%;
+  max-width: 680px;
+  padding: 60px 55px;
+  background: #ffffff;
+  border: 1px solid #e5e0d8;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.06);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* =========================================
+   STATUS ICON
+========================================= */
+
+.payment-status-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.success-icon {
+  background: #f1eee7;
+  color: #7d6a51;
+}
+
+.pending-icon {
+  background: #f5f0e7;
+  color: #9a7b45;
+}
+
+.failed-icon {
+  background: #f6ece8;
+  color: #9b604e;
+}
+
+/* =========================================
+   QAVERIN LABEL
+========================================= */
+
+.payment-success-content > p {
+  margin: 0 0 25px;
+  font-size: 13px;
+  letter-spacing: 5px;
+  color: #8a7860;
+  font-weight: 500;
+}
+
+/* =========================================
+   HEADING
+========================================= */
+
+.payment-success-content h1 {
+  margin: 0 auto 22px;
+  max-width: 600px;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 44px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: #111111;
+  letter-spacing: -1px;
+}
+
+.payment-success-content h1 em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.payment-success-content > span {
+  display: block;
+  max-width: 500px;
+  margin: 0 auto 35px;
+  color: #68615a;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.payment-success-content button {
+  min-width: 220px;
+  padding: 15px 28px;
+  border: none;
+  background: #171717;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+.payment-success-content button:hover {
+  background: #806e56;
+  transform: translateY(-2px);
+}
+
+.payment-success-content button span {
+  margin-left: 12px;
+  font-size: 17px;
+  transition:
+    margin-left 0.3s ease;
+}
+
+.payment-success-content button:hover span {
+  margin-left: 18px;
+}
+
+/* =========================================
+   DARK MODE
+   Uses the SAME Navbar theme
+========================================= */
+
+body.dark-theme .payment-success-page {
+  background: #171513;
+}
+
+body.dark-theme .payment-success-content {
+  background: #24211e;
+  border-color: #3d3935;
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-theme .payment-success-content h1 {
+  color: #f5f1eb;
+}
+
+body.dark-theme .payment-success-content > span {
+  color: #c3bdb5;
+}
+
+body.dark-theme .success-icon {
+  background: #38342e;
+  color: #d1ad76;
+}
+
+body.dark-theme .pending-icon {
+  background: #3a3428;
+  color: #d1ad76;
+}
+
+body.dark-theme .failed-icon {
+  background: #3a2925;
+  color: #d99a88;
+}
+
+body.dark-theme .payment-success-content button {
+  background: #f5f1eb;
+  color: #171513;
+}
+
+body.dark-theme .payment-success-content button:hover {
+  background: #d1ad76;
+  color: #171513;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .payment-success-page {
+    min-height: calc(100vh - 100px);
+    padding: 40px 18px;
+  }
+
+  .payment-success-content {
+    padding: 45px 25px;
+  }
+
+  .payment-status-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 27px;
+    margin-bottom: 22px;
+  }
+
+  .payment-success-content > p {
+    font-size: 11px;
+    letter-spacing: 4px;
+  }
+
+  .payment-success-content h1 {
+    font-size: 34px;
+  }
+
+  .payment-success-content > span {
+    font-size: 14px;
+  }
+
+  .payment-success-content button {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  .payment-success-page {
+    padding: 25px 12px;
+  }
+
+  .payment-success-content {
+    padding: 35px 20px;
+  }
+
+  .payment-status-icon {
+    width: 55px;
+    height: 55px;
+    font-size: 24px;
+  }
+
+  .payment-success-content h1 {
+    font-size: 29px;
+  }
+
+  .payment-success-content > p {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .payment-success-content > span {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+}

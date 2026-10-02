@@ -1,127 +1,301 @@
-import { useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
 import { OrderContext } from "./OrderContext";
+
 
 export function OrderProvider({ children }) {
 
-  const [orders, setOrders] = useState(() => {
+  const [orders, setOrders] =
+    useState([]);
 
-    try {
+  const [loadingOrders, setLoadingOrders] =
+    useState(false);
 
-      const savedOrders =
-        localStorage.getItem("qaverin-orders");
-
-      if (!savedOrders) {
-        return [];
-      }
-
-      const parsedOrders =
-        JSON.parse(savedOrders);
-
-      return Array.isArray(parsedOrders)
-        ? parsedOrders
-        : [];
-
-    } catch (error) {
-
-      console.error(
-        "Failed to load orders:",
-        error
-      );
-
-      return [];
-
-    }
-
-  });
+  const [orderError, setOrderError] =
+    useState("");
 
 
   /* =========================================
-     SAVE ORDERS
+     GET JWT TOKEN
   ========================================= */
 
-  const saveOrders = (newOrders) => {
+  const getToken = () => {
 
-    setOrders(newOrders);
-
-    localStorage.setItem(
-      "qaverin-orders",
-      JSON.stringify(newOrders)
+    return localStorage.getItem(
+      "qaverin-token"
     );
 
   };
 
 
   /* =========================================
-     ADD ORDER
+     FETCH ORDERS FROM BACKEND
   ========================================= */
 
-  const addOrder = (order) => {
+  const fetchOrders = useCallback(
+    async () => {
 
-    const newOrder = {
+      const token =
+        getToken();
 
-      ...order,
-
-      /* =====================================
-         ORDER ID
-      ===================================== */
-
-      id: `QV-${Math.floor(
-        100000 +
-        Math.random() * 900000
-      )}`,
 
       /* =====================================
-         ORDER DATE
+         NO TOKEN
       ===================================== */
 
-      date:
-        new Date().toLocaleDateString(
-          "en-IN",
-          {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }
-        ),
+      if (!token) {
 
-      /* =====================================
-         EXACT CREATION TIME
-      ===================================== */
+        setOrders([]);
 
-      createdAt:
-        new Date().toISOString(),
+        setLoadingOrders(false);
 
-      /* =====================================
-         STATUS
-      ===================================== */
+        return;
 
-      status:
-        order.status || "ORDER PLACED",
+      }
+
+
+      try {
+
+        setLoadingOrders(true);
+
+        setOrderError("");
+
+
+        /* ===================================
+           API REQUEST
+        =================================== */
+
+        const response =
+          await fetch(
+            "http://127.0.0.1:5000/api/orders",
+            {
+              method: "GET",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        /* ===================================
+           TOKEN EXPIRED / INVALID
+        =================================== */
+
+        if (
+          response.status === 401
+        ) {
+
+          setOrders([]);
+
+          setOrderError(
+            "Session expired. Please login again."
+          );
+
+          return;
+
+        }
+
+
+        /* ===================================
+           OTHER API ERROR
+        =================================== */
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message ||
+            "Failed to fetch orders"
+          );
+
+        }
+
+
+        /* ===================================
+           BACKEND ORDERS
+        =================================== */
+
+        const backendOrders =
+          Array.isArray(data.orders)
+            ? data.orders
+            : [];
+
+
+        /* ===================================
+           FORMAT ORDERS
+        =================================== */
+
+        const formattedOrders =
+          backendOrders.map(
+            (order) => ({
+
+              ...order,
+
+
+              /* =============================
+                 TOTAL
+              ============================= */
+
+              total:
+                Number(
+                  order.total_amount || 0
+                ),
+
+
+              /* =============================
+                 DATE
+              ============================= */
+
+              createdAt:
+                order.created_at,
+
+
+              date:
+                order.created_at
+                  ? new Date(
+                      order.created_at
+                    ).toLocaleDateString(
+                      "en-IN",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      }
+                    )
+                  : "—",
+
+
+              /* =============================
+                 STATUS
+              ============================= */
+
+              status:
+                order.status ||
+                "Pending",
+
+            })
+          );
+
+
+        /* ===================================
+           SAVE ORDERS
+        =================================== */
+
+        setOrders(
+          formattedOrders
+        );
+
+        setOrderError("");
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Fetch orders error:",
+          error
+        );
+
+
+        setOrderError(
+          error.message ||
+          "Unable to fetch orders"
+        );
+
+      }
+
+      finally {
+
+        setLoadingOrders(false);
+
+      }
+
+    },
+    []
+  );
+
+
+  /* =========================================
+     INITIAL FETCH
+     
+     setTimeout prevents the React
+     set-state-in-effect warning because
+     fetchOrders starts after the effect
+     has completed.
+  ========================================= */
+
+  useEffect(() => {
+
+    const timer =
+      setTimeout(() => {
+
+        fetchOrders();
+
+      }, 0);
+
+
+    return () => {
+
+      clearTimeout(timer);
+
+    };
+
+  }, [fetchOrders]);
+
+
+  /* =========================================
+     CLEAR ORDERS ON LOGOUT
+  ========================================= */
+
+  useEffect(() => {
+
+    const handleLogout = () => {
+
+      /*
+        Clear the previous user's orders
+        from React state.
+
+        This does NOT delete orders
+        from MySQL.
+      */
+
+      setOrders([]);
+
+      setOrderError("");
+
+      setLoadingOrders(false);
 
     };
 
 
-    /* =====================================
-       ADD NEW ORDER FIRST
-    ===================================== */
-
-    const updatedOrders = [
-      newOrder,
-      ...orders,
-    ];
+    window.addEventListener(
+      "qaverin-logout",
+      handleLogout
+    );
 
 
-    saveOrders(updatedOrders);
+    return () => {
 
+      window.removeEventListener(
+        "qaverin-logout",
+        handleLogout
+      );
 
-    /* =====================================
-       RETURN CREATED ORDER
-       Useful if needed later
-    ===================================== */
+    };
 
-    return newOrder;
-
-  };
+  }, []);
 
 
   /* =========================================
@@ -132,36 +306,185 @@ export function OrderProvider({ children }) {
 
     return orders.find(
       (order) =>
-        String(order.id) === String(id)
+        String(order.id) ===
+        String(id)
     );
 
   };
 
 
   /* =========================================
-     CLEAR ORDERS
+     ADD ORDER
+     
+     Backend creates the real order.
+
+     This function temporarily adds the
+     backend response to React state so
+     existing Checkout code doesn't break.
   ========================================= */
 
-  const clearOrders = () => {
+  const addOrder = (order) => {
 
-    saveOrders([]);
+    if (!order) {
+
+      return null;
+
+    }
+
+
+    const formattedOrder = {
+
+      ...order,
+
+
+      /* =====================================
+         TOTAL
+      ===================================== */
+
+      total:
+        Number(
+          order.total ||
+          order.total_amount ||
+          0
+        ),
+
+
+      /* =====================================
+         DATE
+      ===================================== */
+
+      createdAt:
+        order.createdAt ||
+        order.created_at ||
+        new Date().toISOString(),
+
+
+      date:
+        order.date ||
+
+        (
+          order.created_at
+
+            ? new Date(
+                order.created_at
+              ).toLocaleDateString(
+                "en-IN",
+                {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                }
+              )
+
+            : new Date()
+                .toLocaleDateString(
+                  "en-IN",
+                  {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  }
+                )
+        ),
+
+
+      /* =====================================
+         STATUS
+      ===================================== */
+
+      status:
+        order.status ||
+        "Pending",
+
+    };
+
+
+    setOrders(
+      (currentOrders) => {
+
+        /* ===============================
+           PREVENT DUPLICATE ORDER
+        =============================== */
+
+        const alreadyExists =
+          currentOrders.some(
+            (item) =>
+              String(item.id) ===
+              String(formattedOrder.id)
+          );
+
+
+        if (alreadyExists) {
+
+          return currentOrders;
+
+        }
+
+
+        return [
+
+          formattedOrder,
+
+          ...currentOrders,
+
+        ];
+
+      }
+    );
+
+
+    return formattedOrder;
 
   };
 
 
   /* =========================================
-     DELETE SINGLE ORDER
+     REFRESH ORDERS
+  ========================================= */
+
+  const refreshOrders = () => {
+
+    fetchOrders();
+
+  };
+
+
+  /* =========================================
+     CLEAR ORDERS
+     
+     This only clears frontend state.
+
+     It does NOT delete orders from MySQL.
+  ========================================= */
+
+  const clearOrders = () => {
+
+    setOrders([]);
+
+  };
+
+
+  /* =========================================
+     DELETE ORDER
+     
+     Currently frontend only.
+
+     It does NOT delete the order from
+     the backend/database.
   ========================================= */
 
   const deleteOrder = (id) => {
 
-    const updatedOrders =
-      orders.filter(
-        (order) =>
-          String(order.id) !== String(id)
-      );
+    setOrders(
+      (currentOrders) =>
 
-    saveOrders(updatedOrders);
+        currentOrders.filter(
+          (order) =>
+            String(order.id) !==
+            String(id)
+        )
+
+    );
 
   };
 
@@ -174,15 +497,42 @@ export function OrderProvider({ children }) {
 
     <OrderContext.Provider
       value={{
+
+        /* =================================
+           ORDERS
+        ================================= */
+
         orders,
+
+
+        /* =================================
+           LOADING
+        ================================= */
+
+        loadingOrders,
+
+
+        /* =================================
+           ERROR
+        ================================= */
+
+        orderError,
+
+
+        /* =================================
+           FUNCTIONS
+        ================================= */
 
         addOrder,
 
         getOrderById,
 
+        refreshOrders,
+
         deleteOrder,
 
         clearOrders,
+
       }}
     >
 

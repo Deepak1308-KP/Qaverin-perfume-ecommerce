@@ -2,6 +2,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 
 import { useEffect, useState } from "react";
@@ -10,7 +11,9 @@ import { CartProvider } from "./context/CartProvider";
 import { WishlistProvider } from "./context/WishlistProvider";
 import { OrderProvider } from "./context/OrderProvider";
 
+
 import Navbar from "./components/Navbar";
+
 
 import Hero from "./components/Hero";
 import SignatureCollection from "./components/SignatureCollection";
@@ -19,23 +22,41 @@ import Experience from "./components/Experience";
 import Newsletter from "./components/Newsletter";
 import Footer from "./components/Footer";
 
+
 import Shop from "./components/Shop";
 import ProductDetails from "./components/ProductDetails";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import Wishlist from "./components/Wishlist";
 
+
 import OrderSuccess from "./components/OrderSuccess";
 import OrderDetails from "./components/OrderDetails";
 import Orders from "./components/Orders";
+
 
 import Profile from "./components/Profile";
 import About from "./components/About";
 import Collections from "./components/Collections";
 import Account from "./components/Account";
 
+
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+
+import PaymentSuccess from "./components/PaymentSuccess";
+
+
+/* =========================================
+   ADMIN
+========================================= */
+
+import Admin from "./components/Admin";
+import AdminProducts from "./components/AdminProducts";
+import AdminOrders from "./components/AdminOrders";
+import AdminCustomers from "./components/AdminCustomers";
+import AdminAnalytics from "./components/AdminAnalytics";
+import AdminOrderDetails from "./components/AdminOrderDetails";
 
 
 /* =========================================
@@ -43,8 +64,11 @@ import Signup from "./components/Signup";
 ========================================= */
 
 function Home() {
+
   return (
+
     <>
+
       <Hero />
 
       <SignatureCollection />
@@ -56,9 +80,13 @@ function Home() {
       <Newsletter />
 
       <Footer />
+
     </>
+
   );
+
 }
+
 
 
 /* =========================================
@@ -67,29 +95,49 @@ function Home() {
 ========================================= */
 
 function EntryNotification() {
-  const [showNotification, setShowNotification] = useState(() => {
-    const loggedIn =
-      localStorage.getItem("qaverin-logged-in") === "true";
 
-    return !loggedIn;
-  });
+  const [showNotification, setShowNotification] =
+    useState(() => {
+
+      const loggedIn =
+        localStorage.getItem(
+          "qaverin-logged-in"
+        ) === "true";
+
+
+      return !loggedIn;
+
+    });
+
 
 
   /* =========================================
-     HIDE AFTER 5 SECONDS
+     HIDE AFTER 3 SECONDS
   ========================================= */
 
   useEffect(() => {
-    if (!showNotification) return;
 
-    const timer = setTimeout(() => {
-      setShowNotification(false);
-    }, 3000);
+    if (!showNotification) {
+      return;
+    }
+
+
+    const timer =
+      setTimeout(() => {
+
+        setShowNotification(false);
+
+      }, 3000);
+
 
     return () => {
+
       clearTimeout(timer);
+
     };
+
   }, [showNotification]);
+
 
 
   /* =========================================
@@ -97,8 +145,11 @@ function EntryNotification() {
   ========================================= */
 
   if (!showNotification) {
+
     return null;
+
   }
+
 
 
   /* =========================================
@@ -106,46 +157,31 @@ function EntryNotification() {
   ========================================= */
 
   return (
+
     <div
       style={{
         position: "fixed",
-
         top: "85px",
-
         right: "25px",
-
         zIndex: 999999,
-
         width: "340px",
-
         padding: "18px 20px",
-
         display: "flex",
-
         alignItems: "flex-start",
-
         gap: "14px",
-
         background:
           "var(--popup-background, #f7f4ef)",
-
         color:
           "var(--popup-text, #171513)",
-
         border:
           "1px solid var(--popup-border, #d8c5aa)",
-
         borderRadius: "4px",
-
         boxShadow:
           "0 12px 35px rgba(0, 0, 0, 0.18)",
-
         fontFamily:
           "Arial, sans-serif",
-
         animation:
           "qaverinPopupIn 0.4s ease",
-
         pointerEvents: "none",
       }}
     >
@@ -155,29 +191,21 @@ function EntryNotification() {
       <span
         style={{
           flexShrink: 0,
-
           width: "28px",
-
           height: "28px",
-
           display: "flex",
-
           alignItems: "center",
-
           justifyContent: "center",
-
           color: "#9b7540",
-
           fontSize: "17px",
-
           border:
             "1px solid #9b7540",
-
           borderRadius: "50%",
         }}
       >
         ✦
       </span>
+
 
 
       {/* CONTENT */}
@@ -191,15 +219,10 @@ function EntryNotification() {
         <strong
           style={{
             display: "block",
-
             marginBottom: "6px",
-
             fontSize: "9px",
-
             fontWeight: "600",
-
             letterSpacing: "2px",
-
             color: "#9b7540",
           }}
         >
@@ -210,11 +233,8 @@ function EntryNotification() {
         <p
           style={{
             margin: 0,
-
             fontSize: "12px",
-
             lineHeight: "1.6",
-
             color:
               "var(--popup-message, #5f5952)",
           }}
@@ -226,8 +246,11 @@ function EntryNotification() {
       </div>
 
     </div>
+
   );
+
 }
+
 
 
 /* =========================================
@@ -235,25 +258,19 @@ function EntryNotification() {
 ========================================= */
 
 function NotFound() {
+
   return (
+
     <main
       style={{
         minHeight: "80vh",
-
         display: "flex",
-
         flexDirection: "column",
-
         alignItems: "center",
-
         justifyContent: "center",
-
         background: "#f7f4ef",
-
         color: "#171513",
-
         textAlign: "center",
-
         padding: "40px",
       }}
     >
@@ -262,11 +279,8 @@ function NotFound() {
         style={{
           fontFamily:
             "Arial, sans-serif",
-
           fontSize: "10px",
-
           letterSpacing: "4px",
-
           color: "#9b7540",
         }}
       >
@@ -278,11 +292,8 @@ function NotFound() {
         style={{
           fontFamily:
             "Georgia, serif",
-
           fontSize: "60px",
-
           fontWeight: "400",
-
           margin: "10px 0",
         }}
       >
@@ -294,7 +305,6 @@ function NotFound() {
         style={{
           fontFamily:
             "Arial, sans-serif",
-
           color: "#6f6962",
         }}
       >
@@ -306,20 +316,13 @@ function NotFound() {
         href="/"
         style={{
           marginTop: "25px",
-
           padding: "14px 22px",
-
           background: "#171513",
-
           color: "#fff",
-
           textDecoration: "none",
-
           fontFamily:
             "Arial, sans-serif",
-
           fontSize: "10px",
-
           letterSpacing: "1.5px",
         }}
       >
@@ -327,16 +330,54 @@ function NotFound() {
       </a>
 
     </main>
+
   );
+
 }
 
+// =========================================
+// ADMIN ROUTE PROTECTION
+// =========================================
+
+function AdminRoute({ children }) {
+  const token =
+    localStorage.getItem("qaverin-token");
+
+  const currentUser =
+    localStorage.getItem("qaverin-current-user");
+
+  // No login
+  if (!token || !currentUser) {
+    return <Navigate to="/login" replace />;
+  }
+
+  let user;
+
+  try {
+    user = JSON.parse(currentUser);
+  } catch {
+    localStorage.removeItem("qaverin-current-user");
+    localStorage.removeItem("qaverin-token");
+
+    return <Navigate to="/login" replace />;
+  }
+
+  // Only admin can access admin pages
+  if (user.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
 
 /* =========================================
    APP
 ========================================= */
 
 function App() {
+
   return (
+
     <CartProvider>
 
       <WishlistProvider>
@@ -348,6 +389,7 @@ function App() {
             <Navbar />
 
             <EntryNotification />
+
 
             <Routes>
 
@@ -362,6 +404,7 @@ function App() {
               />
 
 
+
               {/* =================================
                   SHOP
               ================================= */}
@@ -370,6 +413,7 @@ function App() {
                 path="/shop"
                 element={<Shop />}
               />
+
 
 
               {/* =================================
@@ -382,6 +426,7 @@ function App() {
               />
 
 
+
               {/* =================================
                   CART
               ================================= */}
@@ -390,6 +435,7 @@ function App() {
                 path="/cart"
                 element={<Cart />}
               />
+
 
 
               {/* =================================
@@ -401,6 +447,10 @@ function App() {
                 element={<Checkout />}
               />
 
+             <Route
+  path="/payment-success"
+  element={<PaymentSuccess />}
+/>
 
               {/* =================================
                   WISHLIST
@@ -410,6 +460,7 @@ function App() {
                 path="/wishlist"
                 element={<Wishlist />}
               />
+
 
 
               {/* =================================
@@ -422,6 +473,7 @@ function App() {
               />
 
 
+
               {/* =================================
                   ALL ORDERS
               ================================= */}
@@ -430,6 +482,7 @@ function App() {
                 path="/orders"
                 element={<Orders />}
               />
+
 
 
               {/* =================================
@@ -442,6 +495,7 @@ function App() {
               />
 
 
+
               {/* =================================
                   PROFILE
               ================================= */}
@@ -450,6 +504,7 @@ function App() {
                 path="/profile"
                 element={<Profile />}
               />
+
 
 
               {/* =================================
@@ -462,6 +517,7 @@ function App() {
               />
 
 
+
               {/* =================================
                   COLLECTIONS
               ================================= */}
@@ -470,6 +526,7 @@ function App() {
                 path="/collections"
                 element={<Collections />}
               />
+
 
 
               {/* =================================
@@ -482,6 +539,7 @@ function App() {
               />
 
 
+
               {/* =================================
                   SIGN UP
               ================================= */}
@@ -490,6 +548,7 @@ function App() {
                 path="/signup"
                 element={<Signup />}
               />
+
 
 
               {/* =================================
@@ -502,6 +561,66 @@ function App() {
               />
 
 
+
+              {/* =================================
+                  ADMIN DASHBOARD
+              ================================= */}
+
+          <Route
+  path="/admin"
+  element={
+    <AdminRoute>
+      <Admin />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/products"
+  element={
+    <AdminRoute>
+      <AdminProducts />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/customers"
+  element={
+    <AdminRoute>
+      <AdminCustomers />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/analytics"
+  element={
+    <AdminRoute>
+      <AdminAnalytics />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/orders"
+  element={
+    <AdminRoute>
+      <AdminOrders />
+    </AdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/orders/:id"
+  element={
+    <AdminRoute>
+      <AdminOrderDetails />
+    </AdminRoute>
+  }
+/>
+
+
               {/* =================================
                   INVALID URL
               ================================= */}
@@ -510,6 +629,7 @@ function App() {
                 path="*"
                 element={<NotFound />}
               />
+
 
             </Routes>
 
@@ -520,7 +640,9 @@ function App() {
       </WishlistProvider>
 
     </CartProvider>
+
   );
+
 }
 
 

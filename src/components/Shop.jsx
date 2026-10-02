@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useNavigate,
   useSearchParams,
@@ -15,16 +15,21 @@ import oud from "../assets/oud.png";
 import eclat from "../assets/eclat.png";
 
 
+// =========================================
+// SHOP COMPONENT
+// =========================================
+
 function Shop() {
 
   const navigate = useNavigate();
 
-  const [searchParams] = useSearchParams();
+  const [searchParams] =
+    useSearchParams();
 
 
-  /* =========================================
-     CART
-  ========================================= */
+  // =========================================
+  // CART
+  // =========================================
 
   const {
     cartItems,
@@ -32,9 +37,9 @@ function Shop() {
   } = useCart();
 
 
-  /* =========================================
-     WISHLIST
-  ========================================= */
+  // =========================================
+  // WISHLIST
+  // =========================================
 
   const {
     toggleWishlist,
@@ -43,12 +48,39 @@ function Shop() {
   } = useWishlist();
 
 
-  /* =========================================
-     STATE
-  ========================================= */
+  // =========================================
+  // PRODUCTS STATE
+  // =========================================
+
+  const [products, setProducts] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [productError, setProductError] =
+    useState(false);
+
+
+  // =========================================
+  // FILTER STATE
+  // =========================================
 
   const [activeCategory, setActiveCategory] =
     useState("ALL");
+
+
+  // =========================================
+  // SORT STATE
+  // =========================================
+
+  const [sortOption, setSortOption] =
+    useState("default");
+
+
+  // =========================================
+  // MESSAGE STATE
+  // =========================================
 
   const [addedProduct, setAddedProduct] =
     useState(null);
@@ -60,9 +92,9 @@ function Shop() {
     useState("");
 
 
-  /* =========================================
-     SEARCH
-  ========================================= */
+  // =========================================
+  // SEARCH
+  // =========================================
 
   const searchText =
     searchParams.get("search") || "";
@@ -71,117 +103,421 @@ function Shop() {
     searchText.trim().toLowerCase();
 
 
-  /* =========================================
-     PRODUCTS
-  ========================================= */
+  // =========================================
+  // CLEAR NOTIFICATIONS AFTER LOGOUT
+  // =========================================
 
-  const products = [
+  useEffect(() => {
 
-    {
-      id: 1,
-      name: "QAVERIN NOIR",
-      type: "Woody Eau de Parfum",
-      category: "WOODY",
-      price: 129,
-      image: noir,
-    },
+    const checkLoginStatus = () => {
 
-    {
-      id: 2,
-      name: "QAVERIN ROSE",
-      type: "Floral Eau de Parfum",
-      category: "FLORAL",
-      price: 119,
-      image: rose,
-    },
+      const token =
+        localStorage.getItem(
+          "qaverin-token"
+        );
 
-    {
-      id: 3,
-      name: "QAVERIN OUD",
-      type: "Oud Eau de Parfum",
-      category: "OUD",
-      price: 149,
-      image: oud,
-    },
-
-    {
-      id: 4,
-      name: "QAVERIN ÉCLAT",
-      type: "Fresh Eau de Parfum",
-      category: "FRESH",
-      price: 109,
-      image: eclat,
-    },
-
-  ];
+      const isLoggedIn =
+        localStorage.getItem(
+          "qaverin-logged-in"
+        ) === "true";
 
 
-  /* =========================================
-     CATEGORIES
-  ========================================= */
+      if (!token || !isLoggedIn) {
+
+        setAddedProduct(null);
+
+        setCartMessage("");
+
+        setWishlistMessage("");
+
+      }
+
+    };
+
+
+    // Check immediately
+
+    checkLoginStatus();
+
+
+    // =====================================
+    // LOGOUT EVENT
+    // =====================================
+
+    const handleLogoutEvent = () => {
+
+      setAddedProduct(null);
+
+      setCartMessage("");
+
+      setWishlistMessage("");
+
+    };
+
+
+    window.addEventListener(
+      "qaverin-logout",
+      handleLogoutEvent
+    );
+
+
+    // =====================================
+    // CLEANUP
+    // =====================================
+
+    return () => {
+
+      window.removeEventListener(
+        "qaverin-logout",
+        handleLogoutEvent
+      );
+
+    };
+
+  }, []);
+
+
+  // =========================================
+  // FETCH PRODUCTS
+  // =========================================
+
+  useEffect(() => {
+
+    const getProducts = async () => {
+
+      try {
+
+        const response =
+          await fetch(
+            "http://127.0.0.1:5000/api/products"
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          setProductError(true);
+
+          return;
+
+        }
+
+
+        // =====================================
+        // FORMAT DATABASE PRODUCTS
+        // =====================================
+
+        const formattedProducts =
+          Array.isArray(data.products)
+            ? data.products.map(
+                (product) => {
+
+                  const productName =
+                    product.name
+                      ? product.name.toLowerCase()
+                      : "";
+
+
+                  // ===========================
+                  // IMAGE
+                  // ===========================
+
+                  let productImage =
+                    null;
+
+
+                  if (
+                    productName.includes(
+                      "noir"
+                    )
+                  ) {
+
+                    productImage = noir;
+
+                  } else if (
+                    productName.includes(
+                      "rose"
+                    )
+                  ) {
+
+                    productImage = rose;
+
+                  } else if (
+                    productName.includes(
+                      "oud"
+                    )
+                  ) {
+
+                    productImage = oud;
+
+                  } else if (
+                    productName.includes(
+                      "éclat"
+                    ) ||
+                    productName.includes(
+                      "eclat"
+                    )
+                  ) {
+
+                    productImage = eclat;
+
+                  }
+
+
+                  return {
+
+                    id:
+                      product.id,
+
+                    name:
+                      product.name,
+
+                    type:
+                      product.description ||
+                      product.brand ||
+                      "Eau de Parfum",
+
+                    category:
+                      product.category
+                        ? product.category.toUpperCase()
+                        : "OTHER",
+
+                    price:
+                      Number(
+                        product.price
+                      ) || 0,
+
+                    image:
+                      productImage,
+
+                  };
+
+                }
+              )
+            : [];
+
+
+        setProducts(
+          formattedProducts
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Products error:",
+          error
+        );
+
+        setProductError(true);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+    getProducts();
+
+  }, []);
+
+
+  // =========================================
+  // CATEGORIES
+  // =========================================
 
   const categories = [
     "ALL",
-    "WOODY",
-    "FLORAL",
-    "OUD",
-    "FRESH",
+    ...new Set(
+      products.map(
+        (product) =>
+          product.category
+      )
+    ),
   ];
 
 
-  /* =========================================
-     FILTER PRODUCTS
-  ========================================= */
+  // =========================================
+  // FILTER PRODUCTS
+  // =========================================
 
   const filteredProducts =
-    products.filter((product) => {
+    products.filter(
+      (product) => {
 
-      const matchesCategory =
-        activeCategory === "ALL" ||
-        product.category === activeCategory;
-
-
-      const matchesSearch =
-        normalizedSearch === "" ||
-        product.name
-          .toLowerCase()
-          .includes(normalizedSearch) ||
-        product.type
-          .toLowerCase()
-          .includes(normalizedSearch) ||
-        product.category
-          .toLowerCase()
-          .includes(normalizedSearch);
+        const matchesCategory =
+          activeCategory === "ALL" ||
+          product.category ===
+            activeCategory;
 
 
-      return (
-        matchesCategory &&
-        matchesSearch
-      );
+        const matchesSearch =
+          normalizedSearch === "" ||
+          product.name
+            .toLowerCase()
+            .includes(
+              normalizedSearch
+            ) ||
+          product.type
+            .toLowerCase()
+            .includes(
+              normalizedSearch
+            ) ||
+          product.category
+            .toLowerCase()
+            .includes(
+              normalizedSearch
+            );
 
-    });
+
+        return (
+          matchesCategory &&
+          matchesSearch
+        );
+
+      }
+    );
 
 
-  /* =========================================
-     OPEN PRODUCT
-  ========================================= */
+  // =========================================
+  // SORT PRODUCTS
+  // =========================================
 
-  const openProduct = (id) => {
+  const sortedProducts =
+    [...filteredProducts].sort(
+      (a, b) => {
 
-    navigate(`/product/${id}`);
+        if (
+          sortOption === "default"
+        ) {
+
+          return 0;
+
+        }
+
+
+        if (
+          sortOption === "price-low"
+        ) {
+
+          return (
+            Number(a.price) -
+            Number(b.price)
+          );
+
+        }
+
+
+        if (
+          sortOption === "price-high"
+        ) {
+
+          return (
+            Number(b.price) -
+            Number(a.price)
+          );
+
+        }
+
+
+        return 0;
+
+      }
+    );
+
+
+  // =========================================
+  // CHECK ACTIVE FILTERS
+  // =========================================
+
+  const hasActiveFilters =
+    activeCategory !== "ALL" ||
+    sortOption !== "default" ||
+    normalizedSearch !== "";
+
+
+  // =========================================
+  // CLEAR FILTERS
+  // =========================================
+
+  const clearFilters = () => {
+
+    setActiveCategory("ALL");
+
+    setSortOption("default");
+
+    navigate("/shop");
 
   };
 
 
-  /* =========================================
-     ADD TO CART
-  ========================================= */
+  // =========================================
+  // OPEN PRODUCT
+  // =========================================
 
-  const handleAddToCart = (product) => {
+  const openProduct = (id) => {
 
-    /* =======================================
-       CHECK CURRENT CART
-    ======================================= */
+    navigate(
+      `/product/${id}`
+    );
+
+  };
+
+
+  // =========================================
+  // ADD TO CART
+  // =========================================
+
+  const handleAddToCart = async (
+    product
+  ) => {
+
+    // =======================================
+    // CHECK LOGIN
+    // =======================================
+
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
+
+
+    const isLoggedIn =
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
+
+    // =======================================
+    // NOT LOGGED IN
+    // =======================================
+
+    if (
+      !token ||
+      !isLoggedIn
+    ) {
+
+      setAddedProduct(null);
+
+      setCartMessage("");
+
+      alert(
+        "Please login before adding products to your bag."
+      );
+
+      return;
+
+    }
+
+
+    // =======================================
+    // CHECK CURRENT CART
+    // =======================================
 
     const alreadyInCart =
       cartItems.some(
@@ -191,15 +527,16 @@ function Shop() {
       );
 
 
-    /* =======================================
-       ALREADY IN BAG
-    ======================================= */
+    // =======================================
+    // ALREADY IN BAG
+    // =======================================
 
     if (alreadyInCart) {
 
       setAddedProduct(
         `already-${product.id}`
       );
+
 
       setCartMessage(
         `✓ ${product.name} is already in your bag`
@@ -220,45 +557,188 @@ function Shop() {
     }
 
 
-    /* =======================================
-       ADD NEW PRODUCT
-    ======================================= */
+    // =======================================
+    // ADD PRODUCT
+    // =======================================
 
-    addToCart(product, 1);
+    try {
+
+      const success =
+        await addToCart(
+          product,
+          1
+        );
 
 
-    setAddedProduct(product.id);
+      // =====================================
+      // ADD FAILED
+      // =====================================
 
-    setCartMessage(
-      `✓ 1 × ${product.name} added to your bag`
-    );
+      if (!success) {
+
+        setAddedProduct(null);
+
+        setCartMessage("");
+
+        return;
+
+      }
 
 
-    setTimeout(() => {
+      // =====================================
+      // CHECK LOGIN AGAIN
+      // =====================================
+
+      const stillLoggedIn =
+        localStorage.getItem(
+          "qaverin-token"
+        ) &&
+        localStorage.getItem(
+          "qaverin-logged-in"
+        ) === "true";
+
+
+      if (!stillLoggedIn) {
+
+        setAddedProduct(null);
+
+        setCartMessage("");
+
+        return;
+
+      }
+
+
+      // =====================================
+      // SUCCESS
+      // =====================================
+
+      setAddedProduct(
+        product.id
+      );
+
+
+      setCartMessage(
+        `✓ 1 × ${product.name} added to your bag`
+      );
+
+
+      setTimeout(() => {
+
+        setAddedProduct(null);
+
+        setCartMessage("");
+
+      }, 2200);
+
+
+    } catch (error) {
+
+      console.error(
+        "Shop add to cart error:",
+        error
+      );
+
 
       setAddedProduct(null);
 
-      setCartMessage("");
 
-    }, 2200);
+      setCartMessage(
+        "Unable to add product to your bag."
+      );
+
+
+      setTimeout(() => {
+
+        setCartMessage("");
+
+      }, 2200);
+
+    }
 
   };
 
 
-  /* =========================================
-     WISHLIST
-  ========================================= */
+  // =========================================
+  // WISHLIST
+  // =========================================
 
-  const handleWishlist = (product) => {
+  const handleWishlist = (
+    product
+  ) => {
+
+    // =======================================
+    // CHECK LOGIN
+    // =======================================
+
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
+
+
+    const isLoggedIn =
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
+
+    // =======================================
+    // NOT LOGGED IN
+    // =======================================
+
+    if (
+      !token ||
+      !isLoggedIn
+    ) {
+
+      // Clear old wishlist message
+
+      setWishlistMessage("");
+
+
+      // IMPORTANT:
+      // Do NOT call toggleWishlist()
+      // when logged out.
+      //
+      // Just show login alert.
+
+      alert(
+        "Please login before adding products to your wishlist."
+      );
+
+
+      return;
+
+    }
+
+
+    // =======================================
+    // CHECK CURRENT WISHLIST
+    // =======================================
 
     const alreadyWishlisted =
-      isWishlisted(product.id);
+      isWishlisted(
+        product.id
+      );
 
 
-    toggleWishlist(product);
+    // =======================================
+    // TOGGLE WISHLIST
+    // =======================================
+
+    toggleWishlist(
+      product
+    );
 
 
-    if (alreadyWishlisted) {
+    // =======================================
+    // SHOW MESSAGE
+    // =======================================
+
+    if (
+      alreadyWishlisted
+    ) {
 
       setWishlistMessage(
         `${product.name} removed from your wishlist`
@@ -282,9 +762,98 @@ function Shop() {
   };
 
 
-  /* =========================================
-     RENDER
-  ========================================= */
+  // =========================================
+  // LOADING
+  // =========================================
+
+  if (loading) {
+
+    return (
+
+      <main className="shop">
+
+        <section className="shop-header">
+
+          <p className="shop-eyebrow">
+            THE QAVERIN COLLECTION
+          </p>
+
+
+          <h1>
+
+            Discover your
+
+            <br />
+
+            <em>
+              signature.
+            </em>
+
+          </h1>
+
+
+          <p className="shop-description">
+            Loading fragrances...
+          </p>
+
+        </section>
+
+      </main>
+
+    );
+
+  }
+
+
+  // =========================================
+  // ERROR
+  // =========================================
+
+  if (productError) {
+
+    return (
+
+      <main className="shop">
+
+        <section className="shop-header">
+
+          <p className="shop-eyebrow">
+            THE QAVERIN COLLECTION
+          </p>
+
+
+          <h1>
+
+            Unable to load
+
+            <br />
+
+            <em>
+              fragrances.
+            </em>
+
+          </h1>
+
+
+          <p className="shop-description">
+
+            Please make sure the Flask backend
+            is running.
+
+          </p>
+
+        </section>
+
+      </main>
+
+    );
+
+  }
+
+
+  // =========================================
+  // RENDER
+  // =========================================
 
   return (
 
@@ -302,6 +871,7 @@ function Shop() {
           <span>
             ♥
           </span>
+
 
           <span>
             {wishlistMessage}
@@ -324,6 +894,7 @@ function Shop() {
             ✓
           </span>
 
+
           <span>
             {cartMessage}
           </span>
@@ -343,13 +914,16 @@ function Shop() {
           ✦
         </span>
 
+
         <span className="shop-particle particle-two">
           ✧
         </span>
 
+
         <span className="shop-particle particle-three">
           ·
         </span>
+
 
         <span className="shop-particle particle-four">
           ✦
@@ -362,15 +936,23 @@ function Shop() {
 
 
         <h1>
+
           Discover your
+
           <br />
-          <em>signature.</em>
+
+          <em>
+            signature.
+          </em>
+
         </h1>
 
 
         <p className="shop-description">
+
           Explore fragrances carefully crafted
           to become uniquely yours.
+
         </p>
 
       </section>
@@ -388,6 +970,7 @@ function Shop() {
             SEARCH RESULTS FOR
           </span>
 
+
           <strong>
             "{searchText}"
           </strong>
@@ -398,33 +981,105 @@ function Shop() {
 
 
       {/* =====================================
-          CATEGORY FILTER
+          FILTER CONTROLS
       ===================================== */}
 
-      <div className="shop-filters">
+      <div className="shop-controls">
 
-        {categories.map((category) => (
+        <div className="shop-filters">
 
-          <button
-            key={category}
-            type="button"
-            className={
-              activeCategory === category
-                ? "filter-button active"
-                : "filter-button"
-            }
-            onClick={() =>
-              setActiveCategory(category)
+          {categories.map(
+            (category) => (
+
+              <button
+                key={category}
+                type="button"
+                className={
+                  activeCategory ===
+                  category
+                    ? "filter-button active"
+                    : "filter-button"
+                }
+                onClick={() =>
+                  setActiveCategory(
+                    category
+                  )
+                }
+              >
+
+                {category}
+
+              </button>
+
+            )
+          )}
+
+        </div>
+
+
+        <div className="shop-sort">
+
+          <label htmlFor="sort-products">
+            SORT BY
+          </label>
+
+
+          <select
+            id="sort-products"
+            value={sortOption}
+            onChange={(event) =>
+              setSortOption(
+                event.target.value
+              )
             }
           >
 
-            {category}
+            <option value="default">
+              Default
+            </option>
+
+
+            <option value="price-low">
+              Price: Low to High
+            </option>
+
+
+            <option value="price-high">
+              Price: High to Low
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      {/* =====================================
+          CLEAR FILTERS
+      ===================================== */}
+
+      {hasActiveFilters && (
+
+        <div className="shop-clear-row">
+
+          <button
+            type="button"
+            className="shop-clear-button"
+            onClick={clearFilters}
+          >
+
+            CLEAR FILTERS
+
+            <span>
+              ×
+            </span>
 
           </button>
 
-        ))}
+        </div>
 
-      </div>
+      )}
 
 
       {/* =====================================
@@ -435,9 +1090,9 @@ function Shop() {
 
         <span>
 
-          {filteredProducts.length}{" "}
+          {sortedProducts.length}{" "}
 
-          {filteredProducts.length === 1
+          {sortedProducts.length === 1
             ? "FRAGRANCE"
             : "FRAGRANCES"}
 
@@ -445,9 +1100,7 @@ function Shop() {
 
 
         <span>
-
           {activeCategory}
-
         </span>
 
       </div>
@@ -457,7 +1110,7 @@ function Shop() {
           NO RESULTS
       ===================================== */}
 
-      {filteredProducts.length === 0 ? (
+      {sortedProducts.length === 0 ? (
 
         <section className="shop-no-results">
 
@@ -465,20 +1118,23 @@ function Shop() {
             ♡
           </div>
 
+
           <h2>
             No fragrance found.
           </h2>
 
+
           <p>
+
             We couldn't find a fragrance
             matching "{searchText}".
+
           </p>
+
 
           <button
             type="button"
-            onClick={() =>
-              navigate("/shop")
-            }
+            onClick={clearFilters}
           >
 
             VIEW ALL FRAGRANCES
@@ -499,135 +1155,166 @@ function Shop() {
 
         <section className="shop-grid">
 
-          {filteredProducts.map((product) => {
+          {sortedProducts.map(
+            (product) => {
 
-            const active =
-              isWishlisted(product.id);
-
-
-            return (
-
-              <article
-                className="shop-product"
-                key={product.id}
-              >
+              const active =
+                isWishlisted(
+                  product.id
+                );
 
 
-                {/* =========================
-                    PRODUCT IMAGE
-                ========================= */}
+              return (
 
-                <div
-                  className="shop-product-image"
-                  onClick={() =>
-                    openProduct(product.id)
-                  }
+                <article
+                  className="shop-product"
+                  key={product.id}
                 >
 
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                  />
 
-
-                  {/* WISHLIST */}
-
-                  <button
-                    type="button"
-                    className={
-                      `shop-wishlist ${
-                        active ? "active" : ""
-                      }`
-                    }
-                    aria-label={
-                      active
-                        ? `Remove ${product.name} from wishlist`
-                        : `Add ${product.name} to wishlist`
-                    }
-                    onClick={(event) => {
-
-                      event.preventDefault();
-
-                      event.stopPropagation();
-
-                      handleWishlist(product);
-
-                    }}
-                  >
-
-                    {active
-                      ? "♥"
-                      : "♡"}
-
-                  </button>
-
-                </div>
-
-
-                {/* =========================
-                    PRODUCT INFORMATION
-                ========================= */}
-
-                <div className="shop-product-info">
+                  {/* =========================
+                      PRODUCT IMAGE
+                  ========================= */}
 
                   <div
-                    className="shop-product-name"
+                    className="shop-product-image"
                     onClick={() =>
-                      openProduct(product.id)
+                      openProduct(
+                        product.id
+                      )
                     }
                   >
 
-                    <h2>
-                      {product.name}
-                    </h2>
+                    {product.image ? (
 
-                    <p>
-                      {product.type}
-                    </p>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                      />
+
+                    ) : (
+
+                      <div className="shop-image-placeholder">
+                        No Image
+                      </div>
+
+                    )}
+
+
+                    {/* WISHLIST */}
+
+                    <button
+                      type="button"
+                      className={
+                        `shop-wishlist ${
+                          active
+                            ? "active"
+                            : ""
+                        }`
+                      }
+                      aria-label={
+                        active
+                          ? `Remove ${product.name} from wishlist`
+                          : `Add ${product.name} to wishlist`
+                      }
+                      onClick={(event) => {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        handleWishlist(
+                          product
+                        );
+
+                      }}
+                    >
+
+                      {active
+                        ? "♥"
+                        : "♡"}
+
+                    </button>
 
                   </div>
 
 
-                  <span className="shop-price">
-                    ${product.price}
-                  </span>
+                  {/* =========================
+                      PRODUCT INFORMATION
+                  ========================= */}
 
-                </div>
+                  <div className="shop-product-info">
 
+                    <div
+                      className="shop-product-name"
+                      onClick={() =>
+                        openProduct(
+                          product.id
+                        )
+                      }
+                    >
 
-                {/* =========================
-                    ADD TO BAG
-                ========================= */}
-
-                <button
-                  type="button"
-                  className="shop-add-button"
-                  onClick={() =>
-                    handleAddToCart(product)
-                  }
-                >
-
-                  <span>
-
-                    {addedProduct === product.id
-                      ? "ADDED TO BAG"
-                      : "ADD TO BAG"}
-
-                  </span>
+                      <h2>
+                        {product.name}
+                      </h2>
 
 
-                  <span>
-                    →
-                  </span>
+                      <p>
+                        {product.type}
+                      </p>
 
-                </button>
+                    </div>
 
 
-              </article>
+                    <span className="shop-price">
 
-            );
+                      $
+                      {Number(
+                        product.price
+                      ).toFixed(2)}
 
-          })}
+                    </span>
+
+                  </div>
+
+
+                  {/* =========================
+                      ADD TO BAG
+                  ========================= */}
+
+                  <button
+                    type="button"
+                    className="shop-add-button"
+                    onClick={() =>
+                      handleAddToCart(
+                        product
+                      )
+                    }
+                  >
+
+                    <span>
+
+                      {addedProduct ===
+                      product.id
+                        ? "ADDED TO BAG"
+                        : "ADD TO BAG"}
+
+                    </span>
+
+
+                    <span>
+                      →
+                    </span>
+
+                  </button>
+
+
+                </article>
+
+              );
+
+            }
+          )}
 
         </section>
 

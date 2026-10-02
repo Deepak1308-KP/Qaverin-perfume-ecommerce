@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qaverin-perfume-ecommerce.vercel.app/sitemap.xml

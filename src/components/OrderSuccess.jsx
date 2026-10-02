@@ -37,14 +37,51 @@ function OrderSuccess() {
 
 
   /* =========================================
-     GET LATEST ORDER
+     GET LAST ORDER
+     
+     First priority:
+     qaverin-last-order
+     
+     Second priority:
+     OrderContext
+  ========================================= */
+
+  let savedOrder = null;
+
+  try {
+
+    const storedOrder =
+      localStorage.getItem(
+        "qaverin-last-order"
+      );
+
+    savedOrder =
+      storedOrder
+        ? JSON.parse(storedOrder)
+        : null;
+
+  } catch (error) {
+
+    console.error(
+      "Unable to read last order:",
+      error
+    );
+
+  }
+
+
+  /* =========================================
+     LATEST ORDER
   ========================================= */
 
   const latestOrder =
-    Array.isArray(orders) &&
-    orders.length > 0
-      ? orders[0]
-      : null;
+    savedOrder ||
+    (
+      Array.isArray(orders) &&
+      orders.length > 0
+        ? orders[0]
+        : null
+    );
 
 
   /* =========================================
@@ -99,6 +136,23 @@ function OrderSuccess() {
 
 
   /* =========================================
+     CUSTOMER ORDER NUMBER
+     
+     Do NOT use database ID.
+  ========================================= */
+
+  const customerOrderNumber =
+    latestOrder.orderNumber ??
+    latestOrder.order_number ??
+    (
+      Array.isArray(orders) &&
+      orders.length > 0
+        ? orders.length
+        : "—"
+    );
+
+
+  /* =========================================
      PAYMENT NAME
   ========================================= */
 
@@ -125,21 +179,34 @@ function OrderSuccess() {
 
   /* =========================================
      PAYMENT METHOD
+     
+     Support both:
+     
+     payment_method
+     payment
   ========================================= */
 
   const paymentMethod =
     getPaymentName(
+      latestOrder.payment_method ||
       latestOrder.payment
     );
 
 
   /* =========================================
      ORDER TOTAL
+     
+     Support both:
+     
+     total_amount
+     total
   ========================================= */
 
   const orderTotal =
     Number(
-      latestOrder.total || 0
+      latestOrder.total_amount ??
+      latestOrder.total ??
+      0
     );
 
 
@@ -168,10 +235,64 @@ function OrderSuccess() {
 
   /* =========================================
      ORDER DATE
+     
+     Support:
+     
+     date
+     created_at
+     createdAt
   ========================================= */
 
+  const getOrderDate = () => {
+
+    if (latestOrder.date) {
+
+      return latestOrder.date;
+
+    }
+
+
+    const rawDate =
+      latestOrder.created_at ||
+      latestOrder.createdAt;
+
+
+    if (!rawDate) {
+
+      return "—";
+
+    }
+
+
+    const date =
+      new Date(rawDate);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return "—";
+
+    }
+
+
+    return date.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    );
+
+  };
+
+
   const orderDate =
-    latestOrder.date || "—";
+    getOrderDate();
 
 
   /* =========================================
@@ -181,6 +302,20 @@ function OrderSuccess() {
   const orderStatus =
     latestOrder.status ||
     "ORDER PLACED";
+
+
+  /* =========================================
+     REAL DATABASE ORDER ID
+     
+     This is used for:
+     
+     /order/:id
+     
+     Do NOT use customerOrderNumber.
+  ========================================= */
+
+  const orderId =
+    latestOrder.id;
 
 
   /* =========================================
@@ -273,7 +408,7 @@ function OrderSuccess() {
               </span>
 
               <h2>
-                #{latestOrder.id}
+                #{customerOrderNumber}
               </h2>
 
             </div>
@@ -389,7 +524,6 @@ function OrderSuccess() {
 
         <div className="success-message">
 
-
           <span>
             ✦
           </span>
@@ -410,7 +544,6 @@ function OrderSuccess() {
             ✦
           </span>
 
-
         </div>
 
 
@@ -423,10 +556,12 @@ function OrderSuccess() {
 
           {/* =====================================
               VIEW ORDER DETAILS
+              
+              Use REAL database ID.
           ===================================== */}
 
           <Link
-            to={`/order/${latestOrder.id}`}
+            to={`/order/${orderId}`}
             className="success-primary-button"
           >
 

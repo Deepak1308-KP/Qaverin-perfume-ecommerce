@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useCart } from "../context/useCart";
 import { useOrder } from "../context/useOrder";
@@ -10,10 +7,10 @@ import { useOrder } from "../context/useOrder";
 import "./Checkout.css";
 
 
+
 function Checkout() {
 
   const navigate = useNavigate();
-
 
   const {
     cartItems,
@@ -21,53 +18,57 @@ function Checkout() {
     clearCart,
   } = useCart();
 
-
   const { addOrder } = useOrder();
 
 
+
   /* =========================================
-     LOGIN STATUS
+     LOGIN / USER DATA
   ========================================= */
 
   const isLoggedIn =
     localStorage.getItem("qaverin-logged-in") === "true";
 
 
+
+  const userData =
+    localStorage.getItem("qaverin-current-user");
+
+
+
+  let currentUser = null;
+
+  try {
+
+    currentUser = userData
+      ? JSON.parse(userData)
+      : null;
+
+  } catch (error) {
+
+    console.error(
+      "Unable to read current user:",
+      error
+    );
+
+  }
+
+
+
   /* =========================================
-     PAYMENT STATE
+     STATE
   ========================================= */
 
   const [paymentMethod, setPaymentMethod] =
     useState("card");
 
-  const [showPaymentModal, setShowPaymentModal] =
-    useState(false);
-
-  const [paymentProcessing, setPaymentProcessing] =
-    useState(false);
-
-  const [paymentSuccess, setPaymentSuccess] =
-    useState(false);
-
-
-  /* =========================================
-     ORDER STATE
-  ========================================= */
-
   const [isPlacingOrder, setIsPlacingOrder] =
     useState(false);
 
 
-  /* =========================================
-     CUSTOMER DATA
-  ========================================= */
-
-  const [customerData, setCustomerData] =
-    useState(null);
-
 
   /* =========================================
-     GO TO LOGIN FROM CHECKOUT
+     LOGIN
   ========================================= */
 
   const goToLogin = () => {
@@ -81,23 +82,28 @@ function Checkout() {
   };
 
 
+
   /* =========================================
-     COMPLETE ORDER
+     COMPLETE COD ORDER
   ========================================= */
 
-  const completeOrder = (customer, payment) => {
+  const completeOrder = async (
+    customer,
+    payment
+  ) => {
 
-    const loggedIn =
-      localStorage.getItem("qaverin-logged-in") === "true";
+    const token =
+      localStorage.getItem("qaverin-token");
 
 
-    /* LOGIN SAFETY CHECK */
 
-    if (!loggedIn) {
+    if (!token) {
 
       alert(
-        "Please login to place an order."
+        "Your login session has expired. Please login again."
       );
+
+      setIsPlacingOrder(false);
 
       goToLogin();
 
@@ -105,72 +111,389 @@ function Checkout() {
     }
 
 
-    /* CUSTOMER CHECK */
+
+    if (
+      !currentUser ||
+      currentUser.role !== "customer"
+    ) {
+
+      alert(
+        "Please login with a customer account before placing an order."
+      );
+
+      setIsPlacingOrder(false);
+
+      return;
+    }
+
+
 
     if (!customer) {
+
+      setIsPlacingOrder(false);
+
       return;
     }
 
 
-    /* CART CHECK */
 
     if (!cartItems.length) {
+
+      alert(
+        "Your cart is empty."
+      );
+
+      setIsPlacingOrder(false);
+
       return;
     }
 
 
-    /* =======================================
-       CREATE ORDER
-    ======================================= */
 
-    addOrder({
+    try {
 
-      items: cartItems.map((item) => ({
-        ...item,
-      })),
-
-      total: Number(cartTotal),
-
-      customer,
-
-      payment,
-
-      status: "ORDER PLACED",
-
-    });
+      setIsPlacingOrder(true);
 
 
-    /* =======================================
-       CLEAR CART
-    ======================================= */
 
-    clearCart();
+      const response =
+        await fetch(
+          "http://127.0.0.1:5000/api/orders",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+
+              Authorization:
+                `Bearer ${token}`,
+            },
+
+            body: JSON.stringify({
+
+              customer:
+                customer,
+
+              payment_method:
+                payment,
+
+            }),
+          }
+        );
 
 
-    /* =======================================
-       GO TO SUCCESS PAGE
-    ======================================= */
 
-    navigate("/order-success");
+      const data =
+        await response.json();
+
+
+
+      if (!response.ok) {
+
+        alert(
+          data.message ||
+          "Unable to place your order."
+        );
+
+        setIsPlacingOrder(false);
+
+        return;
+      }
+
+
+
+      if (!data.order) {
+
+        alert(
+          "Order was created but no order information was returned."
+        );
+
+        setIsPlacingOrder(false);
+
+        return;
+      }
+
+
+
+      localStorage.setItem(
+        "qaverin-last-order",
+        JSON.stringify(data.order)
+      );
+
+
+
+      if (addOrder) {
+
+        addOrder(
+          data.order
+        );
+
+      }
+
+
+
+      await clearCart();
+
+
+
+      navigate(
+        "/order-success",
+        {
+          replace: true,
+        }
+      );
+
+
+
+    } catch (error) {
+
+      console.error(
+        "Order creation error:",
+        error
+      );
+
+      alert(
+        "Unable to connect to the server. Please make sure the Flask backend is running."
+      );
+
+      setIsPlacingOrder(false);
+
+    }
 
   };
+
+
+
+  /* =========================================
+     START CASHFREE PAYMENT
+  ========================================= */
+
+  const startCashfreePayment =
+    async (customer) => {
+
+      const token =
+        localStorage.getItem(
+          "qaverin-token"
+        );
+
+
+
+      if (!token) {
+
+        alert(
+          "Your login session has expired. Please login again."
+        );
+
+        goToLogin();
+
+        return;
+      }
+
+
+
+      if (!customer) {
+
+        alert(
+          "Customer information is missing."
+        );
+
+        return;
+      }
+
+
+
+      if (!window.Cashfree) {
+
+        alert(
+          "Cashfree payment service is not loaded. Please refresh the page and try again."
+        );
+
+        return;
+      }
+
+
+
+      try {
+
+        setIsPlacingOrder(true);
+
+
+
+        /* =================================
+           CREATE CASHFREE ORDER
+        ================================= */
+
+        const response =
+          await fetch(
+            "http://127.0.0.1:5000/api/payment/create",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+
+                Authorization:
+                  `Bearer ${token}`,
+              },
+
+              body: JSON.stringify({
+
+                amount:
+                  Number(cartTotal),
+
+                customer:
+                  customer,
+
+                /* IMPORTANT:
+                   Send the payment method
+                   selected on Qaverin checkout.
+                */
+
+                payment_method:
+                  paymentMethod,
+
+              }),
+            }
+          );
+
+
+
+        const data =
+          await response.json();
+
+
+
+        if (!response.ok) {
+
+          console.error(
+            "Cashfree create order error:",
+            data
+          );
+
+          alert(
+            data.message ||
+            "Unable to start payment."
+          );
+
+          setIsPlacingOrder(false);
+
+          return;
+        }
+
+
+
+        if (!data.payment_session_id) {
+
+          console.error(
+            "Cashfree session missing:",
+            data
+          );
+
+          alert(
+            "Cashfree payment session was not created."
+          );
+
+          setIsPlacingOrder(false);
+
+          return;
+        }
+
+
+
+        /* =================================
+           SAVE CHECKOUT INFORMATION
+           BEFORE CASHFREE OPENS
+        ================================= */
+
+        localStorage.setItem(
+          "qaverin-pending-payment",
+          JSON.stringify({
+
+            order_id:
+              data.order_id,
+
+            customer:
+              customer,
+
+            payment_method:
+              paymentMethod,
+
+          })
+        );
+
+
+
+        console.log(
+          "Pending payment information saved."
+        );
+
+
+
+        /* =================================
+           INITIALIZE CASHFREE
+        ================================= */
+
+        const cashfree =
+          window.Cashfree({
+            mode: "sandbox",
+          });
+
+
+
+        /* =================================
+           OPEN CASHFREE CHECKOUT
+        ================================= */
+
+        await cashfree.checkout({
+
+          paymentSessionId:
+            data.payment_session_id,
+
+          redirectTarget:
+            "_self",
+
+        });
+
+
+
+      } catch (error) {
+
+        console.error(
+          "Cashfree payment error:",
+          error
+        );
+
+        alert(
+          "Unable to connect to Cashfree. Please try again."
+        );
+
+        setIsPlacingOrder(false);
+
+      }
+
+    };
+
 
 
   /* =========================================
      PLACE ORDER
   ========================================= */
 
-  const handlePlaceOrder = (event) => {
+  const handlePlaceOrder = (
+    event
+  ) => {
 
     event.preventDefault();
 
 
-    /* =======================================
-       LOGIN CHECK
-    ======================================= */
 
     const loggedIn =
-      localStorage.getItem("qaverin-logged-in") === "true";
+      localStorage.getItem(
+        "qaverin-logged-in"
+      ) === "true";
+
 
 
     if (!loggedIn) {
@@ -185,35 +508,70 @@ function Checkout() {
     }
 
 
-    /* =======================================
-       CART CHECK
-    ======================================= */
+
+    if (
+      !currentUser ||
+      currentUser.role !== "customer"
+    ) {
+
+      alert(
+        "Please login with a customer account before placing an order."
+      );
+
+      return;
+    }
+
+
+
+    const token =
+      localStorage.getItem(
+        "qaverin-token"
+      );
+
+
+
+    if (!token) {
+
+      alert(
+        "Login session not found. Please login again."
+      );
+
+      goToLogin();
+
+      return;
+    }
+
+
 
     if (cartItems.length === 0) {
+
+      alert(
+        "Your cart is empty."
+      );
+
       return;
     }
 
 
-    /* =======================================
-       PREVENT DOUBLE ORDER
-    ======================================= */
 
     if (isPlacingOrder) {
+
       return;
+
     }
 
 
-    /* =======================================
-       FORM DATA
-    ======================================= */
 
     const formData =
-      new FormData(event.currentTarget);
+      new FormData(
+        event.currentTarget
+      );
 
 
-    /* =======================================
-       PHONE VALIDATION
-    ======================================= */
+
+    /* =================================
+       PHONE
+    ================================= */
 
     const phone =
       String(
@@ -221,8 +579,13 @@ function Checkout() {
       ).trim();
 
 
+
     const phoneDigits =
-      phone.replace(/\D/g, "");
+      phone.replace(
+        /\D/g,
+        ""
+      );
+
 
 
     if (
@@ -238,9 +601,10 @@ function Checkout() {
     }
 
 
-    /* =======================================
-       PINCODE VALIDATION
-    ======================================= */
+
+    /* =================================
+       PINCODE
+    ================================= */
 
     const pincode =
       String(
@@ -248,7 +612,10 @@ function Checkout() {
       ).trim();
 
 
-    if (!/^\d{6}$/.test(pincode)) {
+
+    if (
+      !/^\d{6}$/.test(pincode)
+    ) {
 
       alert(
         "Please enter a valid 6-digit PIN code."
@@ -258,54 +625,110 @@ function Checkout() {
     }
 
 
-    /* =======================================
-       CUSTOMER DATA
-    ======================================= */
+
+    /* =================================
+       EMAIL
+    ================================= */
+
+    const email =
+      String(
+        formData.get("email") || ""
+      ).trim();
+
+
+
+    if (!email) {
+
+      alert(
+        "Please enter your email address."
+      );
+
+      return;
+    }
+
+
+
+    /* =================================
+       NAME
+    ================================= */
+
+    const name =
+      String(
+        formData.get("name") || ""
+      ).trim();
+
+
+
+    if (!name) {
+
+      alert(
+        "Please enter your full name."
+      );
+
+      return;
+    }
+
+
+
+    /* =================================
+       ADDRESS
+    ================================= */
+
+    const address =
+      String(
+        formData.get("address") || ""
+      ).trim();
+
+
+
+    const city =
+      String(
+        formData.get("city") || ""
+      ).trim();
+
+
+
+    const state =
+      String(
+        formData.get("state") || ""
+      ).trim();
+
+
+
+    /* =================================
+       CUSTOMER
+    ================================= */
 
     const customer = {
 
-      email:
-        String(
-          formData.get("email") || ""
-        ).trim(),
+      email,
 
       phone,
 
-      name:
-        String(
-          formData.get("name") || ""
-        ).trim(),
+      name,
 
-      address:
-        String(
-          formData.get("address") || ""
-        ).trim(),
+      address,
 
-      city:
-        String(
-          formData.get("city") || ""
-        ).trim(),
+      city,
 
-      state:
-        String(
-          formData.get("state") || ""
-        ).trim(),
+      state,
 
       pincode,
 
     };
 
 
-    setCustomerData(customer);
 
-
-    /* =======================================
+    /* =================================
        CASH ON DELIVERY
-    ======================================= */
+    ================================= */
 
-    if (paymentMethod === "cod") {
+    if (
+      paymentMethod === "cod"
+    ) {
 
       setIsPlacingOrder(true);
+
 
 
       setTimeout(() => {
@@ -315,118 +738,25 @@ function Checkout() {
           "cod"
         );
 
-      }, 1000);
+      }, 700);
+
 
 
       return;
     }
 
 
-    /* =======================================
-       CARD / UPI
-    ======================================= */
 
-    setShowPaymentModal(true);
+    /* =================================
+       CARD / UPI → CASHFREE
+    ================================= */
+
+    startCashfreePayment(
+      customer
+    );
 
   };
 
-
-  /* =========================================
-     PROCESS PAYMENT
-  ========================================= */
-
-  const handlePayment = () => {
-
-    /* LOGIN SAFETY CHECK */
-
-    const loggedIn =
-      localStorage.getItem("qaverin-logged-in") === "true";
-
-
-    if (!loggedIn) {
-
-      alert(
-        "Please login to complete payment."
-      );
-
-      setShowPaymentModal(false);
-
-      goToLogin();
-
-      return;
-    }
-
-
-    if (paymentProcessing) {
-      return;
-    }
-
-
-    if (!customerData) {
-      return;
-    }
-
-
-    setPaymentProcessing(true);
-
-
-    /* =======================================
-       DEMO PAYMENT PROCESSING
-    ======================================= */
-
-    setTimeout(() => {
-
-      setPaymentProcessing(false);
-
-      setPaymentSuccess(true);
-
-
-      /* =====================================
-         PAYMENT SUCCESS
-      ===================================== */
-
-      setTimeout(() => {
-
-        setShowPaymentModal(false);
-
-        setPaymentSuccess(false);
-
-        setIsPlacingOrder(true);
-
-
-        /* ===================================
-           CREATE ORDER
-        =================================== */
-
-        setTimeout(() => {
-
-          completeOrder(
-            customerData,
-            paymentMethod
-          );
-
-        }, 700);
-
-      }, 1200);
-
-    }, 1800);
-
-  };
-
-
-  /* =========================================
-     CLOSE PAYMENT MODAL
-  ========================================= */
-
-  const closePaymentModal = () => {
-
-    if (paymentProcessing) {
-      return;
-    }
-
-    setShowPaymentModal(false);
-
-  };
 
 
   /* =========================================
@@ -446,11 +776,11 @@ function Checkout() {
           </p>
 
 
+
           <h1>
-
             Please <em>login.</em>
-
           </h1>
+
 
 
           <p className="checkout-login-description">
@@ -460,6 +790,7 @@ function Checkout() {
             and place an order.
 
           </p>
+
 
 
           <button
@@ -475,6 +806,7 @@ function Checkout() {
             </span>
 
           </button>
+
 
 
           <Link
@@ -495,11 +827,112 @@ function Checkout() {
   }
 
 
+
+  /* =========================================
+     ADMIN PROTECTION
+  ========================================= */
+
+  if (
+    !currentUser ||
+    currentUser.role !== "customer"
+  ) {
+
+    return (
+
+      <main className="checkout-page">
+
+        <section className="checkout-login-required">
+
+          <p className="checkout-eyebrow">
+            QAVERIN · CHECKOUT
+          </p>
+
+
+
+          <h1>
+            Customer <em>login required.</em>
+          </h1>
+
+
+
+          <p className="checkout-login-description">
+
+            Admin accounts cannot place
+            customer orders. Please login
+            with a customer account.
+
+          </p>
+
+
+
+          <button
+            type="button"
+            className="checkout-login-button"
+            onClick={() => {
+
+              localStorage.removeItem(
+                "qaverin-logged-in"
+              );
+
+              localStorage.removeItem(
+                "qaverin-token"
+              );
+
+              localStorage.removeItem(
+                "qaverin-current-user"
+              );
+
+              navigate(
+                "/login",
+                {
+                  replace: true,
+
+                  state: {
+                    from: "/checkout",
+                  },
+
+                }
+              );
+
+            }}
+          >
+
+            LOGIN AS CUSTOMER
+
+            <span>
+              →
+            </span>
+
+          </button>
+
+
+
+          <Link
+            to="/"
+            className="checkout-login-back"
+          >
+
+            ← BACK TO STORE
+
+          </Link>
+
+        </section>
+
+      </main>
+
+    );
+
+  }
+
+
+
   /* =========================================
      EMPTY CART
   ========================================= */
 
-  if (cartItems.length === 0) {
+  if (
+    cartItems.length === 0
+  ) {
 
     return (
 
@@ -512,11 +945,11 @@ function Checkout() {
           </p>
 
 
+
           <h1>
-
             Your bag is <em>empty.</em>
-
           </h1>
+
 
 
           <p>
@@ -525,6 +958,7 @@ function Checkout() {
             proceeding to checkout.
 
           </p>
+
 
 
           <Link
@@ -549,14 +983,16 @@ function Checkout() {
   }
 
 
+
+  /* =========================================
+     MAIN CHECKOUT
+  ========================================= */
+
   return (
 
     <main className="checkout-page">
 
 
-      {/* =========================================
-          HEADER
-      ========================================= */}
 
       <section className="checkout-header">
 
@@ -565,34 +1001,29 @@ function Checkout() {
         </p>
 
 
+
         <h1>
-
           Complete your <em>order.</em>
-
         </h1>
 
 
-        <p>
 
+        <p>
           A few details and your fragrance
           will be on its way.
-
         </p>
 
       </section>
 
 
 
-      {/* =========================================
-          CHECKOUT CONTENT
-      ========================================= */}
-
       <section className="checkout-layout">
 
 
-        {/* =========================================
-            CHECKOUT FORM
-        ========================================= */}
+
+        {/* =================================
+            FORM
+        ================================= */}
 
         <form
           className="checkout-form"
@@ -600,9 +1031,8 @@ function Checkout() {
         >
 
 
-          {/* =======================================
-              CONTACT INFORMATION
-          ======================================= */}
+
+          {/* CONTACT */}
 
           <div className="checkout-section">
 
@@ -611,15 +1041,16 @@ function Checkout() {
             </p>
 
 
+
             <h2>
               Contact information
             </h2>
 
 
+
             <div className="checkout-fields">
 
 
-              {/* EMAIL */}
 
               <div className="checkout-field">
 
@@ -628,12 +1059,16 @@ function Checkout() {
                 </label>
 
 
+
                 <input
                   id="email"
                   name="email"
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
+                  defaultValue={
+                    currentUser?.email || ""
+                  }
                   required
                 />
 
@@ -641,13 +1076,12 @@ function Checkout() {
 
 
 
-              {/* PHONE */}
-
               <div className="checkout-field">
 
                 <label htmlFor="phone">
                   PHONE NUMBER
                 </label>
+
 
 
                 <input
@@ -668,9 +1102,7 @@ function Checkout() {
 
 
 
-          {/* =======================================
-              SHIPPING INFORMATION
-          ======================================= */}
+          {/* SHIPPING */}
 
           <div className="checkout-section">
 
@@ -679,15 +1111,16 @@ function Checkout() {
             </p>
 
 
+
             <h2>
               Shipping address
             </h2>
 
 
+
             <div className="checkout-fields">
 
 
-              {/* FULL NAME */}
 
               <div className="checkout-field">
 
@@ -696,12 +1129,16 @@ function Checkout() {
                 </label>
 
 
+
                 <input
                   id="name"
                   name="name"
                   type="text"
                   placeholder="Your full name"
                   autoComplete="name"
+                  defaultValue={
+                    currentUser?.name || ""
+                  }
                   required
                 />
 
@@ -709,13 +1146,12 @@ function Checkout() {
 
 
 
-              {/* ADDRESS */}
-
               <div className="checkout-field">
 
                 <label htmlFor="address">
                   ADDRESS
                 </label>
+
 
 
                 <input
@@ -731,15 +1167,16 @@ function Checkout() {
 
 
 
-              {/* CITY + STATE */}
-
               <div className="checkout-row">
+
+
 
                 <div className="checkout-field">
 
                   <label htmlFor="city">
                     CITY
                   </label>
+
 
 
                   <input
@@ -754,11 +1191,13 @@ function Checkout() {
                 </div>
 
 
+
                 <div className="checkout-field">
 
                   <label htmlFor="state">
                     STATE
                   </label>
+
 
 
                   <input
@@ -776,13 +1215,12 @@ function Checkout() {
 
 
 
-              {/* PINCODE */}
-
               <div className="checkout-field">
 
                 <label htmlFor="pincode">
                   PIN CODE
                 </label>
+
 
 
                 <input
@@ -805,9 +1243,7 @@ function Checkout() {
 
 
 
-          {/* =======================================
-              PAYMENT
-          ======================================= */}
+          {/* PAYMENT */}
 
           <div className="checkout-section">
 
@@ -816,12 +1252,15 @@ function Checkout() {
             </p>
 
 
+
             <h2>
               Payment
             </h2>
 
 
+
             <div className="payment-options">
+
 
 
               {/* CARD */}
@@ -847,9 +1286,11 @@ function Checkout() {
                 />
 
 
+
                 <span>
                   Credit / Debit Card
                 </span>
+
 
 
                 <small>
@@ -883,9 +1324,11 @@ function Checkout() {
                 />
 
 
+
                 <span>
                   UPI
                 </span>
+
 
 
                 <small>
@@ -919,9 +1362,11 @@ function Checkout() {
                 />
 
 
+
                 <span>
                   Cash on Delivery
                 </span>
+
 
 
                 <small>
@@ -936,9 +1381,7 @@ function Checkout() {
 
 
 
-          {/* =======================================
-              PLACE ORDER
-          ======================================= */}
+          {/* PLACE ORDER BUTTON */}
 
           <button
             type="submit"
@@ -958,6 +1401,7 @@ function Checkout() {
             }
 
 
+
             <span>
 
               {isPlacingOrder
@@ -973,20 +1417,24 @@ function Checkout() {
 
 
 
-        {/* =========================================
+        {/* =================================
             ORDER SUMMARY
-        ========================================= */}
+        ================================= */}
 
         <aside className="checkout-summary">
+
+
 
           <p className="checkout-summary-eyebrow">
             YOUR ORDER
           </p>
 
 
+
           <h2>
             Summary
           </h2>
+
 
 
           <div className="checkout-products">
@@ -999,7 +1447,6 @@ function Checkout() {
               >
 
 
-                {/* IMAGE */}
 
                 <div className="checkout-product-image">
 
@@ -1007,6 +1454,7 @@ function Checkout() {
                     src={item.image}
                     alt={item.name}
                   />
+
 
 
                   <span>
@@ -1017,13 +1465,12 @@ function Checkout() {
 
 
 
-                {/* PRODUCT INFO */}
-
                 <div className="checkout-product-info">
 
                   <h3>
                     {item.name}
                   </h3>
+
 
 
                   <p>
@@ -1034,12 +1481,9 @@ function Checkout() {
 
 
 
-                {/* PRICE */}
-
                 <strong>
 
                   $
-
                   {(
                     Number(item.price) *
                     Number(item.quantity)
@@ -1055,13 +1499,12 @@ function Checkout() {
 
 
 
-          {/* SUBTOTAL */}
-
           <div className="checkout-summary-line">
 
             <span>
               Subtotal
             </span>
+
 
 
             <span>
@@ -1072,13 +1515,12 @@ function Checkout() {
 
 
 
-          {/* SHIPPING */}
-
           <div className="checkout-summary-line">
 
             <span>
               Shipping
             </span>
+
 
 
             <span>
@@ -1088,17 +1530,18 @@ function Checkout() {
           </div>
 
 
-          <div className="checkout-summary-divider"></div>
+
+          <div className="checkout-summary-divider">
+          </div>
 
 
-
-          {/* TOTAL */}
 
           <div className="checkout-total">
 
             <span>
               TOTAL
             </span>
+
 
 
             <strong>
@@ -1108,8 +1551,6 @@ function Checkout() {
           </div>
 
 
-
-          {/* BACK TO CART */}
 
           <Link
             to="/cart"
@@ -1124,284 +1565,12 @@ function Checkout() {
 
       </section>
 
-
-
-      {/* =========================================
-          PAYMENT MODAL
-      ========================================= */}
-
-      {showPaymentModal && (
-
-        <div className="payment-modal-overlay">
-
-          <div className="payment-modal">
-
-
-            {/* PAYMENT FORM */}
-
-            {!paymentProcessing &&
-              !paymentSuccess && (
-
-              <>
-
-                <button
-                  type="button"
-                  className="payment-modal-close"
-                  onClick={closePaymentModal}
-                >
-                  ×
-                </button>
-
-
-                <p className="payment-modal-eyebrow">
-                  QAVERIN · SECURE PAYMENT
-                </p>
-
-
-                <h2>
-
-                  {paymentMethod === "card"
-                    ? "Card payment."
-                    : "UPI payment."
-                  }
-
-                </h2>
-
-
-                <p className="payment-modal-description">
-
-                  Complete your payment securely
-                  to place your order.
-
-                </p>
-
-
-
-                {/* CARD PAYMENT */}
-
-                {paymentMethod === "card" ? (
-
-                  <div className="card-payment-form">
-
-
-                    {/* CARD NUMBER */}
-
-                    <div className="payment-field">
-
-                      <label>
-                        CARD NUMBER
-                      </label>
-
-
-                      <input
-                        type="text"
-                        placeholder="1234 5678 9012 3456"
-                        maxLength="19"
-                        inputMode="numeric"
-                        autoComplete="cc-number"
-                      />
-
-                    </div>
-
-
-
-                    {/* EXPIRY + CVV */}
-
-                    <div className="payment-small-row">
-
-                      <div className="payment-field">
-
-                        <label>
-                          EXPIRY
-                        </label>
-
-
-                        <input
-                          type="text"
-                          placeholder="MM / YY"
-                          maxLength="7"
-                          autoComplete="cc-exp"
-                        />
-
-                      </div>
-
-
-                      <div className="payment-field">
-
-                        <label>
-                          CVV
-                        </label>
-
-
-                        <input
-                          type="password"
-                          placeholder="•••"
-                          maxLength="3"
-                          inputMode="numeric"
-                          autoComplete="cc-csc"
-                        />
-
-                      </div>
-
-                    </div>
-
-
-
-                    {/* CARD HOLDER */}
-
-                    <div className="payment-field">
-
-                      <label>
-                        CARD HOLDER
-                      </label>
-
-
-                      <input
-                        type="text"
-                        placeholder="Name on card"
-                        autoComplete="cc-name"
-                      />
-
-                    </div>
-
-                  </div>
-
-                ) : (
-
-                  /* UPI PAYMENT */
-
-                  <div className="upi-payment-form">
-
-                    <div className="upi-symbol">
-                      UPI
-                    </div>
-
-
-                    <div className="payment-field">
-
-                      <label>
-                        UPI ID
-                      </label>
-
-
-                      <input
-                        type="text"
-                        placeholder="yourname@upi"
-                        autoComplete="off"
-                      />
-
-                    </div>
-
-                  </div>
-
-                )}
-
-
-
-                {/* PAYMENT BUTTON */}
-
-                <button
-                  type="button"
-                  className="payment-confirm-button"
-                  onClick={handlePayment}
-                  disabled={paymentProcessing}
-                >
-
-                  PAY $
-
-                  {Number(cartTotal).toFixed(2)}
-
-
-                  <span>
-                    →
-                  </span>
-
-                </button>
-
-
-                <p className="payment-demo-note">
-
-                  Demo payment · No real money will
-                  be charged.
-
-                </p>
-
-              </>
-
-            )}
-
-
-
-            {/* PAYMENT PROCESSING */}
-
-            {paymentProcessing && (
-
-              <div className="payment-processing">
-
-                <div className="payment-loader">
-
-                  <span></span>
-                  <span></span>
-                  <span></span>
-
-                </div>
-
-
-                <p className="payment-processing-label">
-                  PROCESSING PAYMENT
-                </p>
-
-
-                <h2>
-                  Please wait...
-                </h2>
-
-              </div>
-
-            )}
-
-
-
-            {/* PAYMENT SUCCESS */}
-
-            {paymentSuccess && (
-
-              <div className="payment-success">
-
-                <div className="payment-success-icon">
-                  ✓
-                </div>
-
-
-                <p>
-                  PAYMENT SUCCESSFUL
-                </p>
-
-
-                <h2>
-                  Thank you.
-                </h2>
-
-
-                <span>
-                  Your order is being prepared.
-                </span>
-
-              </div>
-
-            )}
-
-          </div>
-
-        </div>
-
-      )}
-
     </main>
 
   );
 
 }
+
 
 
 export default Checkout;
