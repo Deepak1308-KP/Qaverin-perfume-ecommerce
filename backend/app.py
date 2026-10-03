@@ -123,16 +123,15 @@ Qaverin Team
 # =========================================
 
 DB_CONFIG = {
-    "host": "127.0.0.1",
-    "user": "root",
-
+    "host": os.getenv("MYSQL_HOST", "127.0.0.1").strip(),
+    "port": int(os.getenv("MYSQL_PORT", "3306")),
+    "user": os.getenv("MYSQL_USER", "root").strip(),
     "password": os.getenv("MYSQL_PASSWORD", "").strip(),
-
-    "database": "qaverin_db",
+    "database": os.getenv("MYSQL_DATABASE", "qaverin_db").strip(),
     "connection_timeout": 10,
-    "autocommit": False
+    "autocommit": False,
+    "ssl_disabled": False
 }
-
 
 # =========================================
 # DATABASE CONNECTION HELPER
@@ -1881,8 +1880,8 @@ def create_cashfree_payment():
 
             "order_meta": {
 
-                "return_url":
-                    "http://localhost:5173/payment-success?order_id={order_id}"
+               "return_url":
+                    "https://qaverin-perfume-ecommerce.vercel.app/payment-success?order_id={order_id}"
             }
         }
 
