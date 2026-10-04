@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 function AdminCustomers() {
 
   /* =========================================
@@ -132,7 +134,7 @@ function AdminCustomers() {
 
         const customersResponse =
           await fetch(
-            "http://127.0.0.1:5000/api/admin/customers",
+            `${API_URL}/api/admin/customers`,
             {
               method: "GET",
 
@@ -226,7 +228,7 @@ function AdminCustomers() {
 
         const statsResponse =
           await fetch(
-            "http://127.0.0.1:5000/api/admin/dashboard-stats",
+           `${API_URL}/api/admin/dashboard-stats`,
             {
               method: "GET",
 
@@ -385,7 +387,7 @@ function AdminCustomers() {
 
       const response =
         await fetch(
-          `http://127.0.0.1:5000/api/admin/customers/${customer.id}`,
+          `${API_URL}/api/admin/customers/${customer.id}`,
           {
             method: "DELETE",
 

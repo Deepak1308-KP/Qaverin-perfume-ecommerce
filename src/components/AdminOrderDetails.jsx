@@ -5,6 +5,8 @@ import {
   useParams,
 } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 function AdminOrderDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -55,7 +57,7 @@ function AdminOrderDetails() {
         */
 
         const response = await fetch(
-          "http://127.0.0.1:5000/api/admin/orders",
+          `${API_URL}/api/admin/orders`,
           {
             method: "GET",
             headers: {
@@ -142,7 +144,7 @@ function AdminOrderDetails() {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:5000/api/orders/${id}/status`,
+       `${API_URL}/api/orders/${id}/status`,
         {
           method: "PUT",
           headers: {

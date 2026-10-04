@@ -9,7 +9,7 @@ import oud from "../assets/oud.png";
 import eclat from "../assets/eclat.png";
 
 
-
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 // =========================================
 // PRODUCT IMAGE
 // =========================================
@@ -124,7 +124,7 @@ function Orders() {
         // ===================================
 
         const response = await fetch(
-          "http://127.0.0.1:5000/api/orders",
+          `${API_URL}/api/orders`,
           {
             method: "GET",
 
@@ -597,7 +597,7 @@ function Orders() {
 
 
       const response = await fetch(
-        `http://127.0.0.1:5000/api/orders/${orderId}/cancel`,
+       `${API_URL}/api/orders/${orderId}/cancel`,
         {
           method: "PUT",
 

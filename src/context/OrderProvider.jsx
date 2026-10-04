@@ -6,6 +6,8 @@ import {
 
 import { OrderContext } from "./OrderContext";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 export function OrderProvider({ children }) {
 
@@ -71,7 +73,7 @@ export function OrderProvider({ children }) {
 
         const response =
           await fetch(
-            "http://127.0.0.1:5000/api/orders",
+            `${API_URL}/api/orders`,
             {
               method: "GET",
 

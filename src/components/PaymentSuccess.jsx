@@ -10,6 +10,7 @@ import { useOrder } from "../context/useOrder";
 
 import "./PaymentSuccess.css";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 function PaymentSuccess() {
 
@@ -133,7 +134,7 @@ function PaymentSuccess() {
 
         const verifyResponse =
           await fetch(
-            "http://127.0.0.1:5000/api/payment/verify",
+            `${API_URL}/api/payment/verify`,
             {
               method: "POST",
 
@@ -272,7 +273,7 @@ function PaymentSuccess() {
 
         const orderResponse =
           await fetch(
-            "http://127.0.0.1:5000/api/orders",
+           `${API_URL}/api/orders`,
             {
               method: "POST",
 

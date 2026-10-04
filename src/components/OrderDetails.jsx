@@ -17,6 +17,8 @@ import rose from "../assets/rose.png";
 import oud from "../assets/oud.png";
 import eclat from "../assets/eclat.png";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 // =========================================
 // PRODUCT IMAGE
@@ -144,7 +146,7 @@ function OrderDetails() {
 
         const orderResponse =
           await fetch(
-            `http://127.0.0.1:5000/api/orders/${id}`,
+            `${API_URL}/api/orders/${id}`,
             {
               method: "GET",
 
@@ -239,7 +241,7 @@ function OrderDetails() {
 
             const ordersResponse =
               await fetch(
-                "http://127.0.0.1:5000/api/orders",
+               `${API_URL}/api/orders`,
                 {
                   method: "GET",
 

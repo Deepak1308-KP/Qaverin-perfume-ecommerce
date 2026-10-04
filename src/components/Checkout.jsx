@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
 import { useOrder } from "../context/useOrder";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 import "./Checkout.css";
 
 
@@ -158,7 +159,7 @@ function Checkout() {
 
       const response =
         await fetch(
-          "http://127.0.0.1:5000/api/orders",
+         `${API_URL}/api/orders`,
           {
             method: "POST",
 
@@ -326,7 +327,7 @@ function Checkout() {
 
         const response =
           await fetch(
-            "http://127.0.0.1:5000/api/payment/create",
+            `${API_URL}/api/payment/create`,
             {
               method: "POST",
 

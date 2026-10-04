@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 function AdminAnalytics() {
   /* =========================================
      LOGIN STATUS
@@ -98,7 +99,7 @@ function AdminAnalytics() {
         ===================================== */
 
         const statsResponse = await fetch(
-          "http://127.0.0.1:5000/api/admin/dashboard-stats",
+         `${API_URL}/api/admin/dashboard-stats`,
           {
             method: "GET",
 
@@ -330,7 +331,7 @@ function AdminAnalytics() {
 
         const ordersResponse =
           await fetch(
-            "http://127.0.0.1:5000/api/admin/orders",
+           `${API_URL}/api/admin/orders`,
             {
               method: "GET",
 

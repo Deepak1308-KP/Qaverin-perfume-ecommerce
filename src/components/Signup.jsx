@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "./Signup.css";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 function Signup() {
   const navigate = useNavigate();
 
@@ -30,7 +32,7 @@ function Signup() {
       ========================================= */
 
       const response = await fetch(
-        "http://127.0.0.1:5000/api/register",
+        `${API_URL}/api/register`,
         {
           method: "POST",
 

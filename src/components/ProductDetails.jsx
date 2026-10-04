@@ -11,6 +11,7 @@ import rose from "../assets/rose.png";
 import oud from "../assets/oud.png";
 import eclat from "../assets/eclat.png";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 // =========================================
 // COMPONENT
@@ -80,7 +81,7 @@ function ProductDetails() {
       try {
 
         const response = await fetch(
-          "http://127.0.0.1:5000/api/products"
+         `${API_URL}/api/products`
         );
 
 

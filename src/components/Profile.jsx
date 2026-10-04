@@ -7,6 +7,8 @@ import { useOrder } from "../context/useOrder";
 
 import "./Profile.css";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 function Profile() {
 
@@ -62,7 +64,7 @@ function Profile() {
       try {
 
         const response = await fetch(
-          "http://127.0.0.1:5000/api/profile",
+          `${API_URL}/api/profile`,
           {
             method: "GET",
 

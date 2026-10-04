@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ function AdminOrders() {
         }
 
         const response = await fetch(
-          "http://127.0.0.1:5000/api/admin/orders",
+         `${API_URL}/api/admin/orders`,
           {
             method: "GET",
             headers: {
@@ -90,7 +92,7 @@ function AdminOrders() {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:5000/api/orders/${orderId}/status`,
+        `${API_URL}/api/orders/${orderId}/status`,
         {
           method: "PUT",
           headers: {

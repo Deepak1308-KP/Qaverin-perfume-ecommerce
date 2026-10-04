@@ -6,6 +6,8 @@ import rose from "../assets/rose.png";
 import oud from "../assets/oud.png";
 import eclat from "../assets/eclat.png";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 /* =========================================
    GET PRODUCT IMAGE
 ========================================= */
@@ -122,7 +124,7 @@ function AdminProducts() {
       try {
 
         const response = await fetch(
-          "http://127.0.0.1:5000/api/products"
+          `${API_URL}/api/products`
         );
 
         const data = await response.json();
@@ -295,7 +297,7 @@ function AdminProducts() {
 
       const response = await fetch(
 
-        `http://127.0.0.1:5000/api/admin/products/${editingProductId}`,
+        `${API_URL}/api/admin/products/${editingProductId}`,
 
         {
           method: "PUT",
@@ -367,7 +369,7 @@ function AdminProducts() {
 
       const productsResponse =
         await fetch(
-          "http://127.0.0.1:5000/api/products"
+          `${API_URL}/api/products`
         );
 
       const productsData =
@@ -434,7 +436,7 @@ function AdminProducts() {
 
       const response = await fetch(
 
-        "http://127.0.0.1:5000/api/admin/products",
+        `${API_URL}/api/admin/products`,
 
         {
           method: "POST",
@@ -504,7 +506,7 @@ function AdminProducts() {
 
       const productsResponse =
         await fetch(
-          "http://127.0.0.1:5000/api/products"
+          `${API_URL}/api/products`
         );
 
       const productsData =
@@ -584,7 +586,7 @@ function AdminProducts() {
 
       const response = await fetch(
 
-        `http://127.0.0.1:5000/api/admin/products/${product.id}`,
+        `${API_URL}/api/admin/products/${product.id}`,
 
         {
           method: "DELETE",
