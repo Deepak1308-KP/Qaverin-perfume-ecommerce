@@ -568,6 +568,8 @@ function ProductDetails() {
           price:
             product.price.toFixed(2),
 
+          availability: "https://schema.org/InStock",
+
           seller: {
 
             "@type":
