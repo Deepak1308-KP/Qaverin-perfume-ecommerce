@@ -325,8 +325,8 @@ function ProductDetails() {
       `${product.name} | Qaverin Perfume`;
 
 
-    const productDescription =
-      `${product.name} by Qaverin. ${product.description} Discover the Qaverin fine fragrance collection.`;
+   const productDescription =
+  `Discover ${product.name} by Qaverin. ${product.description} Explore this luxury perfume and discover its distinctive fragrance notes.`;
 
 
     // =======================================
